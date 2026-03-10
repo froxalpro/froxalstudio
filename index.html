@@ -1,45 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moi | Portfolio</title>
+    <title>Portfolio | Animateur Minecraft</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="background-glow"></div>
+    <!-- Arrière-plan dynamique séparé du body pour contrôler l'opacité JS -->
+    <div id="dynamic-bg" class="dynamic-bg"></div>
+
     <header class="navbar">
-        <div class="logo">Mon Port<span class="highlight">folio</span></div>
         <nav>
-            <a href="#home">Accueil</a>
-            <a href="#about">À propos</a>
-            <a href="#projects">Projets</a>
-            <a href="#contact" class="btn-primary">Contact</a>
+            <a href="javascript:void(0);" class="btn-icon mobile-menu-btn" id="mobile-menu-btn">
+                <img src="images/UI/burger.png" alt="Menu" class="nav-icon">
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#home" class="btn-icon"><img src="images/UI/home.png" alt="Home" class="nav-icon"></a>
+                <a href="#about" class="btn-icon"><img src="images/UI/about.png" alt="About" class="nav-icon"></a>
+                <a href="#animations" class="btn-icon"><img src="images/UI/animation.png" alt="Animations"
+                        class="nav-icon"></a>
+                <a href="#contact" class="btn-primary">Contact</a>
+            </div>
         </nav>
     </header>
 
-    <main id="home" class="hero">
-        <div class="hero-content">
-            <h1 class="fade-in-up">Bonjour, je suis <br><span class="gradient-text">Un Développeur Créatif</span></h1>
-            <p class="fade-in-up delay-1">Bienvenue sur la toute première page de mon portfolio. Je construis des expériences web immersives et performantes.</p>
-            <div class="actions fade-in-up delay-2">
-                <a href="#projects" class="btn-glow">Voir mes projets</a>
-                <a href="#contact" class="btn-outline">Me contacter</a>
+    <main id="content">
+        <section id="home" class="hero-section">
+            <div class="logo-wrapper">
+                <img src="images/logo.png" alt="Minecraft Animator Logo" class="main-logo">
             </div>
+        </section>
+
+        <!-- Scroll Progress Bar -->
+        <div class="scroll-progress-container">
+            <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
         </div>
-        <div class="hero-visual fade-in">
-             <div class="glass-card">
-                 <h3>Test Réussi ! 🎉</h3>
-                 <p>Votre site est prêt à être envoyé sur GitHub.</p>
-                 <div class="code-block">
-                     <code>git add .</code>
-                     <code>git commit -m "Initial commit"</code>
-                     <code>git push</code>
-                 </div>
-             </div>
-        </div>
+
+        <!-- Section À Propos -->
+        <section id="about" class="about-section relative-container">
+            <div class="about-content fade-in-element">
+                <h2 class="section-title">ABOUT ME</h2>
+                <div class="about-grid">
+                    <div class="about-text">
+                        <p>I am FroXaL, a 3D animator specializing in Minecraft, Hytale, Roblox, and more. I have been
+                            bringing worlds to life through animation for over 3 years.</p>
+                        <p>My portfolio includes professional work for the Minecraft Marketplace and custom animations
+                            for major YouTubers with over 10 million subscribers. I craft animations with the keen eye
+                            of a creator and trailer scriptwriter.</p>
+
+                        <!-- Social buttons placed below the text as requested -->
+                        <div class="social-links">
+                            <a href="https://x.com/froxal" target="_blank" class="btn-icon">
+                                <img src="images/UI/x.png" alt="Twitter / X" class="nav-icon">
+                            </a>
+                            <a href="https://www.youtube.com/@froxalshort" target="_blank" class="btn-icon">
+                                <img src="images/UI/youtube.png" alt="YouTube" class="nav-icon">
+                            </a>
+                            <a href="https://discord.gg/4AyKuPWgCW" target="_blank" class="btn-icon">
+                                <img src="images/UI/discord.png" alt="Discord" class="nav-icon">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
