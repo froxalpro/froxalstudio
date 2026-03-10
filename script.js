@@ -65,13 +65,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Spread across the entire fullscreen section
                 // The section covers 100vw, so px ranges 0 to 100
                 // We just keep away from the direct center block (say 35% to 65% in px and py)
+                let isMobile = window.innerWidth <= 768;
                 do {
                     px = Math.random() * 100;
-                    py = 10 + Math.random() * 80; // Keep slightly away from top/bottom direct edges
-                } while (px > 25 && px < 75 && py > 30 && py < 70); // Retry if it lands in the middle zone
+                    if (isMobile) {
+                        // Sur mobile: uniquement en haut (0-20%) ou en bas (80-100%)
+                        py = Math.random() < 0.5 ? Math.random() * 20 : 80 + Math.random() * 20;
+                    } else {
+                        py = 10 + Math.random() * 80; // Keep slightly away from top/bottom direct edges
+                    }
+                } while (!isMobile && px > 25 && px < 75 && py > 30 && py < 70); // Retry if it lands in the middle zone (desktop only)
 
                 // Petites tailles pour les XP (encore plus petites)
-                const imgSize = 8 + Math.random() * 8; // entre 8px et 16px
+                let imgSize = 8 + Math.random() * 8; // entre 8px et 16px
+                if (isMobile) {
+                    imgSize = 4 + Math.random() * 6; // entre 4px et 10px sur mobile
+                }
                 particle.style.width = `${imgSize}px`;
                 particle.style.height = `${imgSize}px`;
                 particle.style.objectFit = 'contain';
@@ -144,10 +153,57 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(raf)
     }
 
-    // -- Scroll-linked Fade In, Fade Out bg & Progress bar --
+
+    // -- Contact Modal Toggle --
+    const contactBtns = document.querySelectorAll('a[href="#contact"]');
+    const contactModal = document.getElementById('contact-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const contactForm = document.getElementById('contact-form');
+
+    if (contactModal) {
+        contactBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                contactModal.classList.add('active');
+            });
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            contactModal.classList.remove('active');
+        });
+
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                contactModal.classList.remove('active');
+            }
+        });
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('contact-email').value;
+                const subject = document.getElementById('contact-subject').value;
+                const message = document.getElementById('contact-message').value;
+                
+                const finalMessage = `${message}\n\n---\nEmail de contact: ${email}`;
+                
+                // Build mailto link
+                const mailtoLink = `mailto:froxal.pro@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(finalMessage)}`;
+                window.location.href = mailtoLink;
+                
+                // Close modal after sending
+                contactModal.classList.remove('active');
+                contactForm.reset();
+            });
+        }
+    }
+
+        // -- Scroll-linked Fade In, Fade Out bg & Progress bar --
     const fadeElements = document.querySelectorAll('.fade-in-element');
     const dynamicBg = document.getElementById('dynamic-bg');
+    const dynamicBg2 = document.getElementById('dynamic-bg2');
     const progressBar = document.getElementById('scroll-progress-bar');
+    const clientsSection = document.getElementById('clients');
 
     window.updateOpacityOnScroll = function () {
         const windowHeight = window.innerHeight;
@@ -164,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             progressBar.style.width = `${progressRatio * 100}%`;
         }
 
-        // 1. Apparition des éléments About
+        // 1. Apparition des éléments About et Animations
         fadeElements.forEach(element => {
             const rect = element.getBoundingClientRect();
 
@@ -190,6 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
             bgRatio = Math.max(0, Math.min(1, bgRatio)); // entre 0 et 1
 
             dynamicBg.style.opacity = bgRatio * 0.1; // * 0.1 car c'est l'opacité max initiale
+        }
+
+        // 3. Apparition graduelle du fond bg2.png pour la section Animations
+        if (dynamicBg2 && clientsSection) {
+            const rect = clientsSection.getBoundingClientRect();
+            // Start fading in bg2 when the animations section is at the bottom of the screen
+            const startFadeIn = windowHeight; 
+            // Completely visible when it reaches the top/middle
+            const endFadeIn = windowHeight * 0.2;
+
+            let bg2Ratio = (startFadeIn - rect.top) / (startFadeIn - endFadeIn);
+            bg2Ratio = Math.max(0, Math.min(1, bg2Ratio));
+
+            dynamicBg2.style.opacity = bg2Ratio * 0.1; // * 0.1 pour garder le même niveau d'opacité max que bg1
         }
     };
 

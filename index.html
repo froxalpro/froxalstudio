@@ -11,6 +11,7 @@
 <body>
     <!-- Arrière-plan dynamique séparé du body pour contrôler l'opacité JS -->
     <div id="dynamic-bg" class="dynamic-bg"></div>
+    <div id="dynamic-bg2" class="dynamic-bg bg2"></div>
 
     <header class="navbar">
         <nav>
@@ -20,8 +21,8 @@
             <div class="nav-links" id="nav-links">
                 <a href="#home" class="btn-icon"><img src="images/UI/home.png" alt="Home" class="nav-icon"></a>
                 <a href="#about" class="btn-icon"><img src="images/UI/about.png" alt="About" class="nav-icon"></a>
-                <a href="#animations" class="btn-icon"><img src="images/UI/animation.png" alt="Animations"
-                        class="nav-icon"></a>
+                <a href="javascript:void(0);" class="btn-icon"><img src="images/UI/animation.png" alt="Animations"
+                        class="nav-icon" style="opacity: 0.5; cursor: not-allowed;"></a>
                 <a href="#contact" class="btn-primary">Contact</a>
             </div>
         </nav>
@@ -67,7 +68,39 @@
                 </div>
             </div>
         </section>
+
+        <!-- Section Clients -->
+        <section id="clients" class="animations-section relative-container">
+            <div class="animations-content fade-in-element flex-col-center">
+                <h2 class="section-title">CLIENTS</h2>
+            </div>
+        </section>
     </main>
+    <!-- Modal Contact -->
+    <div id="contact-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+            <h2 class="modal-title">
+                <img src="images/UI/envelop.png" alt="Email" class="modal-icon">
+                CONTACT ME
+            </h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="contact-email">Your Email</label>
+                    <input type="email" id="contact-email" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-subject">Subject</label>
+                    <input type="text" id="contact-subject" placeholder="What is your project about?" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" rows="5" placeholder="Describe your needs..." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary submit-btn">Send via Email</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
