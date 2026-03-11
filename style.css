@@ -681,31 +681,6 @@ main {
         box-sizing: border-box;
     }
 
-    .client-card {
-        padding: 0.3rem;
-        min-width: 0; /* CRUCIAL: Autorise le texte à être plus petit que le contenu fils */
-        overflow: hidden; /* Empêche tout dépassement */
-        width: 100%;
-    }
-
-    .client-name {
-        font-size: 0.55rem; /* Shrunk for better fit */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip; /* Prefer clean cut over ellipsis if still too long */
-        width: 100%;
-    }
-
-    .client-description {
-        display: block;
-        font-size: 0.45rem; /* Shrunk for better fit */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-        width: 100%;
-        margin-top: 2px;
-    }
-
     .partner-badge {
         width: 30px;
         /* Badge plus petit aussi */
@@ -1183,4 +1158,28 @@ main {
     margin-top: 5px;
     word-break: break-word;
     max-width: 100%;
+}
+
+/* Mobile Overrides (placed at the end to prevent desktop overrides) */
+@media screen and (max-width: 768px) {
+    .client-card {
+        padding: 0.2rem;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .client-name {
+        font-size: 0.45rem; /* Even smaller to fit 3 columns */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+
+    .client-description {
+        font-size: 0.35rem; /* Even smaller to fit 3 columns */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        margin-top: 1px;
+    }
 }
