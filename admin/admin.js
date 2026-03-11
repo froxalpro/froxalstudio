@@ -404,11 +404,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   portfolioForm.onsubmit = async (e) => {
     e.preventDefault();
+    console.log("Formulaire Portfolio soumis !");
     const id = portfolioIdInput.value;
     const title = portfolioTitleInput.value.trim();
     const description = portfolioDescInput.value.trim();
     const mediaType = portfolioMediaTypeSelect.value;
     
+    console.log("Données saisies:", { id, title, mediaType });
+
     submitPortfolioBtn.disabled = true;
     portfolioStatus.textContent = "Sauvegarde en cours...";
 
