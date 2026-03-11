@@ -689,18 +689,19 @@ main {
     }
 
     .client-name {
-        font-size: clamp(8px, 12cqw, 0.9rem);
+        font-size: 0.55rem; /* Shrunk for better fit */
         white-space: nowrap;
         overflow: hidden;
+        text-overflow: clip; /* Prefer clean cut over ellipsis if still too long */
         width: 100%;
     }
 
     .client-description {
-        display: block; /* Réaffichage */
-        font-size: 0.5rem; /* Très petit */
+        display: block;
+        font-size: 0.45rem; /* Shrunk for better fit */
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        text-overflow: clip;
         width: 100%;
         margin-top: 2px;
     }
@@ -1087,6 +1088,22 @@ main {
     padding: 2rem;
 }
 
+/* Custom button style for Clients section title */
+.animations-section .section-title.btn-dark {
+    pointer-events: none;
+    margin-bottom: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4rem;
+    height: 60px;
+    width: auto;
+    min-width: 300px;
+    max-width: 800px;
+    font-size: 2rem; /* Reduced size */
+    text-align: center;
+}
+
 .client-card {
     position: relative;
     /* Pour positionner le badge */
@@ -1104,7 +1121,6 @@ main {
         transform 0.2s ease,
         box-shadow 0.2s ease;
     cursor: default;
-    container-type: inline-size;
 }
 
 .partner-badge {
