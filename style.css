@@ -1182,4 +1182,11 @@ main {
         text-overflow: clip;
         margin-top: 1px;
     }
+
+    .partner-badge {
+        width: 20px; /* Even smaller */
+        height: 20px;
+        top: -2px;
+        right: -2px;
+    }
 }
