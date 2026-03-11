@@ -329,4 +329,46 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fallback normal scroll event and initial check
   window.addEventListener("scroll", window.updateOpacityOnScroll);
   window.updateOpacityOnScroll();
+
+  // -- Fetch API Supabase for Dynamic Clients --
+  async function loadClients() {
+    const clientsGrid = document.getElementById("clients-grid");
+    if (!clientsGrid || typeof window.supabaseClient === "undefined") return;
+
+    try {
+      const { data: clients, error } = await window.supabaseClient
+        .from("clients")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      clientsGrid.innerHTML = ""; // Clear existing placeholder
+
+      if (clients && clients.length > 0) {
+        clients.forEach((client) => {
+          const card = document.createElement("div");
+          card.classList.add("client-card", "fade-in-element");
+
+          card.innerHTML = `
+            <div class="client-logo-wrapper">
+              <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
+            </div>
+            <div class="client-name">${client.name}</div>
+          `;
+
+          clientsGrid.appendChild(card);
+        });
+      } else {
+        clientsGrid.innerHTML =
+          "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin.html)</p>";
+      }
+    } catch (err) {
+      console.error("Erreur de chargement des clients :", err);
+      clientsGrid.innerHTML =
+        "<p style='color: red; text-align: center; width: 100%; grid-column: 1/-1;'>Erreur de chargement des données clients.</p>";
+    }
+  }
+
+  loadClients();
 });

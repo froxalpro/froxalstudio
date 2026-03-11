@@ -154,7 +154,27 @@
       <!-- Section Clients -->
       <section id="clients" class="animations-section relative-container">
         <div class="animations-content fade-in-element flex-col-center">
-          <h2 class="section-title">CLIENTS</h2>
+          <h2
+            class="section-title btn-primary"
+            style="
+              pointer-events: none;
+              margin-bottom: 2rem;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0 8rem;
+              padding-top: 35px;
+              height: 80px;
+              width: 80%;
+              max-width: 800px;
+            "
+          >
+            CLIENTS
+          </h2>
+
+          <div id="clients-grid" class="clients-grid">
+            <!-- Les fiches clients générées par Supabase apparaitront ici -->
+          </div>
         </div>
       </section>
     </main>
@@ -203,6 +223,10 @@
 
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <!-- Supabase CDN + Configuration & Main Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
