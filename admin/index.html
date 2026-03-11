@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin V1 | FroXal Studio</title>
+    <script>
+      // Force le trailing slash pour que les chemins relatifs (../) fonctionnent sur GitHub Pages / Localhost
+      if (!window.location.pathname.endsWith('/')) {
+        window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+      }
+    </script>
     <link rel="stylesheet" href="../style.css" />
     <style>
       .admin-fullscreen {
