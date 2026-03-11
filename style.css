@@ -689,10 +689,9 @@ main {
     }
 
     .client-name {
-        font-size: 0.65rem; /* Taille plus petite */
-        white-space: nowrap; /* Pas de retour à la ligne */
+        font-size: clamp(8px, 12cqw, 0.9rem);
+        white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis; /* Ajout de "..." si trop long */
         width: 100%;
     }
 
@@ -1105,6 +1104,7 @@ main {
         transform 0.2s ease,
         box-shadow 0.2s ease;
     cursor: default;
+    container-type: inline-size;
 }
 
 .partner-badge {
