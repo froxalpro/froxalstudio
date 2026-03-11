@@ -1,110 +1,208 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio | Animateur Minecraft</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
+  <body>
     <!-- Arrière-plan dynamique séparé du body pour contrôler l'opacité JS -->
     <div id="dynamic-bg" class="dynamic-bg"></div>
     <div id="dynamic-bg2" class="dynamic-bg bg2"></div>
 
     <header class="navbar">
-        <nav>
-            <a href="javascript:void(0);" class="btn-icon mobile-menu-btn" id="mobile-menu-btn">
-                <img src="images/UI/burger.png" alt="Menu" class="nav-icon">
-            </a>
-            <div class="nav-links" id="nav-links">
-                <a href="#home" class="btn-icon"><img src="images/UI/home.png" alt="Home" class="nav-icon"></a>
-                <a href="#about" class="btn-icon"><img src="images/UI/about.png" alt="About" class="nav-icon"></a>
-                <a href="javascript:void(0);" class="btn-icon"><img src="images/UI/animation.png" alt="Animations"
-                        class="nav-icon" style="opacity: 0.5; cursor: not-allowed;"></a>
-                <a href="#contact" class="btn-primary">Contact</a>
-            </div>
-        </nav>
+      <nav>
+        <a
+          href="javascript:void(0);"
+          class="btn-icon mobile-menu-btn"
+          id="mobile-menu-btn"
+        >
+          <img src="images/UI/burger.png" alt="Menu" class="nav-icon" />
+        </a>
+        <div class="nav-links" id="nav-links">
+          <a href="#home" class="btn-icon"
+            ><img src="images/UI/home.png" alt="Home" class="nav-icon"
+          /></a>
+          <a href="#about" class="btn-icon"
+            ><img src="images/UI/about.png" alt="About" class="nav-icon"
+          /></a>
+          <a href="javascript:void(0);" class="btn-icon"
+            ><img
+              src="images/UI/animation.png"
+              alt="Animations"
+              class="nav-icon"
+              style="opacity: 0.5; cursor: not-allowed"
+          /></a>
+          <a href="#contact" class="btn-primary">Contact</a>
+        </div>
+      </nav>
     </header>
 
     <main id="content">
-        <section id="home" class="hero-section">
-            <div class="logo-wrapper">
-                <img src="images/logo.png" alt="Minecraft Animator Logo" class="main-logo">
-            </div>
-        </section>
-
-        <!-- Scroll Progress Bar -->
-        <div class="scroll-progress-container">
-            <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+      <section
+        id="home"
+        class="hero-section"
+        style="flex-direction: column; align-items: center"
+      >
+        <div class="logo-wrapper">
+          <img
+            src="images/logo.png"
+            alt="Minecraft Animator Logo"
+            class="main-logo"
+          />
         </div>
+        <h1
+          class="hero-subtitle"
+          style="
+            font-family: &quot;Minecraft Bold&quot;, sans-serif !important;
+            text-transform: uppercase;
+            color: #ff9900;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 300px;
+          "
+        >
+          ONE ANIMATION.
+          <span
+            style="
+              color: white;
+              font-family: &quot;Minecraft Bold&quot;, sans-serif !important;
+              font-size: 1.5rem;
+            "
+            >ABSOLUTE IMPACT ON YOUR MARKETPLACE.</span
+          >
+        </h1>
+      </section>
 
-        <!-- Section À Propos -->
-        <section id="about" class="about-section relative-container">
-            <div class="about-content fade-in-element">
-                <h2 class="section-title">ABOUT ME</h2>
-                <div class="about-grid">
-                    <div class="about-text">
-                        <p>I am FroXaL, a 3D animator specializing in Minecraft, Hytale, Roblox, and more. I have been
-                            bringing worlds to life through animation for over 3 years.</p>
-                        <p>My portfolio includes professional work for the Minecraft Marketplace and custom animations
-                            for major YouTubers with over 10 million subscribers. I craft animations with the keen eye
-                            of a creator and trailer scriptwriter.</p>
+      <!-- Scroll Progress Bar -->
+      <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+      </div>
 
-                        <!-- Social buttons placed below the text as requested -->
-                        <div class="social-links">
-                            <a href="https://x.com/froxal" target="_blank" class="btn-icon">
-                                <img src="images/UI/x.png" alt="Twitter / X" class="nav-icon">
-                            </a>
-                            <a href="https://www.youtube.com/@froxalshort" target="_blank" class="btn-icon">
-                                <img src="images/UI/youtube.png" alt="YouTube" class="nav-icon">
-                            </a>
-                            <a href="https://discord.gg/4AyKuPWgCW" target="_blank" class="btn-icon">
-                                <img src="images/UI/discord.png" alt="Discord" class="nav-icon">
-                            </a>
-                        </div>
-                    </div>
-                </div>
+      <!-- Section À Propos -->
+      <section id="about" class="about-section relative-container">
+        <div class="about-content fade-in-element">
+          <h2 class="section-title">ABOUT ME</h2>
+          <div class="about-grid">
+            <div class="about-image">
+              <video
+                id="profile-video"
+                src="images/froxal_hey.webm"
+                class="profile-image"
+                autoplay
+                muted
+                playsinline
+              ></video>
             </div>
-        </section>
+            <div
+              class="about-text"
+              id="about-text-container"
+              style="position: relative"
+            >
+              <p>
+                I am FroXaL, a 3D animator specializing in Minecraft, Hytale,
+                Roblox, and more. I have been bringing worlds to life through
+                animation for over 3 years.
+              </p>
+              <p>
+                My portfolio includes professional work for the Minecraft
+                Marketplace and custom animations for major YouTubers with over
+                10 million subscribers. I craft animations with the keen eye of
+                a creator and trailer scriptwriter.
+              </p>
 
-        <!-- Section Clients -->
-        <section id="clients" class="animations-section relative-container">
-            <div class="animations-content fade-in-element flex-col-center">
-                <h2 class="section-title">CLIENTS</h2>
+              <!-- Social buttons placed below the text as requested -->
+              <div class="social-links">
+                <a href="https://x.com/froxal" target="_blank" class="btn-icon">
+                  <img
+                    src="images/UI/x.png"
+                    alt="Twitter / X"
+                    class="nav-icon"
+                  />
+                </a>
+                <a
+                  href="https://www.youtube.com/@froxalshort"
+                  target="_blank"
+                  class="btn-icon"
+                >
+                  <img
+                    src="images/UI/youtube.png"
+                    alt="YouTube"
+                    class="nav-icon"
+                  />
+                </a>
+                <a
+                  href="https://discord.gg/4AyKuPWgCW"
+                  target="_blank"
+                  class="btn-icon"
+                >
+                  <img
+                    src="images/UI/discord.png"
+                    alt="Discord"
+                    class="nav-icon"
+                  />
+                </a>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Clients -->
+      <section id="clients" class="animations-section relative-container">
+        <div class="animations-content fade-in-element flex-col-center">
+          <h2 class="section-title">CLIENTS</h2>
+        </div>
+      </section>
     </main>
     <!-- Modal Contact -->
     <div id="contact-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button id="close-modal-btn" class="close-btn">&times;</button>
-            <h2 class="modal-title">
-                <img src="images/UI/envelop.png" alt="Email" class="modal-icon">
-                CONTACT ME
-            </h2>
-            <form id="contact-form">
-                <div class="form-group">
-                    <label for="contact-email">Your Email</label>
-                    <input type="email" id="contact-email" placeholder="your.email@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="contact-subject">Subject</label>
-                    <input type="text" id="contact-subject" placeholder="What is your project about?" required>
-                </div>
-                <div class="form-group">
-                    <label for="contact-message">Message</label>
-                    <textarea id="contact-message" rows="5" placeholder="Describe your needs..." required></textarea>
-                </div>
-                <button type="submit" class="btn-primary submit-btn">Send via Email</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+        <h2 class="modal-title">
+          <img src="images/UI/envelop.png" alt="Email" class="modal-icon" />
+          CONTACT ME
+        </h2>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="contact-email">Your Email</label>
+            <input
+              type="email"
+              id="contact-email"
+              placeholder="your.email@example.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <input
+              type="text"
+              id="contact-subject"
+              placeholder="What is your project about?"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea
+              id="contact-message"
+              rows="5"
+              placeholder="Describe your needs..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn-primary submit-btn">
+            Send via Email
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
