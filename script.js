@@ -1,6 +1,71 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Portfolio loaded.");
 
+  // -- 1. Load Supabase Clients FIRST to avoid UI script crashes --
+  async function loadClients() {
+    console.log("Tentative de chargement des clients Supabase...");
+    const clientsGrid = document.getElementById("clients-grid");
+
+    if (!clientsGrid) {
+      console.warn("La div #clients-grid est introuvable sur cette page.");
+      return;
+    }
+
+    if (typeof window.supabaseClient === "undefined") {
+      console.warn(
+        "window.supabaseClient est indéfini. Configuration Supabase manquante.",
+      );
+      clientsGrid.innerHTML =
+        "<p style='color: red;'>Erreur : Supabase CDN non chargé.</p>";
+      return;
+    }
+
+    try {
+      const { data: clients, error } = await window.supabaseClient
+        .from("clients")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      clientsGrid.innerHTML = ""; // Clear existing fallback
+
+      if (clients && clients.length > 0) {
+        console.log("Clients trouvés :", clients.length);
+        clients.forEach((client) => {
+          const card = document.createElement("div");
+          card.classList.add("client-card", "fade-in-element", "visible"); // Forcer visible au cas où le scroll bug
+
+          // Badge Partenaire Minecraft si applicable
+          const partnerBadgeHtml = client.is_partner 
+            ? `<img src="images/UI/Minecraft_Partner_Badge.webp" alt="Minecraft Partner" class="partner-badge" title="Minecraft Partner" />` 
+            : "";
+
+          card.innerHTML = `
+            ${partnerBadgeHtml}
+            <div class="client-logo-wrapper">
+              <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
+            </div>
+            <div class="client-name">${client.name}</div>
+            ${client.description ? `<div class="client-description">${client.description}</div>` : ""}
+          `;
+
+          clientsGrid.appendChild(card);
+        });
+      } else {
+        console.log("Aucun client dans la BDD Supabase.");
+        clientsGrid.innerHTML =
+          "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin)</p>";
+      }
+    } catch (err) {
+      console.error("Erreur critique loadClients:", err);
+      clientsGrid.innerHTML = `<p style='color: red; text-align: center; width: 100%; grid-column: 1/-1;'>Erreur de chargement: ${err.message}</p>`;
+    }
+  }
+
+  // Lancement garanti sans délai
+  loadClients();
+
   // -- Mobile Menu Toggle --
   const mobileBtn = document.getElementById("mobile-menu-btn");
   const navLinks = document.getElementById("nav-links");
@@ -262,7 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -- Scroll-linked Fade In, Fade Out bg & Progress bar --
-  const fadeElements = document.querySelectorAll(".fade-in-element");
   const dynamicBg = document.getElementById("dynamic-bg");
   const dynamicBg2 = document.getElementById("dynamic-bg2");
   const progressBar = document.getElementById("scroll-progress-bar");
@@ -270,7 +334,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.updateOpacityOnScroll = function () {
     const windowHeight = window.innerHeight;
-    const scrollY = window.scrollY; // Hauteur du défilement actuel
+    const scrollY = window.scrollY; // Current scroll height
+    
+    // Refresh the list of elements to animate (so dynamic ones are caught)
+    const fadeElements = document.querySelectorAll(".fade-in-element:not(.visible)");
 
     // 0. Loading Bar logic
     if (progressBar) {
@@ -330,45 +397,5 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", window.updateOpacityOnScroll);
   window.updateOpacityOnScroll();
 
-  // -- Fetch API Supabase for Dynamic Clients --
-  async function loadClients() {
-    const clientsGrid = document.getElementById("clients-grid");
-    if (!clientsGrid || typeof window.supabaseClient === "undefined") return;
-
-    try {
-      const { data: clients, error } = await window.supabaseClient
-        .from("clients")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-
-      clientsGrid.innerHTML = ""; // Clear existing placeholder
-
-      if (clients && clients.length > 0) {
-        clients.forEach((client) => {
-          const card = document.createElement("div");
-          card.classList.add("client-card", "fade-in-element");
-
-          card.innerHTML = `
-            <div class="client-logo-wrapper">
-              <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
-            </div>
-            <div class="client-name">${client.name}</div>
-          `;
-
-          clientsGrid.appendChild(card);
-        });
-      } else {
-        clientsGrid.innerHTML =
-          "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin)</p>";
-      }
-    } catch (err) {
-      console.error("Erreur de chargement des clients :", err);
-      clientsGrid.innerHTML =
-        "<p style='color: red; text-align: center; width: 100%; grid-column: 1/-1;'>Erreur de chargement des données clients.</p>";
-    }
-  }
-
-  loadClients();
+  // (L'ancienne fonction loadClients a été déplacée au début de ce fichier pour éviter les interférences JS)
 });

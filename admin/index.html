@@ -198,6 +198,16 @@
             />
           </div>
           <div class="form-group">
+            <label>Description courte (max 50 chars)</label>
+            <input
+              type="text"
+              id="client-description"
+              class="admin-input"
+              placeholder="Ex: Trailer Animator / Modder"
+              maxlength="50"
+            />
+          </div>
+          <div class="form-group">
             <label>Logo / Image (PNG, JPG)</label>
             <input
               type="file"
@@ -206,6 +216,10 @@
               accept="image/png, image/jpeg, image/jpg"
               required
             />
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;">
+            <input type="checkbox" id="client-is-partner" style="width: 20px; height: 20px; cursor: pointer;" />
+            <label for="client-is-partner" style="margin-bottom: 0;">Partenaire Minecraft</label>
           </div>
           <button
             type="submit"
@@ -271,6 +285,16 @@
             />
           </div>
           <div class="form-group">
+            <label>Nouvelle Description</label>
+            <input
+              type="text"
+              id="edit-client-description"
+              class="admin-input"
+              placeholder="Description"
+              maxlength="50"
+            />
+          </div>
+          <div class="form-group">
             <label>Nouvelle Image (optionnel)</label>
             <input
               type="file"
@@ -281,6 +305,10 @@
             <small style="color: #aaa; text-align: left; display: block"
               >Laissez vide pour conserver l'image actuelle.</small
             >
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;">
+            <input type="checkbox" id="edit-client-is-partner" style="width: 20px; height: 20px; cursor: pointer;" />
+            <label for="edit-client-is-partner" style="margin-bottom: 0;">Partenaire Minecraft</label>
           </div>
           <button
             type="submit"

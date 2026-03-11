@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function showDashboard() {
     loginSection.classList.add("hidden");
     dashboardSection.classList.remove("hidden");
+    loadAdminClients(); // Ajout manquant pour charger les clients existants
   }
 
   function showLogin() {
@@ -92,7 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const clientName = clientNameInput.value.trim();
+    const clientDescription = document.getElementById("client-description").value.trim();
     const imageFile = clientImageInput.files[0];
+    const isPartner = document.getElementById("client-is-partner").checked;
 
     if (!clientName || !imageFile) {
       showMessage("Veuillez remplir tous les champs.", "error");
@@ -127,7 +130,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMessage("Image uploadée. Enregistrement...", "");
       const { error: insertError } = await window.supabaseClient
         .from("clients")
-        .insert([{ name: clientName, image_url: publicUrl }]);
+        .insert([{ 
+          name: clientName, 
+          image_url: publicUrl, 
+          is_partner: isPartner,
+          description: clientDescription 
+        }]);
 
       if (insertError) throw insertError;
 
@@ -184,7 +192,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             <span>${client.name}</span>
           </div>
           <div class="action-btns">
-            <button class="btn-primary btn-sm btn-edit" data-id="${client.id}" data-name="${client.name}" data-img="${client.image_url}" data-path="${storagePath}">Éditer</button>
+            <button class="btn-primary btn-sm btn-edit" 
+              data-id="${client.id}" 
+              data-name="${client.name}" 
+              data-img="${client.image_url}" 
+              data-path="${storagePath}"
+              data-partner="${client.is_partner}"
+              data-description="${client.description || ""}">Éditer</button>
             <button class="btn-primary btn-sm btn-delete" data-id="${client.id}" data-path="${storagePath}">Supprimer</button>
           </div>
         `;
@@ -241,10 +255,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           const name = e.target.getAttribute("data-name");
           const img = e.target.getAttribute("data-img");
           const path = e.target.getAttribute("data-path");
+          const isPartner = e.target.getAttribute("data-partner") === "true";
+          const description = e.target.getAttribute("data-description");
 
           document.getElementById("edit-client-id").value = id;
           document.getElementById("edit-client-name").value = name;
+          document.getElementById("edit-client-description").value = description;
           document.getElementById("edit-client-old-image").value = path; // Pour la suppression de l'ancienne image si remplacée
+          document.getElementById("edit-client-is-partner").checked = isPartner;
 
           document.getElementById("edit-modal").classList.add("active");
         });
@@ -275,7 +293,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const id = document.getElementById("edit-client-id").value;
     const oldPath = document.getElementById("edit-client-old-image").value;
     const newName = document.getElementById("edit-client-name").value.trim();
+    const newDescription = document.getElementById("edit-client-description").value.trim();
     const newImageFile = document.getElementById("edit-client-image").files[0];
+    const isPartner = document.getElementById("edit-client-is-partner").checked;
 
     if (!newName) {
       editStatus.textContent = "Le nom est obligatoire.";
@@ -320,7 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       // Préparation de l'update
-      const updateData = { name: newName };
+      const updateData = { name: newName, is_partner: isPartner, description: newDescription };
       if (finalImageUrl) {
         updateData.image_url = finalImageUrl;
       }
