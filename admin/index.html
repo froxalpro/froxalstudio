@@ -84,6 +84,56 @@
         cursor: pointer;
       }
 
+      .admin-nav-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #444;
+        padding-bottom: 0px;
+      }
+      .admin-tab {
+        flex: 1;
+        padding: 1rem;
+        background: #222;
+        border: 2px solid #444;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        color: #666;
+        cursor: pointer;
+        font-family: "Minecraft Bold", sans-serif;
+        text-transform: uppercase;
+        font-size: 1rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+      }
+      .admin-tab[data-tab="clients-tab"].active {
+        background: #1a3a2a;
+        color: #50c878;
+        border-color: #50c878;
+        border-width: 3px;
+        position: relative;
+        z-index: 2;
+      }
+      .admin-tab[data-tab="portfolio-tab"].active {
+        background: #3d3011;
+        color: #ffcc00;
+        border-color: #ffcc00;
+        border-width: 3px;
+        position: relative;
+        z-index: 2;
+      }
+      .admin-tab:hover:not(.active) {
+        background: #333;
+        color: #aaa;
+      }
+      .tab-content {
+        padding: 2rem;
+        border: 2px solid #444;
+        background: rgba(20, 20, 20, 0.5);
+        border-radius: 0 0 8px 8px;
+        margin-top: -2px;
+      }
+
       .header-admin {
         display: flex;
         justify-content: space-between;
@@ -173,88 +223,170 @@
           <h2 class="admin-title" style="margin: 0; font-size: 1.5rem">
             DASHBOARD
           </h2>
-          <button
-            id="logout-btn"
+          <a
+            href="../index.html"
             class="btn-primary"
-            style="padding: 0.5rem 1rem; font-size: 0.8rem"
+            style="padding: 0.5rem 1rem; font-size: 0.8rem; text-decoration: none;"
           >
-            Quitter
-          </button>
+            RETOUR AU SITE
+          </a>
         </div>
 
-        <p style="text-align: center; margin-bottom: 2rem; color: #aaa">
-          Ajouter une nouvelle carte client dynamique (Logo 500x500 max
-          recommandé).
-        </p>
+        <div class="admin-nav-tabs">
+          <button class="admin-tab active" data-tab="clients-tab">CLIENTS DASHBOARD</button>
+          <button class="admin-tab" data-tab="portfolio-tab">PORTFOLIO DASHBOARD</button>
+        </div>
 
-        <form id="upload-form">
-          <div class="form-group">
-            <label>Nom du Client</label>
-            <input
-              type="text"
-              id="client-name"
-              class="admin-input"
-              placeholder="Ex: Hypixel, Squeezie..."
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label>Description courte (max 50 chars)</label>
-            <input
-              type="text"
-              id="client-description"
-              class="admin-input"
-              placeholder="Ex: Trailer Animator / Modder"
-              maxlength="50"
-            />
-          </div>
-          <div class="form-group">
-            <label>Logo / Image (PNG, JPG)</label>
-            <input
-              type="file"
-              id="client-image"
-              class="admin-file"
-              accept="image/png, image/jpeg, image/jpg"
-              required
-            />
-          </div>
-          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;">
-            <input type="checkbox" id="client-is-partner" style="width: 20px; height: 20px; cursor: pointer;" />
-            <label for="client-is-partner" style="margin-bottom: 0;">Partenaire Minecraft</label>
-          </div>
-          <button
-            type="submit"
-            id="submit-client-btn"
-            class="btn-primary"
-            style="
-              width: 100%;
-              font-family: &quot;Minecraft&quot;, sans-serif !important;
-            "
-          >
-            Ajouter au Portfolio
-          </button>
-        </form>
-        <div id="upload-status" class="status-msg"></div>
+        <!-- ONGLET CLIENTS -->
+        <div id="clients-tab" class="tab-content">
+          <h2 class="admin-title" style="font-size: 1.5rem; margin-top: 1rem; color: #50c878;">CLIENTS DASHBOARD</h2>
+          <p style="text-align: center; margin-bottom: 2rem; color: #aaa">
+            Ajouter une nouvelle carte client dynamique (Logo 500x500 max recommandé).
+          </p>
 
-        <hr style="border-color: #444; margin: 2rem 0" />
+          <form id="upload-form">
+            <div class="form-group">
+              <label>Nom du Client</label>
+              <input
+                type="text"
+                id="client-name"
+                class="admin-input"
+                placeholder="Ex: Hypixel, Squeezie..."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Description courte (max 50 chars)</label>
+              <input
+                type="text"
+                id="client-description"
+                class="admin-input"
+                placeholder="Ex: Trailer Animator / Modder"
+                maxlength="50"
+              />
+            </div>
+            <div class="form-group">
+              <label>Logo / Image (PNG, JPG)</label>
+              <input
+                type="file"
+                id="client-image"
+                class="admin-file"
+                accept="image/png, image/jpeg, image/jpg"
+                required
+              />
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;">
+              <input type="checkbox" id="client-is-partner" style="width: 20px; height: 20px; cursor: pointer;" />
+              <label for="client-is-partner" style="margin-bottom: 0;">Partenaire Minecraft</label>
+            </div>
+            <button
+              type="submit"
+              id="submit-client-btn"
+              class="btn-primary"
+              style="width: 100%; font-family: 'Minecraft', sans-serif !important;"
+            >
+              Ajouter au Clients
+            </button>
+          </form>
+          <div id="upload-status" class="status-msg"></div>
 
-        <h3
-          style="
-            color: white;
-            font-family: &quot;Minecraft&quot;, sans-serif;
-            margin-bottom: 1rem;
-          "
-        >
-          Clients existants :
-        </h3>
-        <div id="admin-clients-list">
-          <!-- La liste s'affichera ici -->
+          <hr style="border-color: #444; margin: 2rem 0" />
+          <h3 style="color: white; font-family: 'Minecraft', sans-serif; margin-bottom: 1rem;">Clients existants :</h3>
+          <div id="admin-clients-list"></div>
+        </div>
+
+        <!-- ONGLET PORTFOLIO -->
+        <div id="portfolio-tab" class="tab-content hidden">
+          <h2 class="admin-title" style="font-size: 1.5rem; margin-top: 1rem; color: #ffcc00;">PORTFOLIO DASHBOARD</h2>
+          <p style="text-align: center; margin-bottom: 2rem; color: #aaa">
+            Gérez vos projets (Images, GIF, Vidéos YouTube/Vimeo).
+          </p>
+
+          <form id="portfolio-form">
+            <input type="hidden" id="portfolio-id" />
+            
+            <div class="form-group">
+              <label>Titre du projet (Optionnel)</label>
+              <input
+                type="text"
+                id="portfolio-title"
+                class="admin-input"
+                placeholder="Ex: Mon superbe projet Hypixel"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Description détaillée (Optionnel)</label>
+              <textarea 
+                id="portfolio-description" 
+                class="admin-textarea" 
+                placeholder="Décrivez votre projet ici..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Type de Média</label>
+              <select id="portfolio-media-type" class="admin-input">
+                <option value="upload">Importer un fichier local (Image/GIF/Vidéo)</option>
+                <option value="external">Lien externe (YouTube, Vimeo, etc.)</option>
+              </select>
+            </div>
+
+            <!-- Champ Upload -->
+            <div id="portfolio-upload-group" class="form-group">
+              <label>Fichier Média</label>
+              <input
+                type="file"
+                id="portfolio-file"
+                class="admin-file"
+                accept="image/*, video/*, image/gif"
+              />
+              <small style="color: #aaa; margin-top: -10px; display: block; margin-bottom: 1.5rem;">
+                Images, GIF ou Vidéos (MP4 recommandés).
+              </small>
+            </div>
+
+            <!-- Champ Lien Externe -->
+            <div id="portfolio-external-group" class="form-group hidden">
+              <label>Lien Vidéo Externe</label>
+              <input
+                type="text"
+                id="portfolio-external-url"
+                class="admin-input"
+                placeholder="Copiez le lien YouTube ou Vimeo ici"
+              />
+            </div>
+
+            <!-- Aperçu du média -->
+            <div id="portfolio-media-preview" class="media-preview-container hidden">
+              <!-- Dynamique via JS -->
+            </div>
+
+            <button
+              type="submit"
+              id="submit-portfolio-btn"
+              class="btn-primary"
+              style="width: 100%; font-family: 'Minecraft', sans-serif !important;"
+            >
+              Sauvegarder le Projet
+            </button>
+            <button
+              type="button"
+              id="cancel-portfolio-btn"
+              class="btn-outline hidden"
+              style="width: 100%; margin-top: 1rem;"
+            >
+              Annuler l'édition
+            </button>
+          </form>
+          <div id="portfolio-status" class="status-msg"></div>
+
+          <hr style="border-color: #444; margin: 2rem 0" />
+          <h3 style="color: white; font-family: 'Minecraft', sans-serif; margin-bottom: 1rem;">Projets récents :</h3>
+          <div id="admin-portfolio-list"></div>
         </div>
       </div>
 
-      <a href="../index.html" class="btn-outline" style="margin-top: 2rem"
-        >Retour au site</a
-      >
     </div>
 
     <!-- MODAL ÉDITION -->

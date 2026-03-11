@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Badge Partenaire Minecraft si applicable
           const partnerBadgeHtml = client.is_partner 
-            ? `<img src="images/UI/Minecraft_Partner_Badge.webp" alt="Minecraft Partner" class="partner-badge" title="Minecraft Partner" />` 
+            ? `<img src="images/partner.png" alt="Minecraft Partner" class="partner-badge" title="Minecraft Partner" />` 
             : "";
 
           card.innerHTML = `
@@ -65,6 +65,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Lancement garanti sans délai
   loadClients();
+  loadPortfolio();
+
+  async function loadPortfolio() {
+    console.log("Chargement du portfolio...");
+    const portfolioGrid = document.getElementById("portfolio-grid");
+    if (!portfolioGrid) return;
+
+    try {
+      const { data: projects, error } = await window.supabaseClient
+        .from("portfolio")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (!projects || projects.length === 0) {
+        portfolioGrid.innerHTML = "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun projet portfolio pour le moment.</p>";
+        return;
+      }
+
+      portfolioGrid.innerHTML = "";
+      projects.forEach((project) => {
+        const item = document.createElement("div");
+        item.classList.add("portfolio-item", "reveal-up");
+
+        let mediaHtml = "";
+        if (project.media_format === "video") {
+           // Si c'est un lien externe (YouTube/Vimeo)
+           if (project.media_type === "external") {
+              let embedUrl = project.media_url;
+              if (embedUrl.includes("youtube.com") || embedUrl.includes("youtu.be")) {
+                  const id = extractYoutubeId(embedUrl);
+                  embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1`;
+              } else if (embedUrl.includes("vimeo.com")) {
+                  const id = embedUrl.split("/").pop();
+                  embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&loop=1&autopause=0&background=1`;
+              }
+              mediaHtml = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+           } else {
+              mediaHtml = `<video src="${project.media_url}" autoplay loop muted playsinline loading="lazy"></video>`;
+           }
+        } else {
+          mediaHtml = `<img src="${project.media_url}" alt="${project.title || "Projet Portfolio"}" loading="lazy" />`;
+        }
+
+        const infoHtml = (project.title || project.description) 
+          ? `<div class="portfolio-info">
+              ${project.title ? `<h3 class="portfolio-title">${project.title}</h3>` : ""}
+              ${project.description ? `<p class="portfolio-desc">${project.description}</p>` : ""}
+            </div>`
+          : "";
+
+        item.innerHTML = `
+          <div class="portfolio-media">${mediaHtml}</div>
+          ${infoHtml}
+        `;
+
+        portfolioGrid.appendChild(item);
+      });
+
+      // Activer l'Intersection Observer pour les animations
+      initRevealObserver();
+
+    } catch (err) {
+      console.error("Erreur portfolio:", err);
+    }
+  }
+
+  function extractYoutubeId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  function initRevealObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".reveal-up").forEach(el => observer.observe(el));
+  }
 
   // -- Mobile Menu Toggle --
   const mobileBtn = document.getElementById("mobile-menu-btn");
@@ -379,17 +465,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 3. Apparition graduelle du fond bg2.png pour la section Animations
+    // Et disparition progressive quand on arrive sur le PORTFOLIO
+    const portfolioSection = document.getElementById("portfolio");
     if (dynamicBg2 && clientsSection) {
       const rect = clientsSection.getBoundingClientRect();
-      // Start fading in bg2 when the animations section is at the bottom of the screen
+      // Apparition (Clients)
       const startFadeIn = windowHeight;
-      // Completely visible when it reaches the top/middle
       const endFadeIn = windowHeight * 0.2;
-
       let bg2Ratio = (startFadeIn - rect.top) / (startFadeIn - endFadeIn);
       bg2Ratio = Math.max(0, Math.min(1, bg2Ratio));
 
-      dynamicBg2.style.opacity = bg2Ratio * 0.1; // * 0.1 pour garder le même niveau d'opacité max que bg1
+      // Disparition (Portfolio)
+      if (portfolioSection) {
+        const portRect = portfolioSection.getBoundingClientRect();
+        // Start fading out when portfolio is near the bottom
+        const startFadeOut = windowHeight * 0.8;
+        const endFadeOut = windowHeight * 0.2;
+        let fadeOutRatio = (startFadeOut - portRect.top) / (startFadeOut - endFadeOut);
+        fadeOutRatio = Math.max(0, Math.min(1, fadeOutRatio));
+        bg2Ratio = bg2Ratio * (1 - fadeOutRatio);
+      }
+
+      dynamicBg2.style.opacity = bg2Ratio * 0.1;
     }
   };
 

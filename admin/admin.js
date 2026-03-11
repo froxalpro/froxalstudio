@@ -17,6 +17,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const submitClientBtn = document.getElementById("submit-client-btn");
   const uploadStatus = document.getElementById("upload-status");
 
+  // Elements Portfolio
+  const portfolioForm = document.getElementById("portfolio-form");
+  const portfolioTitleInput = document.getElementById("portfolio-title");
+  const portfolioDescInput = document.getElementById("portfolio-description");
+  const portfolioMediaTypeSelect = document.getElementById("portfolio-media-type");
+  const portfolioFileInput = document.getElementById("portfolio-file");
+  const portfolioExternalUrlInput = document.getElementById("portfolio-external-url");
+  const portfolioMediaPreview = document.getElementById("portfolio-media-preview");
+  const portfolioStatus = document.getElementById("portfolio-status");
+  const submitPortfolioBtn = document.getElementById("submit-portfolio-btn");
+  const cancelPortfolioBtn = document.getElementById("cancel-portfolio-btn");
+  const adminPortfolioList = document.getElementById("admin-portfolio-list");
+  const portfolioIdInput = document.getElementById("portfolio-id");
+  const portfolioTab = document.getElementById("portfolio-tab");
+
   // 1. Vérifier si l'utilisateur est déjà connecté au chargement
   async function checkSession() {
     try {
@@ -38,7 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   function showDashboard() {
     loginSection.classList.add("hidden");
     dashboardSection.classList.remove("hidden");
-    loadAdminClients(); // Ajout manquant pour charger les clients existants
+    loadAdminClients();
+    loadAdminPortfolio();
   }
 
   function showLogin() {
@@ -50,6 +66,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Lancer la vérification initiale
   checkSession();
+
+  // Gestion des Onglets
+  document.querySelectorAll(".admin-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Désactiver tous les onglets
+      document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
+      
+      // Activer l'onglet cliqué
+      tab.classList.add("active");
+      const target = tab.getAttribute("data-tab");
+      document.getElementById(target).classList.remove("hidden");
+    });
+  });
+
+  // Gestion du sélecteur de média Portfolio
+  portfolioMediaTypeSelect.addEventListener("change", (e) => {
+    if (e.target.value === "upload") {
+      document.getElementById("portfolio-upload-group").classList.remove("hidden");
+      document.getElementById("portfolio-external-group").classList.add("hidden");
+    } else {
+      document.getElementById("portfolio-upload-group").classList.add("hidden");
+      document.getElementById("portfolio-external-group").classList.remove("hidden");
+    }
+    updateMediaPreview();
+  });
 
   // 2. Gestion de la connexion
   loginForm.addEventListener("submit", async (e) => {
@@ -107,7 +149,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     showMessage("Upload de l'image en cours...", "");
 
     try {
-      // A) Upload de l'image dans le bucket 'clients'
       const fileExt = imageFile.name.split(".").pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `public/${fileName}`;
@@ -119,14 +160,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (uploadError) throw uploadError;
 
-      // B) Récupération de l'URL publique de l'image fraîchement uploadé
       const { data: publicRootUrl } = window.supabaseClient.storage
         .from("clients")
         .getPublicUrl(filePath);
 
       const publicUrl = publicRootUrl.publicUrl;
 
-      // C) Insertion de la nouvelle ligne dans la table SQL 'clients'
       showMessage("Image uploadée. Enregistrement...", "");
       const { error: insertError } = await window.supabaseClient
         .from("clients")
@@ -139,18 +178,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (insertError) throw insertError;
 
-      // Tout s'est bien passé
-      showMessage(
-        `Le client ${clientName} a été ajouté au portfolio avec succès !`,
-        "success",
-      );
+      showMessage(`Le client ${clientName} a été ajouté avec succès !`, "success");
       uploadForm.reset();
-      loadAdminClients(); // Rafraichir la liste
+      loadAdminClients();
     } catch (error) {
       console.error("Erreur d'ajout:", error);
       showMessage("Erreur : " + error.message, "error");
     } finally {
-      submitClientBtn.textContent = "Ajouter au Portfolio";
+      submitClientBtn.textContent = "Ajouter aux Clients";
       submitClientBtn.disabled = false;
     }
   });
@@ -171,8 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (error) throw error;
 
       if (!clients || clients.length === 0) {
-        listContainer.innerHTML =
-          "<p style='color: #888;'>Aucun client pour le moment.</p>";
+        listContainer.innerHTML = "<p style='color: #888;'>Aucun client pour le moment.</p>";
         return;
       }
 
@@ -181,14 +215,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const item = document.createElement("div");
         item.className = "client-list-item";
 
-        // On essaye d'extraire le nom du fichier pour la suppression du Storage plus tard
-        // L'URL ressemble à: .../storage/v1/object/public/clients/public/1712..._...jpg
         const filePathMatch = client.image_url.match(/clients\/(public\/.*)$/);
         const storagePath = filePathMatch ? filePathMatch[1] : null;
 
         item.innerHTML = `
           <div class="client-item-info">
-            <img src="${client.image_url}" alt="Logo" />
+            <img src="${client.image_url}" alt="Logo" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px; border: 1px solid #111;" />
             <span>${client.name}</span>
           </div>
           <div class="action-btns">
@@ -205,76 +237,239 @@ document.addEventListener("DOMContentLoaded", async () => {
         listContainer.appendChild(item);
       });
 
-      // Events - Suppression
-      document.querySelectorAll(".btn-delete").forEach((btn) => {
+      // Events Suppression Client
+      listContainer.querySelectorAll(".btn-delete").forEach((btn) => {
         btn.addEventListener("click", async (e) => {
-          if (
-            !confirm(
-              "Voulez-vous vraiment supprimer ce client de votre portfolio ?",
-            )
-          )
-            return;
-
-          const clientId = e.target.getAttribute("data-id");
-          const imagePath = e.target.getAttribute("data-path");
-
-          e.target.textContent = "...";
-          e.target.disabled = true;
-
+          if (!confirm("Voulez-vous vraiment supprimer ce client ?")) return;
+          const clientId = btn.getAttribute("data-id");
+          const imagePath = btn.getAttribute("data-path");
           try {
-            // 1. Supprimer l'image du Storage (si on a bien trouvé son chemin)
-            if (imagePath) {
-              await window.supabaseClient.storage
-                .from("clients")
-                .remove([imagePath]);
-            }
-
-            // 2. Supprimer la ligne de la BDD
-            const { error: delError } = await window.supabaseClient
-              .from("clients")
-              .delete()
-              .eq("id", clientId);
-
-            if (delError) throw delError;
-
-            showMessage("Client supprimé avec succès.", "success");
-            loadAdminClients(); // Rafraichissement
-          } catch (err) {
-            console.error("Erreur suppression:", err);
-            showMessage("Erreur lors de la suppression.", "error");
-            e.target.textContent = "Supprimer";
-            e.target.disabled = false;
-          }
+            if (imagePath) await window.supabaseClient.storage.from("clients").remove([imagePath]);
+            await window.supabaseClient.from("clients").delete().eq("id", clientId);
+            loadAdminClients();
+          } catch (err) { console.error(err); }
         });
       });
 
-      // Events - Édition
-      document.querySelectorAll(".btn-edit").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const id = e.target.getAttribute("data-id");
-          const name = e.target.getAttribute("data-name");
-          const img = e.target.getAttribute("data-img");
-          const path = e.target.getAttribute("data-path");
-          const isPartner = e.target.getAttribute("data-partner") === "true";
-          const description = e.target.getAttribute("data-description");
+       // Events Édition Client
+       listContainer.querySelectorAll(".btn-edit").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          const name = btn.getAttribute("data-name");
+          const description = btn.getAttribute("data-description");
+          const path = btn.getAttribute("data-path");
+          const isPartner = btn.getAttribute("data-partner") === "true";
 
           document.getElementById("edit-client-id").value = id;
           document.getElementById("edit-client-name").value = name;
           document.getElementById("edit-client-description").value = description;
-          document.getElementById("edit-client-old-image").value = path; // Pour la suppression de l'ancienne image si remplacée
+          document.getElementById("edit-client-old-image").value = path;
           document.getElementById("edit-client-is-partner").checked = isPartner;
-
           document.getElementById("edit-modal").classList.add("active");
         });
       });
-    } catch (err) {
-      console.error("Erreur chargement liste admin:", err);
-      listContainer.innerHTML =
-        "<p style='color: red;'>Erreur lors du chargement des clients.</p>";
+
+    } catch (err) { console.error(err); }
+  }
+
+  // --- LOGIQUE PORTFOLIO ---
+
+  async function loadAdminPortfolio() {
+    if (!adminPortfolioList) return;
+    adminPortfolioList.innerHTML = "<p style='color: #888;'>Chargement des projets...</p>";
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("portfolio")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        adminPortfolioList.innerHTML = "<p style='color: #888;'>Aucun projet dans le portfolio.</p>";
+        return;
+      }
+      adminPortfolioList.innerHTML = "";
+      data.forEach(project => {
+        const item = document.createElement("div");
+        item.className = "client-list-item";
+        item.innerHTML = `
+          <div class="client-item-info">
+            <span style="color: #ffcc00; margin-right: 10px;">[${project.media_format.toUpperCase()}]</span>
+            <span>${project.title || "Projet sans titre"}</span>
+          </div>
+          <div class="action-btns">
+            <button class="btn-primary btn-sm btn-edit-portfolio" data-id="${project.id}">Éditer</button>
+            <button class="btn-primary btn-sm btn-delete-portfolio" data-id="${project.id}">Supprimer</button>
+          </div>
+        `;
+        adminPortfolioList.appendChild(item);
+        
+        item.querySelector(".btn-edit-portfolio").onclick = () => editPortfolioProject(project);
+        item.querySelector(".btn-delete-portfolio").onclick = () => deletePortfolioProject(project);
+      });
+    } catch (err) { console.error(err); }
+  }
+
+  function editPortfolioProject(project) {
+    portfolioIdInput.value = project.id;
+    portfolioTitleInput.value = project.title || "";
+    portfolioDescInput.value = project.description || "";
+    portfolioMediaTypeSelect.value = project.media_type;
+    
+    if (project.media_type === "upload") {
+      document.getElementById("portfolio-upload-group").classList.remove("hidden");
+      document.getElementById("portfolio-external-group").classList.add("hidden");
+    } else {
+      document.getElementById("portfolio-upload-group").classList.add("hidden");
+      document.getElementById("portfolio-external-group").classList.remove("hidden");
+      portfolioExternalUrlInput.value = project.media_url;
+    }
+    
+    updateMediaPreview(project.media_url, project.media_format);
+    cancelPortfolioBtn.classList.remove("hidden");
+    submitPortfolioBtn.textContent = "Mettre à jour le Projet";
+    portfolioTab.scrollTop = 0;
+  }
+
+  async function deletePortfolioProject(project) {
+    if (!confirm("Supprimer ce projet du portfolio ?")) return;
+    try {
+      if (project.media_type === "upload") {
+        const path = project.media_url.split("/").pop();
+        await window.supabaseClient.storage.from("portfolio").remove([`public/${path}`]);
+      }
+      await window.supabaseClient.from("portfolio").delete().eq("id", project.id);
+      loadAdminPortfolio();
+    } catch (err) { console.error(err); }
+  }
+
+  cancelPortfolioBtn.onclick = () => {
+    portfolioForm.reset();
+    portfolioIdInput.value = "";
+    cancelPortfolioBtn.classList.add("hidden");
+    submitPortfolioBtn.textContent = "Sauvegarder le Projet";
+    portfolioMediaPreview.classList.add("hidden");
+  };
+
+  portfolioExternalUrlInput.oninput = () => updateMediaPreview();
+  portfolioFileInput.onchange = () => {
+    const file = portfolioFileInput.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const format = file.type.startsWith("video") ? "video" : "image";
+      updateMediaPreview(url, format);
+    }
+  };
+
+  function updateMediaPreview(manualUrl, manualFormat) {
+    let url = manualUrl || "";
+    let format = manualFormat || "";
+
+    if (!manualUrl) {
+      if (portfolioMediaTypeSelect.value === "external") {
+        url = portfolioExternalUrlInput.value.trim();
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+          const id = extractYoutubeId(url);
+          url = `https://www.youtube.com/embed/${id}`;
+          format = "iframe";
+        } else if (url.includes("vimeo.com")) {
+          const id = url.split("/").pop();
+          url = `https://player.vimeo.com/video/${id}`;
+          format = "iframe";
+        } else {
+          format = "image"; // Fallback
+        }
+      }
+    }
+
+    if (!url) {
+      portfolioMediaPreview.classList.add("hidden");
+      return;
+    }
+
+    portfolioMediaPreview.classList.remove("hidden");
+    if (format === "iframe") {
+      portfolioMediaPreview.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen></iframe>`;
+    } else if (format === "video") {
+      portfolioMediaPreview.innerHTML = `<video src="${url}" muted loop autoplay controls></video>`;
+    } else {
+      portfolioMediaPreview.innerHTML = `<img src="${url}" alt="Preview" />`;
     }
   }
 
-  // 6. Gestion du Modal d'édition
+  function extractYoutubeId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  portfolioForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const id = portfolioIdInput.value;
+    const title = portfolioTitleInput.value.trim();
+    const description = portfolioDescInput.value.trim();
+    const mediaType = portfolioMediaTypeSelect.value;
+    
+    submitPortfolioBtn.disabled = true;
+    portfolioStatus.textContent = "Sauvegarde en cours...";
+
+    try {
+      let mediaUrl = "";
+      let mediaFormat = "";
+
+      if (mediaType === "upload") {
+        const file = portfolioFileInput.files[0];
+        if (file) {
+          const fileExt = file.name.split(".").pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = `public/${fileName}`;
+          const { error: uploadError } = await window.supabaseClient.storage.from("portfolio").upload(filePath, file);
+          if (uploadError) throw uploadError;
+          const { data } = window.supabaseClient.storage.from("portfolio").getPublicUrl(filePath);
+          mediaUrl = data.publicUrl;
+          mediaFormat = file.type.startsWith("video") ? "video" : "image";
+        } else if (id) {
+          // Keep existing if editing and no new file
+          const { data, error: fetchError } = await window.supabaseClient.from("portfolio").select("media_url, media_format").eq("id", id).single();
+          if (fetchError) throw fetchError;
+          mediaUrl = data.media_url;
+          mediaFormat = data.media_format;
+        }
+      } else {
+        mediaUrl = portfolioExternalUrlInput.value.trim();
+        if (mediaUrl.includes("youtube") || mediaUrl.includes("youtu.be") || mediaUrl.includes("vimeo")) {
+          mediaFormat = "video";
+        } else {
+          mediaFormat = "image";
+        }
+      }
+
+      if (!mediaUrl) throw new Error("Média manquant");
+
+      const projectData = { title, description, media_type: mediaType, media_url: mediaUrl, media_format: mediaFormat };
+
+      if (id) {
+        const { error: updateError } = await window.supabaseClient.from("portfolio").update(projectData).eq("id", id);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await window.supabaseClient.from("portfolio").insert([projectData]);
+        if (insertError) throw insertError;
+      }
+
+      portfolioStatus.textContent = "Projet sauvegardé !";
+      portfolioForm.reset();
+      portfolioIdInput.value = "";
+      portfolioMediaPreview.classList.add("hidden");
+      loadAdminPortfolio();
+    } catch (err) {
+      console.error("Erreur portfolio submit:", err);
+      portfolioStatus.textContent = "Erreur: " + err.message;
+      alert("Erreur lors de la sauvegarde : " + err.message);
+    } finally {
+      submitPortfolioBtn.disabled = false;
+    }
+  };
+
+  // 6. Gestion du Modal d'édition Client
   const editModal = document.getElementById("edit-modal");
   const closeEditModalBtn = document.getElementById("close-edit-modal");
   const editForm = document.getElementById("edit-form");
@@ -289,7 +484,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const id = document.getElementById("edit-client-id").value;
     const oldPath = document.getElementById("edit-client-old-image").value;
     const newName = document.getElementById("edit-client-name").value.trim();
@@ -297,88 +491,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     const newImageFile = document.getElementById("edit-client-image").files[0];
     const isPartner = document.getElementById("edit-client-is-partner").checked;
 
-    if (!newName) {
-      editStatus.textContent = "Le nom est obligatoire.";
-      editStatus.className = "status-msg error";
-      return;
-    }
-
-    submitEditBtn.textContent = "Mise à jour...";
     submitEditBtn.disabled = true;
-    editStatus.textContent = "Modification en cours...";
-    editStatus.className = "status-msg";
-
     try {
       let finalImageUrl = undefined;
-
-      // Si l'utilisateur a uploadé une nouvelle image
       if (newImageFile) {
-        // Upload
         const fileExt = newImageFile.name.split(".").pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `public/${fileName}`;
-
-        const { error: uploadError } = await window.supabaseClient.storage
-          .from("clients")
-          .upload(filePath, newImageFile);
-
-        if (uploadError) throw uploadError;
-
-        // URL Publique
-        const { data: publicRootUrl } = window.supabaseClient.storage
-          .from("clients")
-          .getPublicUrl(filePath);
-        finalImageUrl = publicRootUrl.publicUrl;
-
-        // Cleanup de l'ancienne image asynchrone pour ne pas ralentir
-        if (oldPath && oldPath !== "null") {
-          window.supabaseClient.storage
-            .from("clients")
-            .remove([oldPath])
-            .catch((e) => console.error("Erreur nettoyage vieille image:", e));
-        }
+        await window.supabaseClient.storage.from("clients").upload(filePath, newImageFile);
+        const { data } = window.supabaseClient.storage.from("clients").getPublicUrl(filePath);
+        finalImageUrl = data.publicUrl;
+        if (oldPath && oldPath !== "null") window.supabaseClient.storage.from("clients").remove([oldPath]).catch(console.error);
       }
 
-      // Préparation de l'update
       const updateData = { name: newName, is_partner: isPartner, description: newDescription };
-      if (finalImageUrl) {
-        updateData.image_url = finalImageUrl;
-      }
+      if (finalImageUrl) updateData.image_url = finalImageUrl;
 
-      // Update Database
-      const { error: updateError } = await window.supabaseClient
-        .from("clients")
-        .update(updateData)
-        .eq("id", id);
-
-      if (updateError) throw updateError;
-
-      editStatus.textContent = "Client mis à jour avec succès !";
-      editStatus.className = "status-msg success";
-
-      setTimeout(() => {
-        editModal.classList.remove("active");
-        editForm.reset();
-        loadAdminClients(); // Rafraichissement
-      }, 1500);
-    } catch (err) {
-      console.error("Erreur édition:", err);
-      editStatus.textContent = "Erreur : " + err.message;
-      editStatus.className = "status-msg error";
-    } finally {
-      submitEditBtn.textContent = "Mettre à jour";
-      submitEditBtn.disabled = false;
-    }
+      await window.supabaseClient.from("clients").update(updateData).eq("id", id);
+      editModal.classList.remove("active");
+      loadAdminClients();
+    } catch (err) { console.error(err); }
+    finally { submitEditBtn.disabled = false; }
   });
 
   function showMessage(msg, type) {
     uploadStatus.textContent = msg;
     uploadStatus.className = `status-msg ${type}`;
-    // Fait disparaître les messages de succès après 5s
     if (type === "success") {
-      setTimeout(() => {
-        if (uploadStatus.textContent === msg) uploadStatus.textContent = "";
-      }, 5000);
+      setTimeout(() => { if (uploadStatus.textContent === msg) uploadStatus.textContent = ""; }, 5000);
     }
   }
 });
