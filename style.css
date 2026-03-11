@@ -31,18 +31,15 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Minecraft", sans-serif !important;
 }
 
-/* --- Base Styles --- */
 body {
     background-color: var(--bg-color);
-    /* Changed to --bg-dark in the instruction, but --bg-color is defined. Keeping --bg-color for consistency with existing variables. */
     color: var(--text-main);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
-    /* Needed for absolute pseudo-element */
+    font-family: "Minecraft", sans-serif;
 }
 
 /* Removed native scroll-behavior: smooth as Lenis library handles it now */
@@ -774,11 +771,20 @@ main {
 
 .hero-subtitle {
     font-size: 1.5rem;
-    color: var(--text-muted);
+    color: #ff9900;
     margin-bottom: 2.5rem;
-    font-weight: 400;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    /* Fallback lisible pour le texte long */
+    font-weight: bold;
+    font-family: "Minecraft Bold", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 300px;
+}
+
+.hero-subtitle span {
+    color: white;
+    font-family: "Minecraft Bold", sans-serif;
+    font-size: 1.5rem;
 }
 
 .hero-actions {
