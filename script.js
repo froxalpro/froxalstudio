@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       } else {
         clientsGrid.innerHTML =
-          "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin.html)</p>";
+          "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin)</p>";
       }
     } catch (err) {
       console.error("Erreur de chargement des clients :", err);
