@@ -1160,18 +1160,19 @@ main {
     padding: 0 !important;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
     cursor: default;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     width: 380px; 
     max-width: 90vw; /* Safety for small screens */
     margin: 0;
+    border-radius: 14px;
 }
 
 .portfolio-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.5), 0 10px 20px rgba(0, 0, 0, 0.6);
     border-top-color: #ffffff;
     border-left-color: #ffffff;
 }
@@ -1184,13 +1185,12 @@ main {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
+    border-radius: 6px;
 }
 
 .portfolio-media-wrapper img,
 .portfolio-media-wrapper video,
 .portfolio-media-wrapper iframe {
-    border-radius: 8px;
-    transition: box-shadow 0.2s ease, border-radius 0.2s ease;
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
@@ -1204,9 +1204,6 @@ main {
     transform: translate(-50%, -50%) !important;
     border: none !important;
     display: block !important;
-    /* Ensure rounded corners are applied */
-    overflow: hidden;
-
 }
 
 .portfolio-info {
@@ -1225,17 +1222,11 @@ main {
 }
 
 .portfolio-card:hover .portfolio-info {
-    /* existing */
-}
-
-/* Hover glow for media */
-.portfolio-card:hover .portfolio-media-wrapper img,
-.portfolio-card:hover .portfolio-media-wrapper video,
-.portfolio-card:hover .portfolio-media-wrapper iframe {
-    box-shadow: 0 0 12px rgba(255,255,255,0.3);
-}
     transform: translateY(0);
 }
+
+
+
 
 .portfolio-title {
     font-family: "Minecraft Bold", sans-serif;
