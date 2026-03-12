@@ -179,6 +179,30 @@
         font-size: 0.8rem;
         cursor: pointer;
       }
+      .media-preview-container {
+        margin: 1.5rem 0;
+        border: 2px dashed #444;
+        border-radius: 8px;
+        padding: 5px;
+        background: #000;
+        max-width: 100%;
+        max-height: 400px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .media-preview-container img,
+      .media-preview-container video {
+        max-width: 100%;
+        max-height: 380px;
+        object-fit: contain;
+      }
+      .media-preview-container iframe {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border: none;
+      }
     </style>
   </head>
 
@@ -463,6 +487,64 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../supabase-config.js"></script>
+    <!-- MODAL ÉDITION PORTFOLIO -->
+    <div id="portfolio-edit-modal" class="modal-overlay">
+      <div
+        class="modal-content"
+        style="
+          max-width: 600px;
+          padding: 2rem;
+          background-color: rgba(30, 30, 30, 0.95);
+          border: 2px solid #5a5a5a;
+          border-radius: 8px;
+        "
+      >
+        <button id="close-portfolio-edit-modal" class="close-btn">&times;</button>
+        <h2 class="admin-title" style="font-size: 1.5rem; margin-top: 1rem; color: #ffcc00;">
+          ÉDITER PROJET
+        </h2>
+        
+        <form id="portfolio-edit-form">
+          <input type="hidden" id="edit-portfolio-id" />
+          
+          <div class="form-group">
+            <label>Titre du projet</label>
+            <input type="text" id="edit-portfolio-title" class="admin-input" />
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="edit-portfolio-description" class="admin-textarea" style="height: 80px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Type de Média</label>
+            <select id="edit-portfolio-media-type" class="admin-input">
+              <option value="upload">Importer un fichier local</option>
+              <option value="external">Lien externe</option>
+            </select>
+          </div>
+
+          <div id="edit-portfolio-upload-group" class="form-group">
+            <label>Nouveau Fichier (Optionnel)</label>
+            <input type="file" id="edit-portfolio-file" class="admin-file" accept="image/*, video/*, image/gif" />
+          </div>
+
+          <div id="edit-portfolio-external-group" class="form-group hidden">
+            <label>Nouveau Lien Externe</label>
+            <input type="text" id="edit-portfolio-external-url" class="admin-input" />
+          </div>
+
+          <div id="edit-portfolio-media-preview" class="media-preview-container hidden"></div>
+
+          <button type="submit" id="submit-edit-portfolio-btn" class="btn-primary" style="width: 100%; font-family: 'Minecraft', sans-serif !important;">
+            Mettre à jour le Projet
+          </button>
+        </form>
+        <div id="edit-portfolio-status" class="status-msg"></div>
+      </div>
+    </div>
+
     <script src="admin.js"></script>
   </body>
 </html>

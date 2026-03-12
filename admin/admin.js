@@ -32,6 +32,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   const portfolioIdInput = document.getElementById("portfolio-id");
   const portfolioTab = document.getElementById("portfolio-tab");
 
+  // Elements du Modal d'édition Portfolio
+  const portfolioEditModal = document.getElementById("portfolio-edit-modal");
+  const closePortfolioEditModalBtn = document.getElementById("close-portfolio-edit-modal");
+  const portfolioEditForm = document.getElementById("portfolio-edit-form");
+  const editPortfolioIdInput = document.getElementById("edit-portfolio-id");
+  const editPortfolioTitleInput = document.getElementById("edit-portfolio-title");
+  const editPortfolioDescInput = document.getElementById("edit-portfolio-description");
+  const editPortfolioMediaTypeSelect = document.getElementById("edit-portfolio-media-type");
+  const editPortfolioFileInput = document.getElementById("edit-portfolio-file");
+  const editPortfolioExternalUrlInput = document.getElementById("edit-portfolio-external-url");
+  const editPortfolioMediaPreview = document.getElementById("edit-portfolio-media-preview");
+  const editPortfolioStatus = document.getElementById("edit-portfolio-status");
+  const submitEditPortfolioBtn = document.getElementById("submit-edit-portfolio-btn");
+
   // 1. Vérifier si l'utilisateur est déjà connecté au chargement
   async function checkSession() {
     try {
@@ -82,113 +96,121 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Gestion du sélecteur de média Portfolio
-  portfolioMediaTypeSelect.addEventListener("change", (e) => {
-    if (e.target.value === "upload") {
-      document.getElementById("portfolio-upload-group").classList.remove("hidden");
-      document.getElementById("portfolio-external-group").classList.add("hidden");
-    } else {
-      document.getElementById("portfolio-upload-group").classList.add("hidden");
-      document.getElementById("portfolio-external-group").classList.remove("hidden");
-    }
-    updateMediaPreview();
-  });
+  if (portfolioMediaTypeSelect) {
+    portfolioMediaTypeSelect.addEventListener("change", (e) => {
+      if (e.target.value === "upload") {
+        document.getElementById("portfolio-upload-group")?.classList.remove("hidden");
+        document.getElementById("portfolio-external-group")?.classList.add("hidden");
+      } else {
+        document.getElementById("portfolio-upload-group")?.classList.add("hidden");
+        document.getElementById("portfolio-external-group")?.classList.remove("hidden");
+      }
+      updateMediaPreview();
+    });
+  }
 
   // 2. Gestion de la connexion
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    loginStatus.textContent = "Connexion en cours...";
-    loginStatus.className = "status-msg";
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginStatus.textContent = "Connexion en cours...";
+      loginStatus.className = "status-msg";
 
-    try {
-      const { data, error } =
-        await window.supabaseClient.auth.signInWithPassword({
-          email: loginEmail.value,
-          password: loginPassword.value,
-        });
+      try {
+        const { data, error } =
+          await window.supabaseClient.auth.signInWithPassword({
+            email: loginEmail.value,
+            password: loginPassword.value,
+          });
 
-      if (error) {
-        console.error("Login error:", error);
-        loginStatus.textContent = "Erreur: " + error.message;
+        if (error) {
+          console.error("Login error:", error);
+          loginStatus.textContent = "Erreur: " + error.message;
+          loginStatus.className = "status-msg error";
+        } else {
+          loginStatus.textContent = "Succès ! Redirection...";
+          loginStatus.className = "status-msg success";
+          setTimeout(showDashboard, 1000);
+        }
+      } catch (err) {
+        console.error("Exception login:", err);
+        loginStatus.textContent = "Erreur inattendue: " + err.message;
         loginStatus.className = "status-msg error";
-      } else {
-        loginStatus.textContent = "Succès ! Redirection...";
-        loginStatus.className = "status-msg success";
-        setTimeout(showDashboard, 1000);
       }
-    } catch (err) {
-      console.error("Exception login:", err);
-      loginStatus.textContent = "Erreur inattendue: " + err.message;
-      loginStatus.className = "status-msg error";
-    }
-  });
+    });
+  }
 
   // 3. Gestion de la déconnexion
-  logoutBtn.addEventListener("click", async () => {
-    const { error } = await window.supabaseClient.auth.signOut();
-    if (!error) {
-      showLogin();
-    }
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      const { error } = await window.supabaseClient.auth.signOut();
+      if (!error) {
+        showLogin();
+      }
+    });
+  }
 
   // 4. Gestion de l'ajout d'un client
-  uploadForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  if (uploadForm) {
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const clientName = clientNameInput.value.trim();
-    const clientDescription = document.getElementById("client-description").value.trim();
-    const imageFile = clientImageInput.files[0];
-    const isPartner = document.getElementById("client-is-partner").checked;
+      const clientName = clientNameInput.value.trim();
+      const clientDescription = document.getElementById("client-description").value.trim();
+      const imageFile = clientImageInput.files[0];
+      const isPartner = document.getElementById("client-is-partner").checked;
 
-    if (!clientName || !imageFile) {
-      showMessage("Veuillez remplir tous les champs.", "error");
-      return;
-    }
+      if (!clientName || !imageFile) {
+        showMessage("Veuillez remplir tous les champs.", "error");
+        return;
+      }
 
-    submitClientBtn.textContent = "Téléchargement...";
-    submitClientBtn.disabled = true;
-    showMessage("Upload de l'image en cours...", "");
+      submitClientBtn.textContent = "Téléchargement...";
+      submitClientBtn.disabled = true;
+      showMessage("Upload de l'image en cours...", "");
 
-    try {
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
+      try {
+        const fileExt = imageFile.name.split(".").pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `public/${fileName}`;
 
-      const { data: uploadData, error: uploadError } =
-        await window.supabaseClient.storage
+        const { data: uploadData, error: uploadError } =
+          await window.supabaseClient.storage
+            .from("clients")
+            .upload(filePath, imageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicRootUrl } = window.supabaseClient.storage
           .from("clients")
-          .upload(filePath, imageFile);
+          .getPublicUrl(filePath);
 
-      if (uploadError) throw uploadError;
+        const publicUrl = publicRootUrl.publicUrl;
 
-      const { data: publicRootUrl } = window.supabaseClient.storage
-        .from("clients")
-        .getPublicUrl(filePath);
+        showMessage("Image uploadée. Enregistrement...", "");
+        const { error: insertError } = await window.supabaseClient
+          .from("clients")
+          .insert([{ 
+            name: clientName, 
+            image_url: publicUrl, 
+            is_partner: isPartner,
+            description: clientDescription 
+          }]);
 
-      const publicUrl = publicRootUrl.publicUrl;
+        if (insertError) throw insertError;
 
-      showMessage("Image uploadée. Enregistrement...", "");
-      const { error: insertError } = await window.supabaseClient
-        .from("clients")
-        .insert([{ 
-          name: clientName, 
-          image_url: publicUrl, 
-          is_partner: isPartner,
-          description: clientDescription 
-        }]);
-
-      if (insertError) throw insertError;
-
-      showMessage(`Le client ${clientName} a été ajouté avec succès !`, "success");
-      uploadForm.reset();
-      loadAdminClients();
-    } catch (error) {
-      console.error("Erreur d'ajout:", error);
-      showMessage("Erreur : " + error.message, "error");
-    } finally {
-      submitClientBtn.textContent = "Ajouter aux Clients";
-      submitClientBtn.disabled = false;
-    }
-  });
+        showMessage(`Le client ${clientName} a été ajouté avec succès !`, "success");
+        uploadForm.reset();
+        loadAdminClients();
+      } catch (error) {
+        console.error("Erreur d'ajout:", error);
+        showMessage("Erreur : " + error.message, "error");
+      } finally {
+        submitClientBtn.textContent = "Ajouter aux Clients";
+        submitClientBtn.disabled = false;
+      }
+    });
+  }
 
   // 5. Charger et afficher la liste des clients dans l'admin
   async function loadAdminClients() {
@@ -293,7 +315,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         item.className = "client-list-item";
         item.innerHTML = `
           <div class="client-item-info">
-            <span style="color: #ffcc00; margin-right: 10px;">[${project.media_format.toUpperCase()}]</span>
+            <span style="color: #ffcc00; margin-right: 10px;">[${(project.media_format || "IMAGE").toUpperCase()}]</span>
             <span>${project.title || "Projet sans titre"}</span>
           </div>
           <div class="action-btns">
@@ -310,24 +332,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function editPortfolioProject(project) {
-    portfolioIdInput.value = project.id;
-    portfolioTitleInput.value = project.title || "";
-    portfolioDescInput.value = project.description || "";
-    portfolioMediaTypeSelect.value = project.media_type;
+    if (!portfolioEditModal) return;
+
+    editPortfolioIdInput.value = project.id;
+    editPortfolioTitleInput.value = project.title || "";
+    editPortfolioDescInput.value = project.description || "";
+    editPortfolioMediaTypeSelect.value = project.media_type;
     
     if (project.media_type === "upload") {
-      document.getElementById("portfolio-upload-group").classList.remove("hidden");
-      document.getElementById("portfolio-external-group").classList.add("hidden");
+      document.getElementById("edit-portfolio-upload-group")?.classList.remove("hidden");
+      document.getElementById("edit-portfolio-external-group")?.classList.add("hidden");
+      editPortfolioExternalUrlInput.value = "";
     } else {
-      document.getElementById("portfolio-upload-group").classList.add("hidden");
-      document.getElementById("portfolio-external-group").classList.remove("hidden");
-      portfolioExternalUrlInput.value = project.media_url;
+      document.getElementById("edit-portfolio-upload-group")?.classList.add("hidden");
+      document.getElementById("edit-portfolio-external-group")?.classList.remove("hidden");
+      editPortfolioExternalUrlInput.value = project.media_url;
     }
     
-    updateMediaPreview(project.media_url, project.media_format);
-    cancelPortfolioBtn.classList.remove("hidden");
-    submitPortfolioBtn.textContent = "Mettre à jour le Projet";
-    portfolioTab.scrollTop = 0;
+    updateMediaPreview(project.media_url, project.media_format, true);
+    portfolioEditModal.classList.add("active");
   }
 
   async function deletePortfolioProject(project) {
@@ -342,31 +365,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) { console.error(err); }
   }
 
-  cancelPortfolioBtn.onclick = () => {
-    portfolioForm.reset();
-    portfolioIdInput.value = "";
-    cancelPortfolioBtn.classList.add("hidden");
-    submitPortfolioBtn.textContent = "Sauvegarder le Projet";
-    portfolioMediaPreview.classList.add("hidden");
-  };
+  if (cancelPortfolioBtn) {
+    cancelPortfolioBtn.onclick = () => {
+      portfolioForm.reset();
+      portfolioIdInput.value = "";
+      cancelPortfolioBtn.classList.add("hidden");
+      submitPortfolioBtn.textContent = "Sauvegarder le Projet";
+      portfolioMediaPreview.classList.add("hidden");
+    };
+  }
 
-  portfolioExternalUrlInput.oninput = () => updateMediaPreview();
-  portfolioFileInput.onchange = () => {
-    const file = portfolioFileInput.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      const format = file.type.startsWith("video") ? "video" : "image";
-      updateMediaPreview(url, format);
-    }
-  };
+  if (portfolioExternalUrlInput) {
+    portfolioExternalUrlInput.oninput = () => updateMediaPreview();
+  }
+  
+  if (portfolioFileInput) {
+    portfolioFileInput.onchange = () => {
+      const file = portfolioFileInput.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        const format = file.type.startsWith("video") ? "video" : "image";
+        updateMediaPreview(url, format);
+      }
+    };
+  }
 
-  function updateMediaPreview(manualUrl, manualFormat) {
+  function updateMediaPreview(manualUrl, manualFormat, isEdit = false) {
     let url = manualUrl || "";
     let format = manualFormat || "";
 
+    const previewDiv = isEdit ? editPortfolioMediaPreview : portfolioMediaPreview;
+    const mediaTypeSelect = isEdit ? editPortfolioMediaTypeSelect : portfolioMediaTypeSelect;
+    const externalUrlInput = isEdit ? editPortfolioExternalUrlInput : portfolioExternalUrlInput;
+
     if (!manualUrl) {
-      if (portfolioMediaTypeSelect.value === "external") {
-        url = portfolioExternalUrlInput.value.trim();
+      if (mediaTypeSelect.value === "external") {
+        url = externalUrlInput.value.trim();
         if (url.includes("youtube.com") || url.includes("youtu.be")) {
           const id = extractYoutubeId(url);
           url = `https://www.youtube.com/embed/${id}`;
@@ -382,17 +416,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (!url) {
-      portfolioMediaPreview.classList.add("hidden");
+      previewDiv?.classList.add("hidden");
       return;
     }
 
-    portfolioMediaPreview.classList.remove("hidden");
+    previewDiv?.classList.remove("hidden");
     if (format === "iframe") {
-      portfolioMediaPreview.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen></iframe>`;
+      previewDiv.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen></iframe>`;
     } else if (format === "video") {
-      portfolioMediaPreview.innerHTML = `<video src="${url}" muted loop autoplay controls></video>`;
+      previewDiv.innerHTML = `<video src="${url}" muted loop autoplay controls></video>`;
     } else {
-      portfolioMediaPreview.innerHTML = `<img src="${url}" alt="Preview" />`;
+      previewDiv.innerHTML = `<img src="${url}" alt="Preview" />`;
     }
   }
 
@@ -402,25 +436,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     return (match && match[2].length === 11) ? match[2] : null;
   }
 
-  portfolioForm.onsubmit = async (e) => {
-    e.preventDefault();
-    console.log("Formulaire Portfolio soumis !");
-    const id = portfolioIdInput.value;
-    const title = portfolioTitleInput.value.trim();
-    const description = portfolioDescInput.value.trim();
-    const mediaType = portfolioMediaTypeSelect.value;
-    
-    console.log("Données saisies:", { id, title, mediaType });
+  if (portfolioForm) {
+    console.log("Portfolio Form found:", portfolioForm);
+    portfolioForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      handlePortfolioSubmit(false);
+    });
+  }
 
-    submitPortfolioBtn.disabled = true;
-    portfolioStatus.textContent = "Sauvegarde en cours...";
+  if (portfolioEditForm) {
+    portfolioEditForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      handlePortfolioSubmit(true);
+    });
+  }
+
+  async function handlePortfolioSubmit(isEdit) {
+    const id = isEdit ? editPortfolioIdInput.value : portfolioIdInput.value;
+    const title = isEdit ? editPortfolioTitleInput.value.trim() : portfolioTitleInput.value.trim();
+    const description = isEdit ? editPortfolioDescInput.value.trim() : portfolioDescInput.value.trim();
+    const mediaType = isEdit ? editPortfolioMediaTypeSelect.value : portfolioMediaTypeSelect.value;
+    const fileInput = isEdit ? editPortfolioFileInput : portfolioFileInput;
+    const externalUrlInput = isEdit ? editPortfolioExternalUrlInput : portfolioExternalUrlInput;
+    const submitBtn = isEdit ? submitEditPortfolioBtn : submitPortfolioBtn;
+    const statusDiv = isEdit ? editPortfolioStatus : portfolioStatus;
+    const form = isEdit ? portfolioEditForm : portfolioForm;
+    const previewDiv = isEdit ? editPortfolioMediaPreview : portfolioMediaPreview;
+    const modal = isEdit ? portfolioEditModal : null;
+
+    submitBtn.disabled = true;
+    statusDiv.textContent = "Sauvegarde en cours...";
+    statusDiv.className = "status-msg";
 
     try {
       let mediaUrl = "";
       let mediaFormat = "";
 
       if (mediaType === "upload") {
-        const file = portfolioFileInput.files[0];
+        const file = fileInput.files[0];
         if (file) {
           const fileExt = file.name.split(".").pop();
           const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -431,14 +484,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           mediaUrl = data.publicUrl;
           mediaFormat = file.type.startsWith("video") ? "video" : "image";
         } else if (id) {
-          // Keep existing if editing and no new file
           const { data, error: fetchError } = await window.supabaseClient.from("portfolio").select("media_url, media_format").eq("id", id).single();
           if (fetchError) throw fetchError;
           mediaUrl = data.media_url;
           mediaFormat = data.media_format;
         }
       } else {
-        mediaUrl = portfolioExternalUrlInput.value.trim();
+        mediaUrl = externalUrlInput.value.trim();
         if (mediaUrl.includes("youtube") || mediaUrl.includes("youtu.be") || mediaUrl.includes("vimeo")) {
           mediaFormat = "video";
         } else {
@@ -458,19 +510,60 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (insertError) throw insertError;
       }
 
-      portfolioStatus.textContent = "Projet sauvegardé !";
-      portfolioForm.reset();
-      portfolioIdInput.value = "";
-      portfolioMediaPreview.classList.add("hidden");
+      statusDiv.textContent = "Projet sauvegardé !";
+      statusDiv.className = "status-msg success";
+      
+      if (isEdit) {
+        setTimeout(() => modal.classList.remove("active"), 1000);
+      } else {
+        form.reset();
+        previewDiv.classList.add("hidden");
+      }
+      
       loadAdminPortfolio();
     } catch (err) {
       console.error("Erreur portfolio submit:", err);
-      portfolioStatus.textContent = "Erreur: " + err.message;
-      alert("Erreur lors de la sauvegarde : " + err.message);
+      statusDiv.textContent = "Erreur: " + err.message;
+      statusDiv.className = "status-msg error";
     } finally {
-      submitPortfolioBtn.disabled = false;
+      submitBtn.disabled = false;
     }
-  };
+  }
+
+  // Event handlers for Edit Modal switches
+  if (editPortfolioMediaTypeSelect) {
+    editPortfolioMediaTypeSelect.addEventListener("change", (e) => {
+      if (e.target.value === "upload") {
+        document.getElementById("edit-portfolio-upload-group")?.classList.remove("hidden");
+        document.getElementById("edit-portfolio-external-group")?.classList.add("hidden");
+      } else {
+        document.getElementById("edit-portfolio-upload-group")?.classList.add("hidden");
+        document.getElementById("edit-portfolio-external-group")?.classList.remove("hidden");
+      }
+      updateMediaPreview(undefined, undefined, true);
+    });
+  }
+
+  if (editPortfolioExternalUrlInput) {
+    editPortfolioExternalUrlInput.oninput = () => updateMediaPreview(undefined, undefined, true);
+  }
+  
+  if (editPortfolioFileInput) {
+    editPortfolioFileInput.onchange = () => {
+      const file = editPortfolioFileInput.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        const format = file.type.startsWith("video") ? "video" : "image";
+        updateMediaPreview(url, format, true);
+      }
+    };
+  }
+
+  if (closePortfolioEditModalBtn) {
+    closePortfolioEditModalBtn.addEventListener("click", () => {
+      portfolioEditModal.classList.remove("active");
+    });
+  }
 
   // 6. Gestion du Modal d'édition Client
   const editModal = document.getElementById("edit-modal");
@@ -479,49 +572,55 @@ document.addEventListener("DOMContentLoaded", async () => {
   const editStatus = document.getElementById("edit-status");
   const submitEditBtn = document.getElementById("submit-edit-btn");
 
-  closeEditModalBtn.addEventListener("click", () => {
-    editModal.classList.remove("active");
-    editForm.reset();
-    editStatus.textContent = "";
-  });
-
-  editForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = document.getElementById("edit-client-id").value;
-    const oldPath = document.getElementById("edit-client-old-image").value;
-    const newName = document.getElementById("edit-client-name").value.trim();
-    const newDescription = document.getElementById("edit-client-description").value.trim();
-    const newImageFile = document.getElementById("edit-client-image").files[0];
-    const isPartner = document.getElementById("edit-client-is-partner").checked;
-
-    submitEditBtn.disabled = true;
-    try {
-      let finalImageUrl = undefined;
-      if (newImageFile) {
-        const fileExt = newImageFile.name.split(".").pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `public/${fileName}`;
-        await window.supabaseClient.storage.from("clients").upload(filePath, newImageFile);
-        const { data } = window.supabaseClient.storage.from("clients").getPublicUrl(filePath);
-        finalImageUrl = data.publicUrl;
-        if (oldPath && oldPath !== "null") window.supabaseClient.storage.from("clients").remove([oldPath]).catch(console.error);
-      }
-
-      const updateData = { name: newName, is_partner: isPartner, description: newDescription };
-      if (finalImageUrl) updateData.image_url = finalImageUrl;
-
-      await window.supabaseClient.from("clients").update(updateData).eq("id", id);
+  if (closeEditModalBtn) {
+    closeEditModalBtn.addEventListener("click", () => {
       editModal.classList.remove("active");
-      loadAdminClients();
-    } catch (err) { console.error(err); }
-    finally { submitEditBtn.disabled = false; }
-  });
+      editForm.reset();
+      if (editStatus) editStatus.textContent = "";
+    });
+  }
+
+  if (editForm) {
+    editForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("edit-client-id").value;
+      const oldPath = document.getElementById("edit-client-old-image").value;
+      const newName = document.getElementById("edit-client-name").value.trim();
+      const newDescription = document.getElementById("edit-client-description").value.trim();
+      const newImageFile = document.getElementById("edit-client-image").files[0];
+      const isPartner = document.getElementById("edit-client-is-partner").checked;
+
+      submitEditBtn.disabled = true;
+      try {
+        let finalImageUrl = undefined;
+        if (newImageFile) {
+          const fileExt = newImageFile.name.split(".").pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = `public/${fileName}`;
+          await window.supabaseClient.storage.from("clients").upload(filePath, newImageFile);
+          const { data } = window.supabaseClient.storage.from("clients").getPublicUrl(filePath);
+          finalImageUrl = data.publicUrl;
+          if (oldPath && oldPath !== "null") window.supabaseClient.storage.from("clients").remove([oldPath]).catch(console.error);
+        }
+
+        const updateData = { name: newName, is_partner: isPartner, description: newDescription };
+        if (finalImageUrl) updateData.image_url = finalImageUrl;
+
+        await window.supabaseClient.from("clients").update(updateData).eq("id", id);
+        editModal.classList.remove("active");
+        loadAdminClients();
+      } catch (err) { console.error(err); }
+      finally { submitEditBtn.disabled = false; }
+    });
+  }
 
   function showMessage(msg, type) {
-    uploadStatus.textContent = msg;
-    uploadStatus.className = `status-msg ${type}`;
-    if (type === "success") {
-      setTimeout(() => { if (uploadStatus.textContent === msg) uploadStatus.textContent = ""; }, 5000);
+    if (uploadStatus) {
+      uploadStatus.textContent = msg;
+      uploadStatus.className = `status-msg ${type}`;
+      if (type === "success") {
+        setTimeout(() => { if (uploadStatus.textContent === msg) uploadStatus.textContent = ""; }, 5000);
+      }
     }
   }
 });

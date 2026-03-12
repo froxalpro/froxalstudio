@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Portfolio loaded.");
+  let allPortfolioProjects = [];
+  let currentPortfolioIndex = -1;
 
   // -- 1. Load Supabase Clients FIRST to avoid UI script crashes --
   async function loadClients() {
@@ -24,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const { data: clients, error } = await window.supabaseClient
         .from("clients")
         .select("*")
+        .order("is_partner", { ascending: false })
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -57,6 +60,15 @@ document.addEventListener("DOMContentLoaded", () => {
         clientsGrid.innerHTML =
           "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun client ajouté pour le moment. (Créez-en un sur /admin)</p>";
       }
+      
+      // -- FitText application --
+      document.querySelectorAll(".client-name").forEach(nameElement => {
+        fitText(nameElement);
+      });
+      document.querySelectorAll(".client-description").forEach(descElement => {
+        fitText(descElement);
+      });
+
     } catch (err) {
       console.error("Erreur critique loadClients:", err);
       clientsGrid.innerHTML = `<p style='color: red; text-align: center; width: 100%; grid-column: 1/-1;'>Erreur de chargement: ${err.message}</p>`;
@@ -79,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
+      allPortfolioProjects = projects;
 
       if (!projects || projects.length === 0) {
         portfolioGrid.innerHTML = "<p style='color: #888; text-align: center; width: 100%; grid-column: 1/-1;'>Aucun projet portfolio pour le moment.</p>";
@@ -87,12 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       portfolioGrid.innerHTML = "";
       projects.forEach((project) => {
-        const item = document.createElement("div");
-        item.classList.add("portfolio-item", "reveal-up");
+        const card = document.createElement("div");
+        card.classList.add("portfolio-card", "fade-in-element", "visible");
 
         let mediaHtml = "";
         if (project.media_format === "video") {
-           // Si c'est un lien externe (YouTube/Vimeo)
            if (project.media_type === "external") {
               let embedUrl = project.media_url;
               if (embedUrl.includes("youtube.com") || embedUrl.includes("youtu.be")) {
@@ -110,23 +122,22 @@ document.addEventListener("DOMContentLoaded", () => {
           mediaHtml = `<img src="${project.media_url}" alt="${project.title || "Projet Portfolio"}" loading="lazy" />`;
         }
 
-        const infoHtml = (project.title || project.description) 
-          ? `<div class="portfolio-info">
-              ${project.title ? `<h3 class="portfolio-title">${project.title}</h3>` : ""}
-              ${project.description ? `<p class="portfolio-desc">${project.description}</p>` : ""}
-            </div>`
-          : "";
-
-        item.innerHTML = `
-          <div class="portfolio-media">${mediaHtml}</div>
-          ${infoHtml}
+        card.innerHTML = `
+          <div class="portfolio-media-wrapper">${mediaHtml}</div>
+          <div class="portfolio-info">
+            ${project.title ? `<div class="portfolio-title">${project.title}</div>` : ""}
+            ${project.description ? `<div class="portfolio-description">${project.description}</div>` : ""}
+          </div>
         `;
 
-        portfolioGrid.appendChild(item);
-      });
+        portfolioGrid.appendChild(card);
 
-      // Activer l'Intersection Observer pour les animations
-      initRevealObserver();
+        // -- Event Click Lightbox --
+        card.style.cursor = "pointer";
+        card.addEventListener("click", () => {
+          openLightboxByIndex(projects.indexOf(project));
+        });
+      });
 
     } catch (err) {
       console.error("Erreur portfolio:", err);
@@ -139,17 +150,101 @@ document.addEventListener("DOMContentLoaded", () => {
     return (match && match[2].length === 11) ? match[2] : null;
   }
 
-  function initRevealObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("active");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+  // --- LIGHTBOX PORTFOLIO ---
+  const lightbox = document.getElementById("portfolio-lightbox");
+  const lightboxMedia = document.getElementById("lightbox-media");
+  const lightboxTitle = document.getElementById("lightbox-title");
+  const lightboxDesc = document.getElementById("lightbox-description");
+  const closeLightboxBtn = document.getElementById("close-lightbox-btn");
 
-    document.querySelectorAll(".reveal-up").forEach(el => observer.observe(el));
+  const nextProjectBtn = document.getElementById("next-project-btn");
+  const prevProjectBtn = document.getElementById("prev-project-btn");
+
+  function openLightboxByIndex(index) {
+    if (index < 0 || index >= allPortfolioProjects.length) return;
+    currentPortfolioIndex = index;
+    updateLightboxContent();
+    lightbox.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function updateLightboxContent() {
+    const project = allPortfolioProjects[currentPortfolioIndex];
+    if (!project || !lightboxMedia) return;
+
+    const isVideo = project.media_url.match(/\.(mp4|webm|ogg|mov)$/i);
+    const isExternal = project.media_url.includes("youtube.com") || project.media_url.includes("youtu.be") || project.media_url.includes("vimeo.com");
+    
+    let type = "image";
+    if (isExternal) type = "iframe";
+    else if (isVideo) type = "video";
+
+    lightboxMedia.innerHTML = "";
+    if (type === "iframe") {
+      let embedUrl = project.media_url;
+      if (project.media_url.includes("youtube.com") || project.media_url.includes("youtu.be")) {
+        const id = extractYoutubeId(project.media_url);
+        embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      } else if (project.media_url.includes("vimeo.com")) {
+        const id = project.media_url.split("/").pop();
+        embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1`;
+      }
+      lightboxMedia.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    } else if (type === "video") {
+      lightboxMedia.innerHTML = `<video src="${project.media_url}" controls autoplay loop></video>`;
+    } else {
+      lightboxMedia.innerHTML = `<img src="${project.media_url}" alt="${project.title || "Portfolio"}">`;
+    }
+
+    if (lightboxTitle) lightboxTitle.textContent = project.title || "";
+    if (lightboxDesc) lightboxDesc.textContent = project.description || "";
+  }
+
+  function nextProject() {
+    currentPortfolioIndex = (currentPortfolioIndex + 1) % allPortfolioProjects.length;
+    updateLightboxContent();
+  }
+
+  function prevProject() {
+    currentPortfolioIndex = (currentPortfolioIndex - 1 + allPortfolioProjects.length) % allPortfolioProjects.length;
+    updateLightboxContent();
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove("active");
+    if (lightboxMedia) lightboxMedia.innerHTML = "";
+    document.body.style.overflow = ""; // Restore scroll
+    currentPortfolioIndex = -1;
+  }
+
+  if (closeLightboxBtn) closeLightboxBtn.addEventListener("click", closeLightbox);
+  if (nextProjectBtn) nextProjectBtn.addEventListener("click", (e) => { e.stopPropagation(); nextProject(); });
+  if (prevProjectBtn) prevProjectBtn.addEventListener("click", (e) => { e.stopPropagation(); prevProject(); });
+
+  if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-nav-container')) closeLightbox();
+    });
+  }
+
+  // Keyboard Navigation
+  document.addEventListener("keydown", (e) => {
+    if (!lightbox || !lightbox.classList.contains("active")) return;
+    if (e.key === "ArrowRight") nextProject();
+    if (e.key === "ArrowLeft") prevProject();
+    if (e.key === "Escape") closeLightbox();
+  });
+
+  // fitText: auto-shrink font size to fit container width and height
+  function fitText(el) {
+    let fontSize = parseFloat(window.getComputedStyle(el).fontSize);
+    // Safety limit to avoid infinite loop or too small text
+    // We check both horizontal and vertical overflow
+    while ((el.scrollWidth > el.offsetWidth || el.scrollHeight > el.offsetHeight) && fontSize > 7) {
+      fontSize -= 0.5;
+      el.style.fontSize = fontSize + "px";
+    }
   }
 
   // -- Mobile Menu Toggle --

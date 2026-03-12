@@ -149,7 +149,7 @@
 
       <!-- Section Portfolio -->
       <section id="portfolio" class="animations-section relative-container">
-        <div class="animations-content flex-col-center">
+        <div class="animations-content fade-in-element flex-col-center">
           <h2 class="section-title btn-dark" style="margin-bottom: 3rem;">PORTFOLIO</h2>
           <div id="portfolio-grid" class="portfolio-grid">
             <!-- Les projets du portfolio apparaitront ici -->
@@ -157,6 +157,24 @@
         </div>
       </section>
     </main>
+    <!-- Lightbox Portfolio -->
+    <div id="portfolio-lightbox" class="modal-overlay">
+      <div class="lightbox-content">
+        <button id="close-lightbox-btn" class="close-btn">&times;</button>
+        
+        <div class="lightbox-nav-container">
+          <button id="prev-project-btn" class="nav-arrow prev"></button>
+          <div id="lightbox-media"></div>
+          <button id="next-project-btn" class="nav-arrow next"></button>
+        </div>
+
+        <div class="lightbox-info">
+          <h3 id="lightbox-title"></h3>
+          <p id="lightbox-description"></p>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal Contact -->
     <div id="contact-modal" class="modal-overlay">
       <div class="modal-content">

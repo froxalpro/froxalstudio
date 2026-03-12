@@ -1008,6 +1008,8 @@ main {
         transform 0.2s ease,
         box-shadow 0.2s ease;
     cursor: default;
+    width: 280px;
+    max-width: 90vw;
 }
 
 .partner-badge {
@@ -1053,13 +1055,18 @@ main {
 }
 
 .client-name {
-    font-family: "Minecraft Bold", "Minecraft", sans-serif;
     color: white;
     text-shadow: 2px 2px 0px #3b3b3b;
     font-size: 1.2rem;
     text-align: center;
     text-transform: uppercase;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: "Minecraft Bold", sans-serif;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .client-description {
@@ -1069,30 +1076,44 @@ main {
     text-align: center;
     margin-top: 5px;
     word-break: break-word;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    line-height: 1.2;
     max-width: 100%;
 }
 
 /* Mobile Overrides (placed at the end to prevent desktop overrides) */
 @media screen and (max-width: 768px) {
+    .clients-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 1rem;
+    }
+
     .client-card {
-        padding: 0.2rem;
+        padding: 0.6rem;
         min-width: 0;
+        width: 100%;
         overflow: hidden;
     }
 
     .client-name {
-        font-size: 0.45rem; /* Even smaller to fit 3 columns */
+        font-size: 0.7rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
     }
 
     .client-description {
-        font-size: 0.35rem; /* Even smaller to fit 3 columns */
+        font-size: 0.6rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
-        margin-top: 1px;
+        margin-top: 2px;
     }
 
     .partner-badge {
@@ -1105,99 +1126,316 @@ main {
 
 /* --- Portfolio Section --- */
 #portfolio {
-    background-color: #0c0c0c; /* Très gris foncé */
-    border-top: 1px solid #ff9900; /* Ligne orange plus fine */
-    border-bottom: 1px solid #ff9900; /* Ligne orange plus fine */
-    padding: 8rem 0;
-    width: 100%;
+    padding: 120px 5% 60px; /* Increased top padding for header clearance */
+    background-color: transparent;
     position: relative;
-    z-index: 15; /* S'assure de passer au dessus des fonds dynamiques */
+    z-index: 10;
 }
+
 #portfolio .animations-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 5%;
+    max-width: 1100px;
+    width: 100%;
 }
 
 .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 2rem !important;
+    width: 100% !important;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto !important;
+    padding: 2rem 0 !important;
 }
 
-.portfolio-item {
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 12px;
-    overflow: hidden;
+.portfolio-card {
     position: relative;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background-color: #000;
+    border: 4px solid;
+    border-top-color: #d1d1d1;
+    border-left-color: #d1d1d1;
+    border-bottom-color: #1a1a1a;
+    border-right-color: #1a1a1a;
+    padding: 0 !important;
     display: flex;
     flex-direction: column;
-}
-
-.portfolio-item:hover {
-    transform: translateY(-10px);
-    border-color: #ff9900;
-    box-shadow: 0 10px 30px rgba(255, 153, 0, 0.2);
-}
-
-.portfolio-media {
-    width: 100%;
-    aspect-ratio: 16 / 9;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
     overflow: hidden;
-    background: #000;
+    aspect-ratio: 16 / 9;
+    width: 380px; 
+    max-width: 90vw; /* Safety for small screens */
+    margin: 0;
 }
 
-.portfolio-media img,
-.portfolio-media video,
-.portfolio-media iframe {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.portfolio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    border-top-color: #ffffff;
+    border-left-color: #ffffff;
+}
+
+.portfolio-media-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    background: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.portfolio-media-wrapper img,
+.portfolio-media-wrapper video,
+.portfolio-media-wrapper iframe {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 105% !important; /* Slight overfill to ensure no gaps */
+    height: 105% !important;
+    min-width: 105% !important;
+    min-height: 105% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    transform: translate(-50%, -50%) !important;
+    border: none !important;
+    display: block !important;
 }
 
 .portfolio-info {
-    padding: 20px;
-    background: rgba(0,0,0,0.5);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transform: translateY(100%); /* Hidden by default */
+    transition: transform 0.3s ease;
+    z-index: 5;
+}
+
+.portfolio-card:hover .portfolio-info {
+    transform: translateY(0);
 }
 
 .portfolio-title {
     font-family: "Minecraft Bold", sans-serif;
-    color: #ff9900;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    color: white;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+.portfolio-description {
+    font-family: "Minecraft", sans-serif;
+    color: #ffd700; /* Gold color for description on overlay */
+    font-size: 0.75rem;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+/* Mobile Overrides Portfolio */
+@media screen and (max-width: 900px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    #portfolio {
+        padding: 80px 1.5rem 40px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0;
+        width: 100%; /* Full width on mobile to maintain center */
+    }
+
+    .portfolio-card {
+        aspect-ratio: 16 / 9;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    /* Fixed overlay for mobile since hover is unreliable */
+    .portfolio-card .portfolio-info {
+        transform: translateY(0) !important;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+        padding: 1rem;
+    }
+
+    .portfolio-title {
+        font-size: 0.95rem;
+    }
+
+    .portfolio-description {
+        font-size: 0.75rem;
+    }
+
+}
+
+/* --- Lightbox --- */
+#portfolio-lightbox .lightbox-content {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    background: #0d0d0d;
+    border: 4px solid;
+    border-top-color: #d1d1d1;
+    border-left-color: #d1d1d1;
+    border-bottom-color: #1a1a1a;
+    border-right-color: #1a1a1a;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: zoomIn 0.3s ease-out;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+}
+
+#lightbox-media {
+    flex: 1;
+    aspect-ratio: 16/9;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.lightbox-nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    background: #000;
+}
+
+.nav-arrow {
+    width: 60px;
+    height: 60px;
+    background: url('images/UI/next.png') no-repeat center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+    opacity: 0.7;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.nav-arrow:hover {
+    opacity: 1;
+    filter: brightness(1.2);
+}
+
+.nav-arrow.prev {
+    transform: scaleX(-1);
+    margin-left: 10px;
+}
+
+.nav-arrow.prev:hover {
+    transform: scaleX(-1) scale(1.1);
+}
+
+.nav-arrow.next {
+    margin-right: 10px;
+}
+
+.nav-arrow.next:hover {
+    transform: scale(1.1);
+}
+
+#lightbox-media img,
+#lightbox-media video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#lightbox-media iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.lightbox-info {
+    padding: 1.5rem;
+    background: #111;
+    border-top: 4px solid #333;
+}
+
+#lightbox-title {
+    color: #ff9b36;
+    font-family: "Minecraft Bold", sans-serif;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
     text-transform: uppercase;
 }
 
-.portfolio-desc {
-    color: #ccc;
-    font-size: 0.9rem;
+#lightbox-description {
+    color: var(--text-muted);
+    font-size: 1rem;
     line-height: 1.4;
 }
 
-/* --- Reveal Animation --- */
-.reveal-up {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s ease-out;
-}
-
-.reveal-up.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
+/* --- MOBILE OPTIMIZATIONS FOR LIGHTBOX --- */
 @media screen and (max-width: 768px) {
-    .portfolio-grid {
-        grid-template-columns: 1fr;
+    .lightbox-content {
+        width: 95%;
+        max-height: 95vh;
+        margin: 5px;
     }
-    #portfolio {
-        padding: 2rem 1rem;
+
+    .nav-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-arrow.prev {
+        margin-left: 5px;
+    }
+
+    .nav-arrow.next {
+        margin-right: 5px;
+    }
+
+    .lightbox-info {
+        padding: 0.8rem;
+    }
+
+    #lightbox-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.2rem;
+    }
+
+    #lightbox-description {
+        font-size: 0.8rem;
+        line-height: 1.3;
     }
 }
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 
