@@ -564,11 +564,6 @@ main {
 
 .project-card {
     background-color: #1f2833;
-    border: 4px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #111111;
-    border-right-color: #111111;
     padding: 1rem;
     width: 100%;
     max-width: 400px;
@@ -577,7 +572,7 @@ main {
 }
 
 .project-card:hover {
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
 }
 
 .project-video-placeholder {
@@ -994,13 +989,8 @@ main {
 .client-card {
     position: relative;
     /* Pour positionner le badge */
-    background-color: #7a7a7a;
-    border: 4px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #3b3b3b;
-    border-right-color: #3b3b3b;
-    padding: 1rem;
+    background-color: transparent;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1010,6 +1000,8 @@ main {
     cursor: default;
     width: 280px;
     max-width: 90vw;
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 .partner-badge {
@@ -1023,28 +1015,39 @@ main {
     filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
 }
 
+.client-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 5;
+}
+
+.client-card:hover .client-info {
+    transform: translateY(0);
+}
+
 .client-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-    border-top-color: #ffffff;
-    border-left-color: #ffffff;
-    border-bottom-color: #555;
-    border-right-color: #555;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
 .client-logo-wrapper {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #222;
-    border: 2px solid #111;
-    border-bottom-color: #444;
-    border-right-color: #444;
-    margin-bottom: 1rem;
+    background: transparent;
+    margin-bottom: 0;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 0;
 }
 
 .client-logo {
@@ -1056,34 +1059,22 @@ main {
 
 .client-name {
     color: white;
-    text-shadow: 2px 2px 0px #3b3b3b;
-    font-size: 1.2rem;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    font-size: 1.1rem;
     text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     font-family: "Minecraft Bold", sans-serif;
-    height: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .client-description {
     font-family: "Minecraft", sans-serif;
-    color: #aaaaaa;
+    color: #ffd700;
     font-size: 0.8rem;
     text-align: center;
     margin-top: 5px;
     word-break: break-word;
-    height: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: hidden;
-    line-height: 1.2;
-    max-width: 100%;
 }
 
 /* Mobile Overrides (placed at the end to prevent desktop overrides) */
@@ -1152,11 +1143,6 @@ main {
 .portfolio-card {
     position: relative;
     background-color: #000;
-    border: 4px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #1a1a1a;
-    border-right-color: #1a1a1a;
     padding: 0 !important;
     display: flex;
     flex-direction: column;
@@ -1172,9 +1158,7 @@ main {
 
 .portfolio-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(102, 252, 241, 0.5), 0 10px 20px rgba(0, 0, 0, 0.6);
-    border-top-color: #ffffff;
-    border-left-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
 .portfolio-media-wrapper {

@@ -49,8 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="client-logo-wrapper">
               <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
             </div>
-            <div class="client-name">${client.name}</div>
-            ${client.description ? `<div class="client-description">${client.description}</div>` : ""}
+            <div class="client-info">
+              <div class="client-name">${client.name}</div>
+              ${client.description ? `<div class="client-description">${client.description}</div>` : ""}
+            </div>
           `;
 
           clientsGrid.appendChild(card);
