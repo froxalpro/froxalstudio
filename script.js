@@ -619,5 +619,19 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", window.updateOpacityOnScroll);
   window.updateOpacityOnScroll();
 
+  // --- Forcer l'autoplay de la vidéo "About" sur mobile ---
+  const profileVid = document.getElementById("profile-video");
+  if (profileVid) {
+    const playVideo = () => {
+      profileVid.play().catch(error => {
+        console.log("Autoplay bloqué par le navigateur, réessai au premier clic.");
+      });
+    };
+    
+    playVideo();
+    // Fallback: jouer au premier clic sur la page si autoplay bloqué
+    document.addEventListener("click", playVideo, { once: true });
+  }
+
   // (L'ancienne fonction loadClients a été déplacée au début de ce fichier pour éviter les interférences JS)
 });

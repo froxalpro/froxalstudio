@@ -1093,19 +1093,9 @@ main {
         overflow: hidden;
     }
 
-    .client-name {
-        font-size: 1.8rem; /* Slightly reduced for 2-column layout */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-    }
-
+    .client-name,
     .client-description {
-        font-size: 1.5rem; /* Slightly reduced for 2-column layout */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-        margin-top: 2px;
+        display: none !important;
     }
 
     .partner-badge {
@@ -1283,13 +1273,17 @@ main {
     opacity: 0.9;
 }
 
-/* Mobile Overrides Portfolio */
 @media screen and (max-width: 900px) {
     .portfolio-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
         padding: 1rem;
+    }
+
+    /* Hide portfolio text on mobile as requested */
+    .portfolio-info {
+        display: none !important;
     }
 }
 
