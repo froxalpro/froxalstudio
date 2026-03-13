@@ -619,18 +619,52 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", window.updateOpacityOnScroll);
   window.updateOpacityOnScroll();
 
-  // --- Forcer l'autoplay de la vidéo "About" sur mobile ---
+  // --- Forcer l'autoplay et le loop de la vidéo "About" sur mobile ---
   const profileVid = document.getElementById("profile-video");
   if (profileVid) {
-    const playVideo = () => {
-      profileVid.play().catch(error => {
-        console.log("Autoplay bloqué par le navigateur, réessai au premier clic.");
-      });
+    // S'assurer que les propriétés vitales sont forcées par JS
+    profileVid.muted = true;
+    profileVid.loop = true;
+    profileVid.playsInline = true;
+
+    const forcePlay = () => {
+      if (profileVid.paused) {
+        profileVid.play().then(() => {
+          console.log("Lecture forcée réussie.");
+          // Une fois que ça joue, on peut retirer les listeners "d'urgence"
+          removeUrgentListeners();
+        }).catch(err => {
+          console.log("Lecture toujours bloquée par le navigateur.");
+        });
+      }
     };
+
+    const removeUrgentListeners = () => {
+      document.removeEventListener("touchstart", forcePlay);
+      document.removeEventListener("click", forcePlay);
+      window.removeEventListener("scroll", forcePlay);
+    };
+
+    // Tentative initiale
+    forcePlay();
+
+    // Listeners sur plusieurs interactions pour déclencher dès que possible
+    document.addEventListener("click", forcePlay, { once: true });
+    document.addEventListener("touchstart", forcePlay, { once: true });
+    window.addEventListener("scroll", forcePlay, { once: true });
+
+    // Sécurité : si la boucle native échoue (arrive parfois sur mobile)
+    profileVid.addEventListener("ended", () => {
+      profileVid.currentTime = 0;
+      profileVid.play();
+    });
     
-    playVideo();
-    // Fallback: jouer au premier clic sur la page si autoplay bloqué
-    document.addEventListener("click", playVideo, { once: true });
+    // Vérification périodique (utile si le mode économie d'énergie met en pause la vidéo)
+    setInterval(() => {
+      if (profileVid.paused && !profileVid.ended) {
+        forcePlay();
+      }
+    }, 2000);
   }
 
   // (L'ancienne fonction loadClients a été déplacée au début de ce fichier pour éviter les interférences JS)
