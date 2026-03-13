@@ -269,12 +269,14 @@ main {
 /* --- Hero Section --- */
 .hero-section {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    /* Fixe en haut */
-    padding: 100px 5% 0;
-    /* Padding top for navbar spacing */
+    align-items: center;
     min-height: 100vh;
+    text-align: center;
+    padding: 100px 5% 2rem; /* Added bottom padding but keep it tight */
+    position: relative;
+    z-index: 10;
 }
 
 .logo-wrapper {
@@ -365,12 +367,9 @@ main {
     border-bottom: 2px solid #333;
     position: sticky;
     top: 96px;
-    /* Ajusté via JS pour correspondre au header */
     z-index: 99;
-    /* Juste en dessous du header (100) */
     overflow: hidden;
     margin-bottom: 2rem;
-    /* Espace avant le About Me */
 }
 
 .scroll-progress-bar {
@@ -544,7 +543,9 @@ main {
 
 #clients .section-title {
     color: #2596be;
-    /* L'un des bleus utilisés plus tôt pour le hamburger, ou un beau bleu Hytale */
+    text-align: center;
+    width: 100%;
+    margin-left: 10px; /* Shifted 10px as requested */
 }
 
 .flex-col-center {
@@ -572,7 +573,7 @@ main {
 }
 
 .project-card:hover {
-    /* transform: translateY(-5px); */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Subtle shadow on hover */
 }
 
 .project-video-placeholder {
@@ -644,9 +645,15 @@ main {
     }
 
     /* Ajustements généraux */
+    .scroll-progress-container {
+        margin-bottom: 0; /* Remove gap to delimit perfectly between image and black background */
+        top: 0; /* Fallback before JS calculates it */
+    }
+
     .hero-section {
         padding-top: 130px;
-        /* Plus d'espace pour que le logo ne colle pas la nav mobile */
+        padding-bottom: 0; /* Ensure it touch the progress bar */
+        min-height: 100vh;
     }
 
     .about-grid {
@@ -704,16 +711,7 @@ main {
     min-height: 100vh;
 }
 
-.hero-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 80px);
-    text-align: center;
-    padding: 2rem 5%;
-    position: relative;
-}
+/* Hero section merged above */
 
 /* Background gradient effect */
 .hero-section::before {
@@ -959,11 +957,12 @@ main {
 
 /* --- Clients Section --- */
 .clients-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 2rem;
     width: 100%;
-    max-width: 900px;
+    max-width: 1200px; /* Increased max-width to allow more cards if needed */
     margin: 0 auto;
     padding: 2rem;
 }
@@ -1061,7 +1060,7 @@ main {
 .client-name {
     color: white;
     text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-    font-size: 1.1rem;
+    font-size: 6.5rem; /* Massive increase as requested */
     text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
@@ -1072,7 +1071,7 @@ main {
 .client-description {
     font-family: "Minecraft", sans-serif;
     color: #ffd700;
-    font-size: 0.8rem;
+    font-size: 4.5rem; /* Massive increase as requested */
     text-align: center;
     margin-top: 5px;
     word-break: break-word;
@@ -1081,6 +1080,7 @@ main {
 /* Mobile Overrides (placed at the end to prevent desktop overrides) */
 @media screen and (max-width: 768px) {
     .clients-grid {
+        display: grid; /* Explicitly set grid to override flex */
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         padding: 1rem;
@@ -1094,14 +1094,14 @@ main {
     }
 
     .client-name {
-        font-size: 0.7rem;
+        font-size: 1.8rem; /* Slightly reduced for 2-column layout */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
     }
 
     .client-description {
-        font-size: 0.6rem;
+        font-size: 1.5rem; /* Slightly reduced for 2-column layout */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
@@ -1119,7 +1119,7 @@ main {
 /* --- Portfolio Section --- */
 #portfolio {
     padding: 120px 5% 60px; /* Increased top padding for header clearance */
-    background-color: transparent;
+    background-color: transparent; /* Background follows the border frame */
     position: relative;
     z-index: 10;
 }
@@ -1129,16 +1129,57 @@ main {
     width: 100%;
 }
 
+/* Portfolio border restored as a frame at site edges */
+/* Delimits the background #1d2029 */
+#portfolio::before {
+    content: "";
+    position: absolute;
+    top: -110px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #13151c;
+    z-index: -1;
+    opacity: var(--portfolio-border-opacity, 0);
+    transition: opacity 0.3s ease-out;
+}
+
+#portfolio::after {
+    content: "";
+    position: absolute;
+    top: -110px; /* Midpoint between Clients (100px bottom pad) and Portfolio (120px top pad) */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #ff9b36;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: inset 0 0 15px rgba(255, 155, 54, 0.2);
+    opacity: var(--portfolio-border-opacity, 0);
+    transition: opacity 0.3s ease-out;
+}
+
+@media screen and (max-width: 768px) {
+    #portfolio::before,
+    #portfolio::after {
+        top: -100px; /* Adjust for mobile padding differences if any */
+    }
+    
+    #portfolio::after {
+        border-width: 1.5px;
+    }
+}
+
 .portfolio-grid {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 2rem !important;
-    width: 100% !important;
+    display: flex; /* Removed !important to allow grid override in media queries */
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    width: 100%;
     max-width: 1200px;
-    margin: 0 auto !important;
-    padding: 2rem 0 !important;
+    margin: 0 auto;
+    padding: 2rem 0;
 }
 
 .portfolio-card {
@@ -1155,6 +1196,18 @@ main {
     max-width: 90vw; /* Safety for small screens */
     margin: 0;
     border-radius: 14px;
+}
+
+.media-type-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    z-index: 15;
+    pointer-events: none;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
 }
 
 .portfolio-card:hover {
@@ -1189,6 +1242,7 @@ main {
     transform: translate(-50%, -50%) !important;
     border: none !important;
     display: block !important;
+    pointer-events: none !important; /* Allow clicks to pass through to the card */
 }
 
 .portfolio-info {
@@ -1232,45 +1286,47 @@ main {
 /* Mobile Overrides Portfolio */
 @media screen and (max-width: 900px) {
     .portfolio-grid {
+        display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
+        padding: 1rem;
     }
 }
 
 @media screen and (max-width: 650px) {
     #portfolio {
-        padding: 80px 1.5rem 40px;
+        padding: 80px 1rem 40px;
     }
 
     .portfolio-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 columns as requested */
+        gap: 0.8rem; /* Smaller gap for mobile 2-col */
         padding: 0;
-        width: 100%; /* Full width on mobile to maintain center */
+        width: 100%;
     }
 
     .portfolio-card {
         aspect-ratio: 16 / 9;
         width: 100%;
-        max-width: 450px;
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0;
     }
 
     /* Fixed overlay for mobile since hover is unreliable */
     .portfolio-card .portfolio-info {
         transform: translateY(0) !important;
         background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
-        padding: 1rem;
+        padding: 0.5rem; /* Smaller padding */
     }
 
     .portfolio-title {
-        font-size: 0.95rem;
+        font-size: 0.7rem; /* Smaller title for 2-col */
     }
 
     .portfolio-description {
-        font-size: 0.75rem;
+        font-size: 0.6rem; /* Smaller description */
     }
-
 }
 
 /* --- Lightbox --- */

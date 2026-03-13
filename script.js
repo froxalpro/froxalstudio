@@ -100,12 +100,26 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Group: Videos first, then Photos
+      projects.sort((a, b) => {
+        const aIsVideo = a.media_format === "video";
+        const bIsVideo = b.media_format === "video";
+        if (aIsVideo && !bIsVideo) return -1;
+        if (!aIsVideo && bIsVideo) return 1;
+        return 0;
+      });
+
+      allPortfolioProjects = projects;
+
       portfolioGrid.innerHTML = "";
       projects.forEach((project) => {
         const card = document.createElement("div");
         card.classList.add("portfolio-card", "fade-in-element", "visible");
 
         let mediaHtml = "";
+        const iconSrc = project.media_format === "video" ? "images/UI/animation.png" : "images/UI/photo.png";
+        const iconAlt = project.media_format === "video" ? "Vidéo" : "Photo";
+
         if (project.media_format === "video") {
            if (project.media_type === "external") {
               let embedUrl = project.media_url;
@@ -125,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         card.innerHTML = `
+          <img src="${iconSrc}" alt="${iconAlt}" class="media-type-icon" />
           <div class="portfolio-media-wrapper">${mediaHtml}</div>
           <div class="portfolio-info">
             ${project.title ? `<div class="portfolio-title">${project.title}</div>` : ""}
@@ -584,6 +599,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       dynamicBg2.style.opacity = bg2Ratio * 0.1;
+    }
+
+    // 4. Apparition progressive du contour Portfolio
+    if (portfolioSection) {
+      const rect = portfolioSection.getBoundingClientRect();
+      // On commence à faire apparaître le contour un peu avant d'arriver sur la section
+      const startFadeBorder = windowHeight * 1.2;
+      const endFadeBorder = windowHeight * 0.4;
+      
+      let borderRatio = (startFadeBorder - rect.top) / (startFadeBorder - endFadeBorder);
+      borderRatio = Math.max(0, Math.min(1, borderRatio));
+      
+      portfolioSection.style.setProperty('--portfolio-border-opacity', borderRatio);
     }
   };
 
