@@ -667,5 +667,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
   }
 
+  // --- Particules Oranges Brillantes pour Portfolio ---
+  function initPortfolioParticles() {
+    const portfolio = document.getElementById("portfolio");
+    if (!portfolio) return;
+
+    // Créer un conteneur pour les particules
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.width = "100%";
+    container.style.height = "100%";
+    container.style.pointerEvents = "none";
+    container.style.zIndex = "1"; // Behind content
+    portfolio.appendChild(container);
+
+    const particleCount = 20;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.className = "portfolio-particle";
+
+      // Taille aléatoire entre 4px et 10px
+      const size = Math.random() * 6 + 4;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // Position aléatoire
+      particle.style.top = `${Math.random() * 100}%`;
+      particle.style.left = `${Math.random() * 100}%`;
+
+      // Délai d'animation aléatoire
+      particle.style.animationDelay = `${Math.random() * 8}s`;
+      particle.style.animationDuration = `${Math.random() * 4 + 6}s`;
+
+      container.appendChild(particle);
+    }
+  }
+
+  initPortfolioParticles();
+
   // (L'ancienne fonction loadClients a été déplacée au début de ce fichier pour éviter les interférences JS)
 });

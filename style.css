@@ -1117,6 +1117,8 @@ main {
 #portfolio .animations-content {
     max-width: 1100px;
     width: 100%;
+    position: relative;
+    z-index: 10; /* Above particles */
 }
 
 /* Portfolio border restored as a frame at site edges */
@@ -1478,4 +1480,30 @@ main {
     }
 }
 
+/* --- Portfolio Particles --- */
+#portfolio {
+    overflow: hidden; /* Prevent particles from causing scrollbars */
+}
+
+.portfolio-particle {
+    position: absolute;
+    background-color: #ff9b36;
+    /* Removed border-radius for square pixel look */
+    pointer-events: none;
+    z-index: 1; /* Behind content */
+    box-shadow: 0 0 10px #ff9b36, 0 0 20px rgba(255, 155, 54, 0.5);
+    animation: float-twinkle 8s infinite ease-in-out;
+    opacity: 0.6;
+}
+
+@keyframes float-twinkle {
+    0%, 100% {
+        transform: translate(0, 0);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(20px, -30px);
+        opacity: 0.8;
+    }
+}
 
