@@ -115,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       projects.forEach((project) => {
         const card = document.createElement("div");
         card.classList.add("portfolio-card", "fade-in-element", "visible");
+        card.setAttribute("data-format", project.media_format); // image or video
 
         let mediaHtml = "";
         const iconSrc = project.media_format === "video" ? "images/UI/animation.png" : "images/UI/photo.png";
@@ -156,6 +157,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
+      // -- Setup Filtering --
+      setupPortfolioFilters();
+
     } catch (err) {
       console.error("Erreur portfolio:", err);
     }
@@ -165,6 +169,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  function setupPortfolioFilters() {
+    const triggerBtn = document.getElementById("filter-trigger-btn");
+    const dropdown = document.getElementById("filter-dropdown");
+    const filterButtons = document.querySelectorAll(".filter-dropdown .filter-btn");
+    const portfolioCards = document.querySelectorAll(".portfolio-card");
+
+    if (!triggerBtn || !dropdown) return;
+
+    // Toggle dropdown
+    triggerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("active");
+    });
+
+    // Close dropdown when selecting a filter
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const filterValue = btn.getAttribute("data-filter");
+
+        // Update active button UI
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Apply filtering
+        portfolioCards.forEach(card => {
+          const format = card.getAttribute("data-format");
+          
+          if (filterValue === "all" || format === filterValue) {
+            card.classList.remove("hidden-filter");
+          } else {
+            card.classList.add("hidden-filter");
+          }
+        });
+
+        // Close dropdown
+        dropdown.classList.remove("active");
+      });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && e.target !== triggerBtn) {
+        dropdown.classList.remove("active");
+      }
+    });
   }
 
   // --- LIGHTBOX PORTFOLIO ---
@@ -679,6 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.style.left = "0";
     container.style.width = "100%";
     container.style.height = "100%";
+    container.style.overflow = "hidden"; // Contain particles locally
     container.style.pointerEvents = "none";
     container.style.zIndex = "1"; // Behind content
     portfolio.appendChild(container);
