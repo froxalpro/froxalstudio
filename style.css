@@ -1289,51 +1289,60 @@ main {
     }
 }
 
-/* Portfolio Filter Styles (Dropdown) */
-.portfolio-filter-container {
-    margin-top: 4rem;
+/* Portfolio Tabs Styles */
+.portfolio-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    z-index: 100;
     position: relative;
-    z-index: 100; /* Must be above particles and grid */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
 }
 
-#filter-trigger-btn {
+.portfolio-tabs .filter-btn {
+    background-color: #7a7a7a;
+    border: 2px solid;
+    border-top-color: #d1d1d1;
+    border-left-color: #d1d1d1;
+    border-bottom-color: #3b3b3b;
+    border-right-color: #3b3b3b;
+    padding: 0.8rem 1.5rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #3b3b3b;
+    font-size: 0.9rem;
+    font-family: "Minecraft Bold", sans-serif;
+    text-transform: uppercase;
     cursor: pointer;
-    z-index: 101;
+    image-rendering: pixelated;
+    transition: all 0.1s ease;
 }
 
-.filter-dropdown {
-    position: absolute;
-    bottom: calc(100% + 15px); /* Opens upwards */
-    background: rgba(19, 21, 28, 0.95);
-    border: 2px solid #333;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 155, 54, 0.1);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 160px;
+.portfolio-tabs .filter-btn:hover {
+    background-color: #6d7bd2;
+    border-top-color: #ffffff;
+    border-left-color: #ffffff;
+    border-bottom-color: #7c8ae2;
+    border-right-color: #7c8ae2;
 }
 
-.filter-dropdown.active {
-    opacity: 1;
-    pointer-events: all;
-    transform: translateY(0);
+.portfolio-tabs .filter-btn.active {
+    background-color: #2b7a78; /* Primary theme color for active tab */
+    border-top-color: #3aaeac;
+    border-left-color: #3aaeac;
+    border-bottom-color: #1a4a49;
+    border-right-color: #1a4a49;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4);
+    transform: translateY(2px);
 }
 
-.filter-dropdown .filter-btn {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    font-family: "Minecraft", sans-serif;
+.portfolio-tabs .filter-btn:active {
+    border-top-color: #3b3b3b;
+    border-left-color: #3b3b3b;
+    border-bottom-color: #d1d1d1;
+    border-right-color: #d1d1d1;
+    transform: translateY(2px);
 }
 
 /* Logic for filtering animation */

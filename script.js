@@ -172,20 +172,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupPortfolioFilters() {
-    const triggerBtn = document.getElementById("filter-trigger-btn");
-    const dropdown = document.getElementById("filter-dropdown");
-    const filterButtons = document.querySelectorAll(".filter-dropdown .filter-btn");
+    const filterButtons = document.querySelectorAll(".portfolio-tabs .filter-btn");
     const portfolioCards = document.querySelectorAll(".portfolio-card");
 
-    if (!triggerBtn || !dropdown) return;
+    if (filterButtons.length === 0) return;
 
-    // Toggle dropdown
-    triggerBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("active");
-    });
-
-    // Close dropdown when selecting a filter
     filterButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         const filterValue = btn.getAttribute("data-filter");
@@ -204,17 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("hidden-filter");
           }
         });
-
-        // Close dropdown
-        dropdown.classList.remove("active");
       });
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && e.target !== triggerBtn) {
-        dropdown.classList.remove("active");
-      }
     });
   }
 
