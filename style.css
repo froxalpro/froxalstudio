@@ -1115,7 +1115,7 @@ main {
 }
 
 #portfolio .animations-content {
-    max-width: 1100px;
+    max-width: 1250px;
     width: 100%;
     position: relative;
     z-index: 10; /* Above particles */
@@ -1163,10 +1163,10 @@ main {
 }
 
 .portfolio-grid {
-    display: flex; /* Removed !important to allow grid override in media queries */
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
     justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    align-items: start;
     gap: 2rem;
     width: 100%;
     max-width: 1200px;
@@ -1184,8 +1184,8 @@ main {
     cursor: default;
     overflow: hidden;
     aspect-ratio: 16 / 9;
-    width: 380px; 
-    max-width: 90vw; /* Safety for small screens */
+    width: 100%; 
+    max-width: 100%; /* Safety for small screens */
     margin: 0;
     border-radius: 14px;
 }
