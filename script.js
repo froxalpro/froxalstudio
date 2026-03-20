@@ -46,12 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
           card.innerHTML = `
             ${partnerBadgeHtml}
-            <div class="client-logo-wrapper">
-              <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
-            </div>
-            <div class="client-info">
-              <div class="client-name">${client.name}</div>
-              ${client.description ? `<div class="client-description">${client.description}</div>` : ""}
+            <div class="client-card-main">
+              <div class="client-logo-wrapper">
+                <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
+              </div>
+              <div class="client-info">
+                <div class="client-name">${client.name}</div>
+                ${client.description ? `<div class="client-description">${client.description}</div>` : ""}
+              </div>
             </div>
           `;
 
@@ -80,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Lancement garanti sans délai
   loadClients();
   loadPortfolio();
+  loadReviews();
 
   async function loadPortfolio() {
     console.log("Chargement du portfolio...");
@@ -149,6 +152,14 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         portfolioGrid.appendChild(card);
+        
+        // Auto-fit project titles and descriptions after a brief delay to ensure layout
+        setTimeout(() => {
+          const titEl = card.querySelector(".portfolio-title");
+          const dscEl = card.querySelector(".portfolio-description");
+          if (titEl) fitText(titEl);
+          if (dscEl) fitText(dscEl);
+        }, 100);
 
         // -- Event Click Lightbox --
         card.style.cursor = "pointer";
@@ -288,9 +299,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // fitText: auto-shrink font size to fit container width and height
   function fitText(el) {
     let fontSize = parseFloat(window.getComputedStyle(el).fontSize);
-    // Safety limit to avoid infinite loop or too small text
-    // We check both horizontal and vertical overflow
-    while ((el.scrollWidth > el.offsetWidth || el.scrollHeight > el.offsetHeight) && fontSize > 7) {
+    const parent = el.parentElement;
+    const maxH = parent ? parent.offsetHeight * 0.9 : 9999;
+    
+    while ((el.scrollWidth > el.offsetWidth || el.scrollHeight > maxH || el.offsetHeight > maxH) && fontSize > 10) {
       fontSize -= 0.5;
       el.style.fontSize = fontSize + "px";
     }
@@ -740,6 +752,52 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initPortfolioParticles();
+
+  // --- 3. Load Reviews (Testimonials) ---
+  async function loadReviews() {
+    const reviewsTrack = document.getElementById("reviews-track");
+    if (!reviewsTrack) return;
+
+    try {
+      const { data: reviews, error } = await window.supabaseClient
+        .from("reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (!reviews || reviews.length === 0) {
+        reviewsTrack.parentElement.style.display = "none";
+        return;
+      }
+
+      reviewsTrack.innerHTML = "";
+      // Triple the reviews to ensure it fills even the ultra-wide screens and loops seamlessly
+      const tripledReviews = [...reviews, ...reviews, ...reviews];
+      
+      tripledReviews.forEach((review) => {
+        const card = document.createElement("div");
+        card.classList.add("review-card");
+
+        let starsHtml = "";
+        for (let i = 1; i <= 5; i++) {
+          const img = i <= review.rating ? "images/UI/etoile.png" : "images/UI/etoile_vide.png";
+          starsHtml += `<img src="${img}" alt="Star" />`;
+        }
+
+        card.innerHTML = `
+          <div class="review-author">${review.pseudo}</div>
+          <div class="review-stars">${starsHtml}</div>
+          <div class="review-text">${review.text}</div>
+        `;
+
+        reviewsTrack.appendChild(card);
+      });
+
+    } catch (err) {
+      console.error("Erreur loadReviews:", err);
+    }
+  }
 
   // (L'ancienne fonction loadClients a été déplacée au début de ce fichier pour éviter les interférences JS)
 });

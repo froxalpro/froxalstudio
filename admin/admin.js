@@ -46,6 +46,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const editPortfolioStatus = document.getElementById("edit-portfolio-status");
   const submitEditPortfolioBtn = document.getElementById("submit-edit-portfolio-btn");
 
+  // Elements Ratings
+  const ratingForm = document.getElementById("rating-form");
+  const ratingPseudo = document.getElementById("rating-pseudo");
+  const ratingText = document.getElementById("rating-text");
+  const ratingValue = document.getElementById("rating-value");
+  const starSelector = document.getElementById("star-selector");
+  const ratingStatus = document.getElementById("rating-status");
+  const submitRatingBtn = document.getElementById("submit-rating-btn");
+  const adminRatingsList = document.getElementById("admin-ratings-list");
+
+  // Elements Ratings Edit
+  const ratingEditModal = document.getElementById("rating-edit-modal");
+  const ratingEditForm = document.getElementById("rating-edit-form");
+  const editRatingId = document.getElementById("edit-rating-id");
+  const editRatingPseudo = document.getElementById("edit-rating-pseudo");
+  const editRatingText = document.getElementById("edit-rating-text");
+  const editRatingValue = document.getElementById("edit-rating-value");
+  const editStarSelector = document.getElementById("edit-star-selector");
+  const closeRatingEditModalBtn = document.getElementById("close-rating-edit-modal");
+  const editRatingStatus = document.getElementById("edit-rating-status");
+  const submitEditRatingBtn = document.getElementById("submit-edit-rating-btn");
+
   // 1. Vérifier si l'utilisateur est déjà connecté au chargement
   async function checkSession() {
     try {
@@ -69,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dashboardSection.classList.remove("hidden");
     loadAdminClients();
     loadAdminPortfolio();
+    loadAdminRatings();
   }
 
   function showLogin() {
@@ -92,6 +115,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       tab.classList.add("active");
       const target = tab.getAttribute("data-tab");
       document.getElementById(target).classList.remove("hidden");
+
+      if (target === "ratings-tab") loadAdminRatings();
     });
   });
 
@@ -622,5 +647,202 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => { if (uploadStatus.textContent === msg) uploadStatus.textContent = ""; }, 5000);
       }
     }
+  }
+
+  // --- LOGIQUE RATINGS (AVIS) ---
+
+  function updateStarUI(val, selectorId = "star-selector") {
+    const selector = document.getElementById(selectorId);
+    if (!selector) return;
+    const stars = selector.querySelectorAll("img");
+    stars.forEach(star => {
+      const starVal = parseInt(star.getAttribute("data-value"));
+      if (starVal <= val) {
+        star.src = "../images/UI/etoile.png";
+      } else {
+        star.src = "../images/UI/etoile_vide.png";
+      }
+    });
+  }
+
+  // Star selector for Add Form
+  if (starSelector) {
+    const stars = starSelector.querySelectorAll("img");
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const val = parseInt(star.getAttribute("data-value"));
+        ratingValue.value = val;
+        updateStarUI(val, "star-selector");
+      });
+      star.addEventListener("mouseover", () => {
+        const val = parseInt(star.getAttribute("data-value"));
+        updateStarUI(val, "star-selector");
+      });
+      star.addEventListener("mouseout", () => {
+        const val = parseInt(ratingValue.value);
+        updateStarUI(val, "star-selector");
+      });
+    });
+  }
+
+  // Star selector for Edit Form
+  if (editStarSelector) {
+    const stars = editStarSelector.querySelectorAll("img");
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const val = parseInt(star.getAttribute("data-value"));
+        editRatingValue.value = val;
+        updateStarUI(val, "edit-star-selector");
+      });
+      star.addEventListener("mouseover", () => {
+        const val = parseInt(star.getAttribute("data-value"));
+        updateStarUI(val, "edit-star-selector");
+      });
+      star.addEventListener("mouseout", () => {
+        const val = parseInt(editRatingValue.value);
+        updateStarUI(val, "edit-star-selector");
+      });
+    });
+  }
+
+  // Submit Rating
+  if (ratingForm) {
+    ratingForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const pseudo = ratingPseudo.value.trim();
+      const text = ratingText.value.trim();
+      const rating = parseInt(ratingValue.value);
+
+      if (!pseudo || !text) return;
+
+      submitRatingBtn.disabled = true;
+      ratingStatus.textContent = "Enregistrement...";
+      ratingStatus.className = "status-msg";
+
+      try {
+        const { error } = await window.supabaseClient
+          .from("reviews")
+          .insert([{ pseudo, text, rating }]);
+
+        if (error) throw error;
+
+        ratingStatus.textContent = "Avis ajouté avec succès !";
+        ratingStatus.className = "status-msg success";
+        ratingForm.reset();
+        ratingValue.value = "5";
+        updateStarUI(5);
+        loadAdminRatings();
+      } catch (err) {
+        console.error("Erreur rating submit:", err);
+        ratingStatus.textContent = "Erreur: " + err.message;
+        ratingStatus.className = "status-msg error";
+      } finally {
+        submitRatingBtn.disabled = false;
+      }
+    });
+  }
+
+  async function loadAdminRatings() {
+    if (!adminRatingsList) return;
+    adminRatingsList.innerHTML = "<p style='color: #888;'>Chargement des avis...</p>";
+    
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        adminRatingsList.innerHTML = "<p style='color: #888;'>Aucun avis pour le moment.</p>";
+        return;
+      }
+
+      adminRatingsList.innerHTML = "";
+      data.forEach((review, index) => {
+        const item = document.createElement("div");
+        item.className = "client-list-item";
+        
+        const reviewNumber = data.length - index;
+
+        item.innerHTML = `
+          <div class="client-item-info" style="font-family: 'Minecraft', sans-serif !important;">
+            <span style="color: #ffcc00; margin-right: 10px; flex-shrink: 0;">Avis #${reviewNumber}</span>
+            <span style="color: white; margin-right: 5px; flex-shrink: 0;">${review.pseudo.toUpperCase()}:</span>
+            <span style="color: #ccc; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${review.text}</span>
+          </div>
+          <div class="action-btns">
+            <button class="btn-primary btn-sm btn-edit-rating" data-id="${review.id}" data-pseudo="${review.pseudo}" data-rating="${review.rating}" data-text="${review.text}">Éditer</button>
+            <button class="btn-primary btn-sm btn-delete-rating" data-id="${review.id}" style="background: #ff5555; border-color: #ff5555;">Supprimer</button>
+          </div>
+        `;
+        adminRatingsList.appendChild(item);
+
+        item.querySelector(".btn-edit-rating").onclick = () => {
+          editRatingId.value = review.id;
+          editRatingPseudo.value = review.pseudo;
+          editRatingText.value = review.text;
+          editRatingValue.value = review.rating;
+          updateStarUI(review.rating, "edit-star-selector");
+          ratingEditModal.classList.add("active");
+        };
+
+        item.querySelector(".btn-delete-rating").onclick = async () => {
+          if (!confirm("Supprimer cet avis ?")) return;
+          try {
+            await window.supabaseClient.from("reviews").delete().eq("id", review.id);
+            loadAdminRatings();
+          } catch (err) { console.error(err); }
+        };
+      });
+    } catch (err) {
+      console.error("Erreur loadAdminRatings:", err);
+      adminRatingsList.innerHTML = "<p style='color: red;'>Erreur de chargement.</p>";
+    }
+  }
+
+  // Initial UI call for stars
+  updateStarUI(5, "star-selector");
+
+  // Close rating edit modal
+  if (closeRatingEditModalBtn) {
+    closeRatingEditModalBtn.onclick = () => {
+      ratingEditModal.classList.remove("active");
+    };
+  }
+
+  // Handle rating edit submit
+  if (ratingEditForm) {
+    ratingEditForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const id = editRatingId.value;
+      const pseudo = editRatingPseudo.value.trim();
+      const text = editRatingText.value.trim();
+      const rating = parseInt(editRatingValue.value);
+
+      submitEditRatingBtn.disabled = true;
+      editRatingStatus.textContent = "Mise à jour...";
+      
+      try {
+        const { error } = await window.supabaseClient
+          .from("reviews")
+          .update({ pseudo, text, rating })
+          .eq("id", id);
+
+        if (error) throw error;
+
+        ratingEditModal.classList.remove("active");
+        loadAdminRatings();
+      } catch (err) {
+        console.error("Erreur update rating:", err);
+        editRatingStatus.textContent = "Erreur: " + err.message;
+        editRatingStatus.className = "status-msg error";
+      } finally {
+        submitEditRatingBtn.disabled = false;
+      }
+    });
   }
 });

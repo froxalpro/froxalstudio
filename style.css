@@ -40,6 +40,9 @@ body {
     overflow-x: hidden;
     position: relative;
     font-family: "Minecraft", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 /* Removed native scroll-behavior: smooth as Lenis library handles it now */
@@ -999,8 +1002,18 @@ main {
     cursor: default;
     width: 280px;
     max-width: 90vw;
+    /* overflow: hidden removed to allow badge overflow */
+}
+
+/* Nouveau conteneur pour garder les arrondis et le masquage des infos */
+.client-card-main {
+    width: 100%;
+    height: 100%;
+    position: relative;
     border-radius: 14px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .partner-badge {
@@ -1019,14 +1032,19 @@ main {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1rem;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    height: 100%; /* Fill the card to allow centering */
+    padding: 2rem;
+    padding-top: 50px; /* Redescend le texte un peu */
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.95) 70%);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Center vertically */
     transform: translateY(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
 }
 
 .client-card:hover .client-info {
@@ -1059,22 +1077,31 @@ main {
 
 .client-name {
     color: white;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-    font-size: 6.5rem; /* Massive increase as requested */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    font-size: 1.1rem; /* Slightly larger again but safe */
     text-align: center;
     text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    font-family: "Minecraft Bold", sans-serif;
+    overflow: visible; /* Prevent letter-cropping */
+    font-family: "Minecraft", sans-serif;
+    line-height: 1.4; /* Better clearance */
+    margin-bottom: 5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: auto;
+    width: 100%;
 }
 
 .client-description {
     font-family: "Minecraft", sans-serif;
     color: #ffd700;
-    font-size: 4.5rem; /* Massive increase as requested */
+    font-size: 0.75rem; /* Extremely small */
     text-align: center;
     margin-top: 5px;
     word-break: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: auto;
+    width: 100%;
 }
 
 /* Mobile Overrides (placed at the end to prevent desktop overrides) */
@@ -1090,7 +1117,7 @@ main {
         padding: 0.6rem;
         min-width: 0;
         width: 100%;
-        overflow: hidden;
+        /* overflow: hidden removed */
     }
 
     .client-name,
@@ -1242,14 +1269,19 @@ main {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1rem;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    height: 100%;
+    padding: 1.5rem;
+    padding-top: 40px; /* Redescend un peu le texte */
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.95) 75%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center; /* Center to avoid top-crop */
     transform: translateY(100%); /* Hidden by default */
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
 }
 
 .portfolio-card:hover .portfolio-info {
@@ -1262,17 +1294,29 @@ main {
 .portfolio-title {
     font-family: "Minecraft Bold", sans-serif;
     color: white;
-    font-size: 1rem;
+    font-size: 0.9rem; /* Extremely small */
     text-transform: uppercase;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.4; /* Better clearance */
+    margin-bottom: 5px;
+    padding: 2px 0;
+    max-height: 2.8em;
+    overflow: visible; /* Prevent cropping */
+    width: 100%;
 }
 
 .portfolio-description {
     font-family: "Minecraft", sans-serif;
     color: #ffd700; /* Gold color for description on overlay */
-    font-size: 0.75rem;
-    margin-top: 4px;
-    opacity: 0.9;
+    font-size: 0.7rem; /* Extremely small */
+    margin-top: 5px;
+    opacity: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-height: 3em;
+    overflow: hidden;
 }
 
 @media screen and (max-width: 900px) {
@@ -1561,6 +1605,143 @@ main {
     50% {
         transform: translate(20px, -30px);
         opacity: 0.8;
+    }
+}
+
+/* --- Reviews Section --- */
+.reviews-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 3rem 0;
+    margin: 4rem 0;
+    position: relative;
+    z-index: 10;
+    /* Symmetrical gradient mask on both sides */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.reviews-track {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem 0;
+    width: max-content; 
+    animation: reviews-scroll 60s linear infinite; /* Slowest more professional scroll */
+    pointer-events: auto;
+    will-change: transform;
+}
+
+.reviews-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes reviews-scroll {
+    0% { transform: translateX(-66.666%); }
+    100% { transform: translateX(-33.333%); }
+}
+
+.reviews-track::-webkit-scrollbar {
+    display: none;
+}
+
+.review-card {
+    flex: 0 0 400px;
+    min-width: 200px; /* Safety fallback */
+    background: rgba(20, 20, 20, 0.7);
+    border: 2px solid #333;
+    padding: 2rem;
+    border-radius: 15px; /* Rounded corners as requested */
+    scroll-snap-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+    font-family: "Minecraft", sans-serif; /* Minecraft font */
+}
+
+.review-card:hover {
+    border-color: #ff9900;
+    transform: translate(-5px, -5px);
+    box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.6);
+    background: rgba(30, 30, 30, 0.9);
+}
+
+.review-stars {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.review-stars img {
+    width: 24px;
+    height: 24px;
+    /* Removed image-rendering: pixelated as icons are high-res */
+}
+
+.review-text {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #eee;
+    font-family: "Minecraft", sans-serif;
+    flex-grow: 1;
+    position: relative;
+    padding-left: 15px;
+    border-left: 2px solid #ff9900;
+}
+
+.review-author {
+    font-family: "Minecraft", sans-serif;
+    color: #ff9900;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.review-author::before {
+    content: ">";
+    color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+    .reviews-track {
+        display: flex; /* Back to flex for scroll illusion */
+        flex-wrap: nowrap;
+        gap: 0.8rem;
+        padding: 1rem 10%; /* Center first card slightly */
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+    }
+    .review-card {
+        flex: 0 0 calc(33.333% - 0.6rem); /* 3 per line on mobile */
+        min-width: 100px;
+        padding: 0.8rem;
+        gap: 0.7rem;
+        border-radius: 8px;
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    }
+    .review-card:hover {
+        transform: none;
+        box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.6);
+    }
+    .review-stars img {
+        width: 14px;
+        height: 14px;
+    }
+    .review-text {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        padding-left: 10px;
+    }
+    .review-author {
+        font-size: 0.85rem;
+        gap: 5px;
+    }
+    .review-author::before {
+        font-size: 0.7rem;
     }
 }
 

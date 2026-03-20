@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FroXaL Studio</title>
     <link rel="icon" type="image/png" href="images/froxal_logo.png" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=10" />
   </head>
 
   <body>
@@ -28,6 +28,9 @@
           /></a>
           <a href="#about" class="btn-icon"
             ><img src="images/UI/about.png" alt="About" class="nav-icon"
+          /></a>
+          <a href="#clients" class="btn-icon"
+            ><img src="images/UI/clients.png" alt="Clients" class="nav-icon"
           /></a>
           <a href="#portfolio" class="btn-icon"
             ><img
@@ -145,6 +148,12 @@
           <div id="clients-grid" class="clients-grid">
             <!-- Les fiches clients générées par Supabase apparaitront ici -->
           </div>
+
+          <div class="reviews-container fade-in-element">
+            <div id="reviews-track" class="reviews-track">
+              <!-- Les avis clients apparaîtront ici -->
+            </div>
+          </div>
         </div>
       </section>
 
@@ -231,7 +240,7 @@
 
     <!-- Supabase CDN + Configuration & Main Script -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js?v=1"></script>
-    <script src="script.js?v=1"></script>
+    <script src="supabase-config.js?v=2"></script>
+    <script src="script.js?v=10"></script>
   </body>
 </html>
