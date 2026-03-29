@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Minecraft';
+    src: url('Minecraft.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --bg-color: #0b0c10;
     --bg-secondary: #1f2833;
@@ -798,6 +805,64 @@ main {
     font-size: 0.8rem;
 }
 
+/* --- Portfolio Loader Overlay --- */
+.portfolio-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: auto; /* Bloque les clics pendant l'intro */
+    overflow: hidden;
+    display: none; /* Caché par défaut jusqu'au trigger JS */
+    flex-direction: column; /* Aligne le texte au dessus de la vidéo */
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    background-color: var(--bg-color);
+    transition: opacity 0.5s ease;
+}
+
+#loader-percentage {
+    font-family: 'Minecraft', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    letter-spacing: 2px;
+}
+
+#loading-video {
+    position: relative;
+    width: 25%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    will-change: mix-blend-mode;
+    transform: translateZ(0); /* Force hardware layer */
+}
+
+/* État initial pour le reveal aléatoire */
+.portfolio-card.portfolio-item-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+@media (max-width: 768px) {
+    #loading-video {
+        width: 50%; /* Agrandissement x2 pour le mode mobile */
+    }
+}
+
+/* Hide portfolio content initially if desired, or let the overlay cover it */
+#portfolio .animations-content {
+    opacity: 1; /* Par défaut, écrasé par le JS pendant le chargement */
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1333,60 +1398,117 @@ main {
     }
 }
 
-/* Portfolio Tabs Styles */
-.portfolio-tabs {
+/* Portfolio Filter Controls - Parent pour l'alignement global */
+.portfolio-filter-controls {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 3rem;
-    z-index: 100;
-    position: relative;
-    flex-wrap: wrap;
+    justify-content: center; /* Centré par défaut sur PC */
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    z-index: 1000;
 }
 
-.portfolio-tabs .filter-btn {
+/* Dropdown Wrapper - Limité à la taille de l'icône */
+.portfolio-filter-dropdown {
+    position: relative;
+    display: inline-block;
+    width: auto;
+}
+
+.filter-trigger {
     background-color: #7a7a7a;
     border: 2px solid;
     border-top-color: #d1d1d1;
     border-left-color: #d1d1d1;
     border-bottom-color: #3b3b3b;
     border-right-color: #3b3b3b;
-    padding: 0.8rem 1.5rem;
-    color: #ffffff;
-    text-shadow: 2px 2px 0px #3b3b3b;
-    font-size: 0.9rem;
-    font-family: "Minecraft Bold", sans-serif;
-    text-transform: uppercase;
     cursor: pointer;
-    image-rendering: pixelated;
+    padding: 6px;
     transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    image-rendering: pixelated;
 }
 
-.portfolio-tabs .filter-btn:hover {
+.filter-trigger:hover {
     background-color: #6d7bd2;
     border-top-color: #ffffff;
     border-left-color: #ffffff;
     border-bottom-color: #7c8ae2;
     border-right-color: #7c8ae2;
+    transform: scale(1.05);
 }
 
-.portfolio-tabs .filter-btn.active {
-    background-color: #2b7a78; /* Primary theme color for active tab */
-    border-top-color: #3aaeac;
-    border-left-color: #3aaeac;
-    border-bottom-color: #1a4a49;
-    border-right-color: #1a4a49;
+.filter-options-container {
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 5px); /* Collé à droite de l'icône */
+    transform: translateY(-50%);
+    background: #111;
+    border: 2px solid #555658;
+    z-index: 30000;
+    min-width: 150px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+}
+
+/* Version ultra-compacte pour PC */
+@media screen and (min-width: 901px) {
+    .filter-trigger {
+        padding: 4px;
+        transform: scale(0.85);
+    }
+    .filter-options-container {
+        min-width: 130px;
+        left: calc(100% + 5px);
+    }
+    .filter-options-container .filter-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+    }
+}
+
+.filter-options-container.show {
+    display: flex;
+}
+
+/* Mobile Alignment Override */
+@media screen and (max-width: 768px) {
+    .portfolio-filter-controls {
+        justify-content: flex-start; /* Alignement gauche sur mobile */
+    }
+}
+
+.filter-options-container .filter-btn {
+    width: 100%;
+    background-color: #7a7a7a;
+    border: none;
+    border-bottom: 2px solid #3b3b3b;
+    padding: 0.7rem 1.2rem; /* Réduit pour être plus compact */
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #3b3b3b;
+    font-size: 0.85rem; /* Légèrement réduit */
+    font-family: "Minecraft Bold", sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    margin: 0 !important;
+}
+
+.filter-options-container .filter-btn:last-child {
+    border-bottom: none;
+}
+
+.filter-options-container .filter-btn:hover {
+    background-color: #6d7bd2;
+}
+
+.filter-options-container .filter-btn.active {
+    background-color: #313234;
+    color: #ffffff;
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4);
-    transform: translateY(2px);
-}
-
-.portfolio-tabs .filter-btn:active {
-    border-top-color: #3b3b3b;
-    border-left-color: #3b3b3b;
-    border-bottom-color: #d1d1d1;
-    border-right-color: #d1d1d1;
-    transform: translateY(2px);
 }
 
 /* Logic for filtering animation */

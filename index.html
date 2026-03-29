@@ -26,15 +26,12 @@
           <a href="#home" class="btn-icon"
             ><img src="images/UI/home.png" alt="Home" class="nav-icon"
           /></a>
-          <a href="#about" class="btn-icon"
-            ><img src="images/UI/about.png" alt="About" class="nav-icon"
-          /></a>
           <a href="#clients" class="btn-icon"
             ><img src="images/UI/clients.png" alt="Clients" class="nav-icon"
           /></a>
           <a href="#portfolio" class="btn-icon"
             ><img
-              src="images/UI/animation.png"
+              src="images/UI/photo.png"
               alt="Portfolio"
               class="nav-icon"
           /></a>
@@ -159,17 +156,32 @@
 
       <!-- Section Portfolio -->
       <section id="portfolio" class="animations-section relative-container">
+        <!-- Overlay de chargement dynamique -->
+        <div id="portfolio-loader" class="portfolio-loader">
+          <div id="loader-percentage">0%</div>
+          <video id="loading-video" class="loader-video" muted playsinline>
+            <source src="images/loading.webm" type="video/webm">
+          </video>
+        </div>
+
         <div class="animations-content fade-in-element flex-col-center">
           <h2 class="section-title" style="margin-bottom: 3rem;">PORTFOLIO</h2>
           <div id="portfolio-grid" class="portfolio-grid">
             <!-- Les projets du portfolio apparaitront ici -->
           </div>
 
-          <!-- Portfolio Tabs -->
-          <div class="portfolio-tabs">
-            <button class="filter-btn active" data-filter="all">ALL</button>
-            <button class="filter-btn" data-filter="video">ANIMATIONS</button>
-            <button class="filter-btn" data-filter="image">THUMBNAILS</button>
+          <!-- Portfolio Filter Controls Wrapper -->
+          <div class="portfolio-filter-controls">
+            <div class="portfolio-filter-dropdown">
+              <button id="filter-trigger" class="btn-icon filter-trigger" title="Filtrer les projets">
+                <img src="images/UI/filter.png" alt="Filter" class="nav-icon" />
+              </button>
+              <div id="filter-options" class="filter-options-container">
+                <button class="filter-btn active" data-filter="all">ALL</button>
+                <button class="filter-btn" data-filter="video">ANIMATIONS</button>
+                <button class="filter-btn" data-filter="image">THUMBNAILS</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

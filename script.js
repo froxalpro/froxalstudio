@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Portfolio loaded.");
   let allPortfolioProjects = [];
   let currentPortfolioIndex = -1;
+  let hasPlayedPortfolioIntro = false;
 
   // -- 1. Load Supabase Clients FIRST to avoid UI script crashes --
   async function loadClients() {
@@ -117,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
       portfolioGrid.innerHTML = "";
       projects.forEach((project) => {
         const card = document.createElement("div");
-        card.classList.add("portfolio-card", "fade-in-element", "visible");
+        // Utiliser portfolio-item-hidden au lieu du système de fade-in standard pour le reveal aléatoire
+        card.classList.add("portfolio-card", "portfolio-item-hidden");
         card.setAttribute("data-format", project.media_format); // image or video
 
         let mediaHtml = "";
@@ -183,20 +185,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupPortfolioFilters() {
-    const filterButtons = document.querySelectorAll(".portfolio-tabs .filter-btn");
+    const filterTrigger = document.getElementById("filter-trigger");
+    const filterOptions = document.getElementById("filter-options");
+    const filterButtons = document.querySelectorAll(".filter-options-container .filter-btn");
     const portfolioCards = document.querySelectorAll(".portfolio-card");
 
-    if (filterButtons.length === 0) return;
+    if (!filterTrigger || !filterOptions) return;
+
+    // Toggle du menu déroulant
+    filterTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      filterOptions.classList.toggle("show");
+    });
+
+    // Fermer si on clique ailleurs
+    document.addEventListener("click", () => {
+      filterOptions.classList.remove("show");
+    });
 
     filterButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Éviter la fermeture immédiate par le document.click
         const filterValue = btn.getAttribute("data-filter");
 
         // Update active button UI
         filterButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
-        // Apply filtering
+        // Appliquer le filtrage
         portfolioCards.forEach(card => {
           const format = card.getAttribute("data-format");
           
@@ -206,6 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("hidden-filter");
           }
         });
+
+        // Fermer le menu après sélection
+        filterOptions.classList.remove("show");
       });
     });
   }
@@ -657,7 +676,104 @@ document.addEventListener("DOMContentLoaded", () => {
       
       portfolioSection.style.setProperty('--portfolio-border-opacity', borderRatio);
     }
+
+    // 5. Trigger d'introduction Portfolio (One-shot)
+    if (portfolioSection && !hasPlayedPortfolioIntro) {
+      const rect = portfolioSection.getBoundingClientRect();
+      const viewportCenter = windowHeight / 2;
+      const sectionCenter = rect.top + rect.height / 2;
+      
+      // Se déclenche quand le milieu de la section arrive vers le milieu du viewport
+      if (Math.abs(sectionCenter - viewportCenter) < (windowHeight * 0.2)) {
+          hasPlayedPortfolioIntro = true;
+          startPortfolioIntro();
+      }
+    }
   };
+
+  // --- Fonction déclenchée une seule fois au scroll ---
+  function startPortfolioIntro() {
+    const portfolioLoader = document.getElementById("portfolio-loader");
+    const loadingVideo = document.getElementById("loading-video");
+    const portfolioContent = document.querySelector("#portfolio .animations-content");
+    const percentageDiv = document.getElementById("loader-percentage");
+
+    if (!portfolioLoader || !loadingVideo) return;
+
+    // S'assurer que le contenu est caché pendant l'animation
+    if (portfolioContent) {
+        portfolioContent.style.opacity = "0";
+        portfolioContent.style.transition = "none";
+    }
+
+    portfolioLoader.style.display = "flex";
+    portfolioLoader.style.opacity = "1";
+    portfolioLoader.style.backgroundColor = "var(--bg-color)";
+
+    const startSequence = () => {
+      // 1. Animation du pourcentage (0-100% en 0.5s)
+      let startTime = null;
+      const duration = 500; // Réduit à 0.5s
+      
+      function animateCounter(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const count = Math.floor(progress * 100);
+        
+        if (percentageDiv) percentageDiv.textContent = `${count}%`;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateCounter);
+        }
+      }
+      requestAnimationFrame(animateCounter);
+
+      // 2. Vidéo de Chargement (Phase Unique : 0.5s)
+      if (loadingVideo.duration && isFinite(loadingVideo.duration)) {
+        loadingVideo.playbackRate = loadingVideo.duration / 0.5;
+      }
+      loadingVideo.play().catch(err => console.log("Loading play blocked:", err));
+
+      // 3. Révélation STAGGERED (un par un aléatoirement) après 0.5s
+      // Le processus total d'apparition doit durer 2s
+      setTimeout(() => {
+        // Cacher le loader
+        portfolioLoader.style.opacity = "0";
+        
+        // Afficher DIRECTEMENT le conteneur parent (sans fade)
+        if (portfolioContent) {
+          portfolioContent.style.opacity = "1";
+          portfolioContent.style.transition = "none";
+        }
+
+        // Récupérer et mélanger les cartes
+        const cards = Array.from(document.querySelectorAll(".portfolio-card"));
+        const shuffledCards = cards.sort(() => Math.random() - 0.5);
+
+        // Calculer l'intervalle pour que TOUT apparaisse en 2s (2000ms)
+        const totalRevealDuration = 2000;
+        const staggerInterval = shuffledCards.length > 0 ? totalRevealDuration / shuffledCards.length : 0;
+
+        // Apparition une par une sans transition
+        shuffledCards.forEach((card, index) => {
+           setTimeout(() => {
+              card.classList.remove("portfolio-item-hidden");
+           }, index * staggerInterval);
+        });
+
+        setTimeout(() => {
+          portfolioLoader.style.display = "none";
+        }, totalRevealDuration + 600);
+      }, 500);
+    };
+
+    if (loadingVideo.readyState >= 1) {
+      startSequence();
+    } else {
+      loadingVideo.addEventListener("loadedmetadata", startSequence, { once: true });
+    }
+  }
 
   // Fallback normal scroll event and initial check
   window.addEventListener("scroll", window.updateOpacityOnScroll);
