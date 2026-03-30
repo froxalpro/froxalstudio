@@ -755,10 +755,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalRevealDuration = 2000;
         const staggerInterval = shuffledCards.length > 0 ? totalRevealDuration / shuffledCards.length : 0;
 
-        // Apparition une par une sans transition
+        // Apparition une par une avec l'animation break.webm
         shuffledCards.forEach((card, index) => {
            setTimeout(() => {
               card.classList.remove("portfolio-item-hidden");
+              
+              // Jouer l'animation break.webm
+              const breakVid = document.createElement("video");
+              breakVid.src = "images/break.webm";
+              breakVid.autoplay = true;
+              breakVid.muted = true;
+              breakVid.playsInline = true;
+              breakVid.classList.add("break-video");
+              
+              // On l'ajoute à la carte
+              card.appendChild(breakVid);
+              
+              // Supprimer à la fin de la vidéo
+              breakVid.onended = () => {
+                breakVid.remove();
+              };
+              
+              // Sécurité au cas où onended ne se déclencherait pas (ex: erreur chargement)
+              setTimeout(() => {
+                if (breakVid.parentNode) breakVid.remove();
+              }, 3000); // 3 secondes max
+              
            }, index * staggerInterval);
         });
 
