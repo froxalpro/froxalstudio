@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ${partnerBadgeHtml}
             <div class="client-card-main">
               <div class="client-logo-wrapper">
-                <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" />
+                <img src="${client.image_url}" alt="${client.name} Logo" class="client-logo" width="80" height="80" loading="lazy" />
               </div>
               <div class="client-info">
                 <div class="client-name">${client.name}</div>
@@ -123,20 +123,27 @@ document.addEventListener("DOMContentLoaded", () => {
         card.setAttribute("data-format", project.media_format); // image or video
 
         let mediaHtml = "";
-        const iconSrc = project.media_format === "video" ? "images/UI/animation.png" : "images/UI/photo.png";
+        const iconSrc = project.media_format === "video" ? "images/UI/animation.webp" : "images/UI/photo.webp";
         const iconAlt = project.media_format === "video" ? "Vidéo" : "Photo";
 
         if (project.media_format === "video") {
            if (project.media_type === "external") {
-              let embedUrl = project.media_url;
-              if (embedUrl.includes("youtube.com") || embedUrl.includes("youtu.be")) {
-                  const id = extractYoutubeId(embedUrl);
-                  embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1`;
-              } else if (embedUrl.includes("vimeo.com")) {
-                  const id = embedUrl.split("/").pop();
-                  embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&loop=1&autopause=0&background=1`;
+              const ytId = extractYoutubeId(project.media_url);
+              if (ytId) {
+                  // YouTube Facade
+                  mediaHtml = `
+                    <div class="youtube-facade" data-video-id="${ytId}">
+                      <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" alt="Video Placeholder" loading="lazy" width="100%" height="auto" />
+                      <div class="play-button-overlay"></div>
+                    </div>`;
+              } else {
+                  let embedUrl = project.media_url;
+                  if (embedUrl.includes("vimeo.com")) {
+                      const id = embedUrl.split("/").pop();
+                      embedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&loop=1&autopause=0&background=1`;
+                  }
+                  mediaHtml = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen" loading="lazy"></iframe>`;
               }
-              mediaHtml = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
            } else {
               mediaHtml = `<video src="${project.media_url}" autoplay loop muted playsinline loading="lazy"></video>`;
            }
@@ -165,8 +172,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // -- Event Click Lightbox --
         card.style.cursor = "pointer";
-        card.addEventListener("click", () => {
-          openLightboxByIndex(projects.indexOf(project));
+        card.addEventListener("click", (e) => {
+          const facade = card.querySelector(".youtube-facade");
+          if (facade && e.target.closest(".play-button-overlay")) {
+             // If they click the play button, load the video in-place
+             const ytId = facade.getAttribute("data-video-id");
+             facade.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+             e.stopPropagation();
+          } else {
+             openLightboxByIndex(projects.indexOf(project));
+          }
         });
       });
 
@@ -359,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "#FFa022",
     ];
     const sizes = [3, 4, 5];
-    const xpImages = ["images/xp1.png", "images/xp2.png"];
+    const xpImages = ["images/xp1.webp", "images/xp2.webp"];
 
     for (let i = 0; i < numParticles; i++) {
       let particle;
@@ -447,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // -- New specific generation of XP around the ABOUT ME text only --
   function createTextParticles(containerElement, numParticles) {
     if (!containerElement) return;
-    const xpImages = ["images/xp1.png", "images/xp2.png"];
+    const xpImages = ["images/xp1.webp", "images/xp2.webp"];
     for (let i = 0; i < numParticles; i++) {
       let particle = document.createElement("img");
       particle.classList.add("pixel-particle", "xp-particle");
@@ -760,13 +775,15 @@ document.addEventListener("DOMContentLoaded", () => {
            setTimeout(() => {
               card.classList.remove("portfolio-item-hidden");
               
-              // Jouer l'animation break.webm
+              // Jouer l'animation break.webp
               const breakVid = document.createElement("video");
               breakVid.src = "images/break.webm";
               breakVid.autoplay = true;
               breakVid.muted = true;
               breakVid.playsInline = true;
               breakVid.classList.add("break-video");
+              breakVid.width = 400; // Explicit width for the overlay video
+              breakVid.height = 400;
               
               // On l'ajoute à la carte
               card.appendChild(breakVid);
