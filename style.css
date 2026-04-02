@@ -203,52 +203,36 @@ a.btn-icon:hover .nav-icon,
 }
 
 .btn-primary {
-    background-color: #7a7a7a;
-    /* Slightly darker stone color */
-    border: 2px solid;
-    border-top-color: #d1d1d1;
-    /* Highlight top */
-    border-left-color: #d1d1d1;
-    /* Highlight left */
-    border-bottom-color: #3b3b3b;
-    /* Shadow bottom */
-    border-right-color: #3b3b3b;
-    /* Shadow right */
-    padding: calc(0.6rem + 5px) 1.5rem calc(0.6rem - 5px) 1.5rem;
+    background-color: #2c2c2c;
+    border: 1px solid #0033cc;
+    height: 44px;
+    padding: 10px 1.5rem 0 1.5rem;
     color: #ffffff !important;
-    text-shadow: 2px 2px 0px #3b3b3b;
-    /* Pixel drop shadow */
+    text-shadow: none; /* Supprimé pour un centrage visuel parfait */
     font-size: 1rem;
     text-transform: uppercase;
-    text-align: center;
-    cursor: pointer;
     text-decoration: none;
+    cursor: pointer;
     image-rendering: pixelated;
-    /* Ensures edges stay sharp */
-    transform: translateY(0px);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    line-height: normal;
 }
 
 .btn-primary:hover {
-    background-color: #6d7bd2;
-    /* Specific blue requested color on hover */
-    border-top-color: #ffffff;
-    border-left-color: #ffffff;
-    border-bottom-color: #7c8ae2;
-    border-right-color: #7c8ae2;
-    transform: translateY(0px);
+    background-color: #1e4de6;
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .btn-primary:active {
-    border-top-color: #3b3b3b;
-    /* Invert borders for click effect */
-    border-left-color: #3b3b3b;
-    border-bottom-color: #d1d1d1;
-    border-right-color: #d1d1d1;
-    text-shadow: 1px 1px 0px #3b3b3b;
-    /* Adjust shadow slightly */
-    transform: translateY(0px);
-    /* Push the text slightly down to match the border depression */
-    padding: calc(0.6rem + 7px) 1.5rem calc(0.6rem - 7px) 1.5rem;
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: #1a3ab1;
 }
 
 .btn-dark {
