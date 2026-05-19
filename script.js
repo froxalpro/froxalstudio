@@ -361,18 +361,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Hover attraction variables for logo particles
+  const logoParticles = [];
+  let mouseActive = false;
+  let mouseX = 0;
+  let mouseY = 0;
+
   // -- Pixel Glow Effect generator --
   function createParticles(containerElement, numParticles, isCircle = true) {
     if (!containerElement) return;
 
-    const blueColors = ["#00FFFF", "#007FFF", "#1F51FF", "#0AFFFF", "#00BFFF"];
-    const orangeColors = [
-      "#FF9B36",
-      "#FFA449",
-      "#FF8B1C",
-      "#FFAF59",
-      "#FFa022",
-    ];
+    const whiteColors = ["#FFFFFF", "#F2F2F2", "#E6E6E6", "#FAFAFA", "#CCCCCC"];
     const sizes = [3, 4, 5];
     const xpImages = ["images/xp1.webp", "images/xp2.webp"];
 
@@ -392,22 +391,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (isCircle) {
         const angle = Math.random() * Math.PI * 2;
-        const radius = 35 + Math.random() * 25;
+        const radius = 80 + Math.random() * 60; /* Élargi la dispersion des particules */
         px = 50 + radius * Math.cos(angle);
         py = 50 + radius * Math.sin(angle);
 
-        let color;
-        if (py < 45 || (py >= 45 && py < 55 && Math.random() < 0.5)) {
-          color = orangeColors[Math.floor(Math.random() * orangeColors.length)];
-        } else {
-          color = blueColors[Math.floor(Math.random() * blueColors.length)];
-        }
+        const color = whiteColors[Math.floor(Math.random() * whiteColors.length)];
 
         const size = sizes[Math.floor(Math.random() * sizes.length)];
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.backgroundColor = color;
         particle.style.boxShadow = `0 0 ${size * 2}px ${color}, 0 0 ${size * 4}px ${color}`;
+
+        // Save metadata for JS attraction & floating loop
+        logoParticles.push({
+          el: particle,
+          baseX: px,
+          baseY: py,
+          x: px,
+          y: py,
+          floatOffset: Math.random() * 100,
+          speed: 0.05 + Math.random() * 0.05
+        });
       } else {
         // Spread across the entire fullscreen section
         // The section covers 100vw, so px ranges 0 to 100
@@ -444,10 +449,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Delay d'apparition aléatoire
       const delay = Math.random() * 2;
 
-      particle.style.animation = `
+      if (isCircle) {
+        particle.style.animation = `fadeInParticle 1s forwards ${delay}s`;
+      } else {
+        particle.style.animation = `
                 particleFloat ${floatDuration}s infinite ease-in-out alternate ${delay}s, 
                 fadeInParticle 1s forwards ${delay}s
             `;
+      }
 
       containerElement.appendChild(particle);
     }
@@ -455,7 +464,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Generate particles for Logo (dense circle, orange top, blue bot)
   const logoWrapper = document.querySelector(".logo-wrapper");
-  createParticles(logoWrapper, 80, true);
+  createParticles(logoWrapper, 25, true); /* Réduit le nombre de particules */
+
+  // Mouse interactivity loop for Logo Particles
+  if (logoWrapper) {
+    logoWrapper.addEventListener("mousemove", (e) => {
+      const rect = logoWrapper.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+      mouseActive = true;
+    });
+
+    logoWrapper.addEventListener("mouseleave", () => {
+      mouseActive = false;
+    });
+
+    // Support touch devices
+    logoWrapper.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 0) {
+        const rect = logoWrapper.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+        mouseActive = true;
+      }
+    });
+
+    logoWrapper.addEventListener("touchend", () => {
+      mouseActive = false;
+    });
+  }
+
+  function updateLogoParticles() {
+    if (!logoWrapper || logoParticles.length === 0) return;
+
+    const rect = logoWrapper.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const time = Date.now() * 0.0015; // float speed multiplier
+
+    logoParticles.forEach((p) => {
+      // Initial home coordinate in pixels
+      const homeX = (p.baseX / 100) * width;
+      const homeY = (p.baseY / 100) * height;
+
+      // Small hover idle float in pixels
+      const floatX = Math.sin(time + p.floatOffset) * 15;
+      const floatY = Math.cos(time + p.floatOffset) * 15;
+
+      let targetX = homeX + floatX;
+      let targetY = homeY + floatY;
+
+      if (mouseActive) {
+        const dx = mouseX - (homeX + floatX);
+        const dy = mouseY - (homeY + floatY);
+        const dist = Math.hypot(dx, dy);
+        const maxDist = 280; // Larger range of attraction for high responsiveness
+
+        if (dist < maxDist) {
+          // Stronger force near cursor, easing towards boundary
+          const force = (1 - dist / maxDist) * 0.85;
+          targetX += dx * force;
+          targetY += dy * force;
+        }
+      }
+
+      // Smooth interpolation in pixels
+      const currentPxX = (p.x / 100) * width;
+      const currentPxY = (p.y / 100) * height;
+
+      const nextPxX = currentPxX + (targetX - currentPxX) * p.speed;
+      const nextPxY = currentPxY + (targetY - currentPxY) * p.speed;
+
+      // Save back current percentage
+      p.x = (nextPxX / width) * 100;
+      p.y = (nextPxY / height) * 100;
+
+      // Translate from the base % position
+      const offsetX = nextPxX - homeX;
+      const offsetY = nextPxY - homeY;
+      p.el.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+    });
+
+    requestAnimationFrame(updateLogoParticles);
+  }
+
+  // Launch particle loop
+  requestAnimationFrame(updateLogoParticles);
 
   // NOTE: L'ancienne génération éparse d'XP autour de "about" a été retirée.
 
@@ -534,11 +628,70 @@ document.addEventListener("DOMContentLoaded", () => {
       infinite: false,
     });
 
+    const arrowIndicator = document.querySelector(".scroll-arrow-indicator");
+    const scrollTriggerLine = document.querySelector(".scroll-trigger-line");
+
     // get scroll value
     lenis.on("scroll", ({ scroll, limit, velocity, direction, progress }) => {
       if (typeof updateOpacityOnScroll === "function") {
         updateOpacityOnScroll();
       }
+      
+      // Hide scroll down arrow when user scrolls down
+      if (arrowIndicator) {
+        if (scroll > 50) {
+          arrowIndicator.style.opacity = "0";
+          arrowIndicator.style.visibility = "hidden";
+        } else {
+          arrowIndicator.style.opacity = "0.6";
+          arrowIndicator.style.visibility = "visible";
+        }
+      }
+
+      // Hide trigger line when user scrolls down
+      if (scrollTriggerLine) {
+        if (scroll > 50) {
+          scrollTriggerLine.style.opacity = "0";
+          scrollTriggerLine.style.visibility = "hidden";
+        } else {
+          scrollTriggerLine.style.opacity = "1";
+          scrollTriggerLine.style.visibility = "visible";
+        }
+      }
+    });
+
+    // Automatic scroll on hover of the bottom trigger line
+    if (scrollTriggerLine) {
+      scrollTriggerLine.addEventListener("mouseenter", () => {
+        if (window.scrollY < 100) {
+          lenis.scrollTo("#about");
+        }
+      });
+    }
+
+    // Scroll to #about when arrow clicked or hovered
+    if (arrowIndicator) {
+      arrowIndicator.addEventListener("click", () => {
+        lenis.scrollTo("#about");
+      });
+      arrowIndicator.addEventListener("mouseenter", () => {
+        if (window.scrollY < 100) {
+          lenis.scrollTo("#about");
+        }
+      });
+    }
+
+    // Smooth scroll for anchor links using Lenis
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+        if (href === "#" || href === "#contact") return;
+        e.preventDefault();
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          lenis.scrollTo(targetElement);
+        }
+      });
     });
 
     function raf(time) {

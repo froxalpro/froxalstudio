@@ -15,8 +15,8 @@
 }
 
 :root {
-    --bg-color: #0b0c10;
-    --bg-secondary: #1f2833;
+    --bg-color: #121212; /* Gris foncé */
+    --bg-secondary: #1a1a1a;
     --text-main: #ffffff;
     --text-muted: #c5c6c7;
     --primary: #2b7a78;
@@ -53,7 +53,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url("images/bg.webp");
+    background-image: none; /* Désactivé pour conserver le fond gris */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -70,7 +70,7 @@ body {
 }
 
 .dynamic-bg.bg2 {
-    background-image: url("images/bg2.webp");
+    background-image: none; /* Désactivé pour conserver le fond gris */
     opacity: 0;
     /* Initializes at 0, JavaScript handles fade-in */
 }
@@ -203,7 +203,7 @@ a.btn-icon:hover .nav-icon,
 }
 
 .btn-primary {
-    background-color: #2c2c2c;
+    background-color: #0a1224; /* Très sombre/bleu-noir */
     border: 1px solid #0033cc;
     height: 44px;
     padding: 10px 1.5rem 0 1.5rem;
@@ -282,6 +282,53 @@ main {
     /* Small push so it doesn't touch the absolute edge, change to 0 if wanted touching */
     animation: fadeInDown 1s ease-out forwards;
     /* Removed drop-shadow here to avoid conflicting with the new pixel glow */
+}
+
+.hero-logo-text {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0rem;
+    margin-bottom: 2rem;
+    animation: fadeInDown 1s ease-out forwards;
+    user-select: none;
+}
+
+.hero-logo-text .word {
+    display: flex;
+    justify-content: center;
+    line-height: 0.85;
+}
+
+.hero-logo-text .word.line-1 {
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+}
+
+.hero-logo-text .word.line-2 {
+    font-size: clamp(3rem, 9vw, 6.7rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: #ff9b36; /* Orange color matching accent */
+}
+
+/* Micro-animation on letter hover for high-end feel */
+.hero-logo-text .word span {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease;
+    cursor: default;
+}
+
+.hero-logo-text .word span:hover {
+    transform: scale(1.15) translateY(-5px);
+    color: #ff9b36;
+}
+
+.hero-logo-text .word.line-2 span:hover {
+    color: #ffffff;
 }
 
 .pixel-particle {
@@ -411,13 +458,14 @@ main {
 }
 
 .section-title {
-    font-family: "Minecraft Bold", "Minecraft", sans-serif;
-    font-size: 3rem;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.5rem, 7vw, 5.5rem);
     color: #ff9b36;
     /* Orange color matching the pixel glow */
     margin-bottom: 3rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: -0.02em;
 }
 
 .about-grid {
@@ -454,12 +502,15 @@ main {
 .about-text {
     flex: 1;
     /* Le texte prend le reste, et retombe exactement sous le titre ABOUT ME (+350 de margin - 300 d'image - 50 gap ~ on compense) */
-    font-size: 1.2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300; /* Police fine Space Grotesk */
+    font-size: 1.6rem;
+    line-height: 1.6;
     color: var(--text-muted);
 }
 
 .about-text p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
 }
 
 .social-links {
@@ -640,6 +691,10 @@ main {
         padding-top: 130px;
         padding-bottom: 0; /* Ensure it touch the progress bar */
         min-height: 100vh;
+    }
+
+    .hero-section::before {
+        display: none; /* Retire la lueur sur mobile */
     }
 
     .about-grid {
@@ -960,7 +1015,7 @@ main {
 }
 
 .modal-content {
-    background-color: #3a3a3a;
+    background-color: #0d1117; /* Très sombre bleu-gris */
     border: 4px solid;
     border-top-color: #d1d1d1;
     border-left-color: #d1d1d1;
@@ -1030,7 +1085,7 @@ main {
 .form-group textarea {
     width: 100%;
     padding: 0.8rem;
-    background-color: #2c2c2c;
+    background-color: #070a0e; /* Très sombre pour haut contraste */
     border: 2px solid #111;
     color: #fff;
     outline: none;
@@ -1051,7 +1106,7 @@ main {
 }
 
 #contact-form:invalid .submit-btn {
-    background-color: #2c2c2c;
+    background-color: #070a0e;
     color: #888888 !important;
     border-top-color: #555555;
     border-left-color: #555555;
@@ -1062,178 +1117,224 @@ main {
     cursor: not-allowed;
 }
 
-/* --- Clients Section --- */
-.clients-grid {
+/* --- Credits & Footer Section --- */
+.credits-section {
+    background-color: #0b0b0b; /* Fond encore plus sombre pour le footer */
+    padding: 6rem 2rem 3rem 2rem;
+    border-top: 1px solid #1a1a1a;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 2rem;
+    align-items: center;
     width: 100%;
-    max-width: 1200px; /* Increased max-width to allow more cards if needed */
-    margin: 0 auto;
-    padding: 2rem;
 }
 
-/* Custom button style for Clients section title */
-.animations-section .section-title.btn-dark {
-    pointer-events: none;
-    margin-bottom: 2rem;
-    display: inline-flex;
+.credits-content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 0.4rem 3rem;
-    min-height: 50px;
-    height: auto;
-    width: auto;
-    min-width: 250px;
-    max-width: 800px;
-    font-size: 1.6rem;
+    gap: 4rem;
+}
+
+.credits-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #888888; /* Gris */
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     text-align: center;
-    line-height: normal;
+    margin-bottom: 1rem;
 }
 
-.client-card {
+/* Credits Grid - Sleek row of logos */
+.clients-credits-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Restyle client cards inside the credits footer */
+.clients-credits-grid .client-card {
     position: relative;
-    /* Pour positionner le badge */
-    background-color: transparent;
-    padding: 0;
+    width: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-    cursor: default;
-    width: 280px;
-    max-width: 90vw;
-    /* overflow: hidden removed to allow badge overflow */
-}
-
-/* Nouveau conteneur pour garder les arrondis et le masquage des infos */
-.client-card-main {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.partner-badge {
-    position: absolute;
-    top: -30px;
-    right: -30px;
-    width: 120px;
-    height: 120px;
-    z-index: 20;
-    image-rendering: auto;
-    filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
-}
-
-.client-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Fill the card to allow centering */
-    padding: 2rem;
-    padding-top: 50px; /* Redescend le texte un peu */
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.95) 70%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center vertically */
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 5;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.client-card:hover .client-info {
-    transform: translateY(0);
-}
-
-.client-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.3), 0 10px 30px rgba(0, 0, 0, 0.8);
-}
-
-.client-logo-wrapper {
-    width: 100%;
-    aspect-ratio: 1 / 1;
     background: transparent;
-    margin-bottom: 0;
+    transition: transform 0.3s ease;
+    cursor: default;
+}
+
+.clients-credits-grid .client-card-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+}
+
+.clients-credits-grid .client-logo-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #222;
+    background-color: #121212;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    filter: grayscale(100%) opacity(0.6);
 }
 
-.client-logo {
+.clients-credits-grid .client-card:hover .client-logo-wrapper {
+    filter: grayscale(0%) opacity(1);
+    border-color: #ff9b36;
+    box-shadow: 0 0 15px rgba(255, 155, 54, 0.4);
+}
+
+.clients-credits-grid .client-logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    image-rendering: auto;
 }
 
-.client-name {
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    font-size: 1.1rem; /* Slightly larger again but safe */
+/* We present info below the logo cleanly like movie credits role */
+.clients-credits-grid .client-info {
+    position: static;
+    transform: none;
+    background: transparent;
+    padding: 0.5rem 0 0 0;
     text-align: center;
-    text-transform: uppercase;
-    overflow: visible; /* Prevent letter-cropping */
-    font-family: "Minecraft", sans-serif;
-    line-height: 1.4; /* Better clearance */
-    margin-bottom: 5px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    image-rendering: auto;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
 }
 
-.client-description {
-    font-family: "Minecraft", sans-serif;
-    color: #ffd700;
-    font-size: 0.75rem; /* Extremely small */
-    text-align: center;
-    margin-top: 5px;
-    word-break: break-word;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    image-rendering: auto;
-    width: 100%;
+.clients-credits-grid .client-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #888;
+    margin-top: 0.5rem;
+    transition: color 0.3s ease;
 }
 
-/* Mobile Overrides (placed at the end to prevent desktop overrides) */
+.clients-credits-grid .client-card:hover .client-name {
+    color: #fff;
+}
+
+/* Client description is shown as a tiny footnote or hidden if too crowded, but let's make it a nice small text */
+.clients-credits-grid .client-description {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 0.1rem;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Small, subtle partner badge top-right of logo */
+.clients-credits-grid .partner-badge {
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    z-index: 10;
+    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5));
+}
+
+/* Legal Footer Bottom style */
+.credits-footer-bottom {
+    width: 100%;
+    border-top: 1px solid #1a1a1a;
+    padding-top: 3rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.credits-copyright {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: #444;
+    letter-spacing: 0.05em;
+}
+
+.credits-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.credits-links a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.credits-links a:hover {
+    color: #ff9b36;
+}
+
+.credits-divider {
+    color: #333;
+    font-size: 0.85rem;
+    user-select: none;
+}
+
+/* Mobile Overrides */
 @media screen and (max-width: 768px) {
-    .clients-grid {
-        display: grid; /* Explicitly set grid to override flex */
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        padding: 1rem;
+    .credits-section {
+        padding: 4rem 1rem 2rem 1rem;
+    }
+    
+    .clients-credits-grid {
+        gap: 1.5rem;
     }
 
-    .client-card {
-        padding: 0.6rem;
-        min-width: 0;
-        width: 100%;
-        /* overflow: hidden removed */
+    .clients-credits-grid .client-card {
+        width: 100px;
     }
 
-    .client-name,
-    .client-description {
-        display: none !important;
-    }
-
-    .partner-badge {
+    .clients-credits-grid .client-logo-wrapper {
         width: 60px;
         height: 60px;
-        top: -10px;
-        right: -10px;
+    }
+
+    .clients-credits-grid .client-name {
+        font-size: 0.8rem;
+    }
+
+    .clients-credits-grid .client-description {
+        display: none;
+    }
+
+    .clients-credits-grid .partner-badge {
+        width: 24px;
+        height: 24px;
+        top: -3px;
+        right: 12px;
     }
 }
 
@@ -1819,27 +1920,39 @@ main {
 }
 
 .review-card {
-    flex: 0 0 400px;
+    flex: 0 0 300px;
     min-width: 200px; /* Safety fallback */
     background: rgba(20, 20, 20, 0.7);
     border: 2px solid #333;
-    padding: 2rem;
-    border-radius: 15px; /* Rounded corners as requested */
+    padding: 1.25rem;
+    border-radius: 12px; /* Rounded corners as requested */
     scroll-snap-align: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
     backdrop-filter: blur(10px);
-    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
     font-family: "Minecraft", sans-serif; /* Minecraft font */
 }
 
 .review-card:hover {
-    border-color: #ff9900;
+    border-color: #ff9900; /* Bordure orange au survol */
     transform: translate(-5px, -5px);
     box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.6);
     background: rgba(30, 30, 30, 0.9);
+}
+
+.review-card:hover .review-author {
+    color: #ff9900; /* Pseudo orange au survol */
+}
+
+.review-card:hover .review-stars img {
+    filter: none; /* Étoiles repassent en couleur or au survol */
+}
+
+.review-card:hover .review-text {
+    border-left-color: #ff9900; /* Barre latérale orange au survol */
 }
 
 .review-stars {
@@ -1849,30 +1962,33 @@ main {
 }
 
 .review-stars img {
-    width: 24px;
-    height: 24px;
-    /* Removed image-rendering: pixelated as icons are high-res */
+    width: 16px;
+    height: 16px;
+    filter: grayscale(100%) brightness(1.2); /* Étoiles grises par défaut */
+    transition: filter 0.3s ease;
 }
 
 .review-text {
-    font-size: 1rem;
+    font-size: 0.85rem;
     line-height: 1.4;
     color: #eee;
     font-family: "Minecraft", sans-serif;
     flex-grow: 1;
     position: relative;
     padding-left: 15px;
-    border-left: 2px solid #ff9900;
+    border-left: 2px solid #888888; /* Barre latérale grise par défaut */
+    transition: border-color 0.3s ease;
 }
 
 .review-author {
     font-family: "Minecraft", sans-serif;
-    color: #ff9900;
-    font-size: 1.2rem;
+    color: #888888; /* Pseudo en gris par défaut */
+    font-size: 0.95rem;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: color 0.3s ease;
 }
 
 .review-author::before {
@@ -1917,5 +2033,53 @@ main {
     .review-author::before {
         font-size: 0.7rem;
     }
+}
+
+/* --- Scroll Down Indicator and Auto Scroll Area --- */
+.scroll-arrow-indicator {
+    position: absolute;
+    bottom: 3rem; /* Rehaussé sur la page */
+    left: 0;
+    width: 100%;
+    height: 100px; /* Grande zone de contact sur toute la largeur du bas */
+    z-index: 20;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scroll-arrow-indicator:hover {
+    opacity: 1 !important;
+}
+
+.scroll-arrow-indicator svg {
+    animation: arrowBounce 2s infinite;
+}
+
+@keyframes arrowBounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-8px);
+    }
+    60% {
+        transform: translateY(-4px);
+    }
+}
+
+.scroll-trigger-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Aligné avec la même hauteur */
+    z-index: 15;
+    background-color: transparent;
+    pointer-events: auto;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 

@@ -7,11 +7,14 @@
     <link rel="icon" type="image/png" href="images/froxal_logo.webp" />
     <link rel="stylesheet" href="style.css?v=11" />
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Pixelify+Sans:wght@400..700&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    
     <!-- Preload Critical Assets -->
     <link rel="preload" href="Minecraft.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="Minecraft-Bold.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="images/logo.webp" as="image">
-    <link rel="preload" href="images/bg.webp" as="image">
+
     
     <meta name="description" content="FroXaL Studio - Professionnal 3D Animator specializing in Minecraft, Hytale, and Roblox. Over 3 years of experience bringing worlds to life.">
   </head>
@@ -34,8 +37,8 @@
           <a href="#home" class="btn-icon"
             ><img src="images/UI/home.webp" alt="Home" class="nav-icon" width="15" height="16"
           /></a>
-          <a href="#clients" class="btn-icon"
-            ><img src="images/UI/clients.webp" alt="Clients" class="nav-icon" width="15" height="16"
+          <a href="#about" class="btn-icon"
+            ><img src="images/UI/clients.webp" alt="About Me" class="nav-icon" width="15" height="16"
           /></a>
           <a href="#portfolio" class="btn-icon"
             ><img
@@ -56,18 +59,25 @@
         style="flex-direction: column; align-items: center"
       >
         <div class="logo-wrapper">
-          <img
-            src="images/logo.webp"
-            alt="Minecraft Animator Logo"
-            class="main-logo"
-            width="800"
-            height="370"
-          />
+          <h1 class="hero-logo-text">
+            <span class="word line-1">
+              <span>F</span><span>R</span><span>O</span><span>X</span><span>A</span><span>L</span>
+            </span>
+            <span class="word line-2">
+              <span>S</span><span>T</span><span>U</span><span>D</span><span>I</span><span>O</span>
+            </span>
+          </h1>
         </div>
         <h1 class="hero-subtitle">
           ONE ANIMATION.
           <span>ABSOLUTE IMPACT ON YOUR PROJECT.</span>
         </h1>
+        <div class="scroll-arrow-indicator">
+          <svg width="48" height="24" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4L24 20L44 4" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="scroll-trigger-line" aria-hidden="true"></div>
       </section>
 
       <!-- Scroll Progress Bar -->
@@ -157,23 +167,6 @@
         </div>
       </section>
 
-      <!-- Section Clients -->
-      <section id="clients" class="animations-section relative-container">
-        <div class="animations-content fade-in-element flex-col-center">
-          <h2 class="section-title">CLIENTS</h2>
-
-          <div id="clients-grid" class="clients-grid">
-            <!-- Les fiches clients générées par Supabase apparaitront ici -->
-          </div>
-
-          <div class="reviews-container fade-in-element">
-            <div id="reviews-track" class="reviews-track">
-              <!-- Les avis clients apparaîtront ici -->
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Section Portfolio -->
       <section id="portfolio" class="animations-section relative-container">
         <!-- Overlay de chargement dynamique -->
@@ -205,6 +198,35 @@
           </div>
         </div>
       </section>
+
+      <!-- Section Clients (remplacée par un footer / zone de crédits en bas de page) -->
+      <footer id="clients" class="credits-section relative-container">
+        <div class="credits-content fade-in-element">
+          <h2 class="credits-title">CLIENTS</h2>
+          
+          <div id="clients-grid" class="clients-credits-grid">
+            <!-- Les fiches clients générées par Supabase apparaitront ici, formatées en crédits discrets -->
+          </div>
+
+          <!-- Reviews (Avis Clients) -->
+          <div class="reviews-container fade-in-element">
+            <div id="reviews-track" class="reviews-track">
+              <!-- Les avis clients apparaîtront ici -->
+            </div>
+          </div>
+
+          <!-- Liens légaux & copyright (termes, services, etc.) -->
+          <div class="credits-footer-bottom">
+            <p class="credits-copyright">© 2026 FROXAL STUDIO. ALL RIGHTS RESERVED.</p>
+            <div class="credits-links">
+              <a href="#home">HOME</a>
+              <a href="#about">ABOUT</a>
+              <a href="#portfolio">PORTFOLIO</a>
+              <a href="javascript:void(0);" onclick="document.getElementById('contact-modal').classList.add('active')">CONTACT</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
     <!-- Lightbox Portfolio -->
     <div id="portfolio-lightbox" class="modal-overlay">
