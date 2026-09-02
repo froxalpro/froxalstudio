@@ -1,29 +1,25 @@
 @font-face {
-    font-family: "Minecraft";
-    src: url("Minecraft.ttf") format("truetype");
+    font-family: 'Minecraft';
+    src: url('Minecraft.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
 }
 
 @font-face {
-    font-family: "Minecraft Bold";
-    src: url("Minecraft-Bold.ttf") format("truetype");
+    font-family: 'Minecraft';
+    src: url('Minecraft-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
-    font-display: swap;
 }
 
 :root {
-    --bg-color: #121212; /* Gris foncé */
-    --bg-secondary: #1a1a1a;
-    --text-main: #ffffff;
-    --text-muted: #c5c6c7;
-    --primary: #2b7a78;
-    --secondary: #3aaeac;
-    --accent: #66fcf1;
-    --glass-bg: rgba(31, 40, 51, 0.4);
-    --glass-border: rgba(102, 252, 241, 0.2);
+    --bg-color: #1c1c1c;        /* Gris très foncé type Bedrock */
+    --footer-color: #3A3A40;    
+    --header-color: #3A3A40;    
+    --text-color: #ffffff;      
+    --mc-green: #3CA536;        /* Vert Creeper / Grass */
+    --mc-green-hover: #45bf3e;
+    --border-color: #000000;    
 }
 
 * {
@@ -33,2053 +29,645 @@
 }
 
 body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-main);
+    color: var(--text-color);
     line-height: 1.6;
-    overflow-x: hidden;
-    position: relative;
-    font-family: "Minecraft", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Removed native scroll-behavior: smooth as Lenis library handles it now */
+/* Typographie globale */
+h1, h2, h3 {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
-/* Background image overlay with opacity and blur */
-.dynamic-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: none; /* Désactivé pour conserver le fond gris */
+p {
+    font-family: 'Minecraft', sans-serif;
+    font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+    p {
+        font-size: 1.6rem;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    width: 100%;
+}
+
+section {
+    padding: 4rem 0;
+}
+
+/* Header */
+header {
+    background-color: var(--header-color);
+    width: 100%;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.header-logo {
+    height: 100px; /* Taille agrandie par défaut */
+    width: auto;
+    object-fit: contain;
+    transition: height 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 1)) drop-shadow(0px 0px 20px rgba(0, 0, 0, 1));
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #aaaaaa;
+    font-size: 1.2rem;
+    font-family: 'Minecraft', sans-serif;
+    letter-spacing: 1px;
+    transition: color 0.1s;
+}
+
+header nav a:hover {
+    color: var(--mc-green);
+    text-decoration: underline;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 8px;
+}
+
+/* Layout */
+.middle-section {
+    flex: 1;
+}
+
+/* Bouton style Minecraft */
+.mc-button {
+    display: inline-block;
+    background-color: var(--mc-green);
+    color: white;
+    text-decoration: none;
+    font-family: 'Minecraft', sans-serif;
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border: 4px solid #000000;
+    /* Effet 3D très simple typique du jeu */
+    box-shadow: inset -4px -4px 0px rgba(0,0,0,0.3), inset 4px 4px 0px rgba(255,255,255,0.4);
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.mc-button:hover {
+    background-color: var(--mc-green-hover);
+}
+
+.mc-button:active {
+    box-shadow: inset 4px 4px 0px rgba(0,0,0,0.4);
+    padding-top: 14px; /* Simule l'enfoncement */
+    padding-bottom: 10px;
+}
+
+/* Hero Section */
+#hero {
+    text-align: center;
+    padding: 6rem 2rem;
+}
+
+#hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    text-shadow: 4px 4px 0px #000000;
+}
+
+#hero p {
+    font-size: 1.5rem;
+    color: #cccccc;
+    margin-bottom: 2rem;
+}
+
+/* Conteneurs Blocky (Box UI) */
+.mc-box {
+    background-color: #2a2a2a;
+    border: 4px solid #000000;
+    padding: 2rem;
+    box-shadow: inset -4px -4px 0px rgba(0,0,0,0.5), inset 4px 4px 0px rgba(255,255,255,0.1);
+    margin-bottom: 2rem;
+}
+
+/* Section About */
+#about {
+    background-color: #0069FC;
+    position: relative;
+    z-index: 1;
+}
+
+#about::before,
+#tos-page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('assets/banner3D.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.1;
-    /* 10% opacity Base */
-    filter: blur(8px);
-    /* Subtle blur effect */
-    z-index: -2;
-    /* Keep it behind everything, even behind the pixel particles (-1) */
-    pointer-events: none;
-    /* Make sure it doesn't block clicks */
-    will-change: opacity;
-    /* Optimize for smooth scrolling JS updates */
+    opacity: 0.45;
+    z-index: -1;
 }
 
-.dynamic-bg.bg2 {
-    background-image: none; /* Désactivé pour conserver le fond gris */
-    opacity: 0;
-    /* Initializes at 0, JavaScript handles fade-in */
-}
-
-h1,
-h2,
-h3 {
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: flex-end;
-    /* Align the navigation links to the right */
-    align-items: center;
-    padding: 2rem 5%;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
-    background-color: var(--bg-color);
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-.highlight {
-    color: var(--primary);
-}
-
-nav {
-    display: flex;
-    align-items: center;
+/* Livre Responsive (Section About) */
+.book-container {
     position: relative;
-    /* Base pour absolute dropdown tooltip */
-}
-
-.mobile-menu-btn {
-    display: none !important;
-    /* Absent sur bureau */
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-nav a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-a.btn-icon,
-.btn-icon {
-    background-color: #7a7a7a;
-    /* Slightly darker stone color */
-    border: 2px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #3b3b3b;
-    border-right-color: #3b3b3b;
-    padding: 0.4rem;
-    /* Égal de tous les côtés pour un bouton carré */
-    display: inline-flex;
-    align-items: center;
-    /* Centrage vertical */
-    justify-content: center;
-    /* Centrage horizontal */
-    box-shadow: 2px 2px 0px #3b3b3b;
-    /* Pixel drop shadow */
-    image-rendering: pixelated;
-    transition: all 0.1s ease;
-    width: 44px;
-    /* Fixe la taille globale du bouton */
-    height: 44px;
-}
-
-a.btn-icon:hover,
-.btn-icon:hover {
-    background-color: #6d7bd2;
-    /* Specific blue requested color on hover */
-    border-top-color: #ffffff;
-    border-left-color: #ffffff;
-    border-bottom-color: #7c8ae2;
-    border-right-color: #7c8ae2;
-}
-
-a.btn-icon:active,
-.btn-icon:active {
-    border-top-color: #3b3b3b;
-    border-left-color: #3b3b3b;
-    border-bottom-color: #d1d1d1;
-    border-right-color: #d1d1d1;
-    box-shadow: 1px 1px 0px #3b3b3b;
-    padding: calc(0.4rem + 2px) 0.4rem calc(0.4rem - 2px) 0.4rem;
-    /* Push down effect */
-}
-
-nav a:hover {
-    color: var(--text-main);
-}
-
-.nav-icon {
-    width: 32px;
-    height: 32px;
-    /* vertical-align: middle; removed as block display replaces it */
-    filter: brightness(0.7);
-    transition:
-        filter 0.3s ease,
-        transform 0.3s ease;
-    display: block;
-    /* Mieux pour le flexbox centré */
+    max-width: 750px; /* Taille légèrement augmentée */
     margin: 0 auto;
-    /* Garantie le centrage horizontal au cas où */
+    width: 100%;
 }
 
-nav a:hover .nav-icon,
-a.btn-icon:hover .nav-icon,
-.btn-icon:hover .nav-icon {
-    filter: brightness(1);
-    transform: scale(1.1);
-}
-
-.btn-primary {
-    background-color: #0a1224; /* Très sombre/bleu-noir */
-    border: 1px solid #0033cc;
-    height: 44px;
-    padding: 10px 1.5rem 0 1.5rem;
-    color: #ffffff !important;
-    text-shadow: none; /* Supprimé pour un centrage visuel parfait */
-    font-size: 1rem;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    image-rendering: pixelated;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    line-height: normal;
-}
-
-.btn-primary:hover {
-    background-color: #1e4de6;
-    border-color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.btn-primary:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    background-color: #1a3ab1;
-}
-
-.btn-dark {
-    background-color: #333333;
-    border: 4px solid;
-    border-top-color: #555555;
-    border-left-color: #555555;
-    border-bottom-color: #111111;
-    border-right-color: #111111;
-    color: #ffffff !important;
-    text-shadow: 2px 2px 0px #111111;
-    image-rendering: pixelated;
-}
-
-/* --- Main Content --- */
-main {
-    min-height: 100vh;
-}
-
-/* --- Hero Section --- */
-.hero-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
-    padding: 100px 5% 2rem; /* Added bottom padding but keep it tight */
-    position: relative;
-    z-index: 10;
-}
-
-.logo-wrapper {
-    position: relative;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.main-logo {
-    max-width: 800px;
-    /* Adjust this value depending on the actual logo image size */
+.book-bg {
     width: 100%;
     height: auto;
-    object-fit: contain;
-    margin-top: 10px;
-    /* Small push so it doesn't touch the absolute edge, change to 0 if wanted touching */
-    animation: fadeInDown 1s ease-out forwards;
-    /* Removed drop-shadow here to avoid conflicting with the new pixel glow */
+    display: block;
 }
 
-.hero-logo-text {
-    font-family: 'Bricolage Grotesque', sans-serif;
+.book-content {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 10% 12%; /* Marges en pourcentage pour toujours suivre la taille de l'image */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0rem;
-    margin-bottom: 2rem;
-    animation: fadeInDown 1s ease-out forwards;
-    user-select: none;
+    justify-content: center; /* Centre verticalement */
+    text-align: center;
+    overflow-y: auto; /* Permet de scroller le texte sur petit écran si besoin */
 }
 
-.hero-logo-text .word {
-    display: flex;
-    justify-content: center;
-    line-height: 0.85;
+.book-logo {
+    max-width: 280px;
+    width: 40%;
+    margin-top: -1.5rem;
+    margin-bottom: 1rem;
 }
 
-.hero-logo-text .word.line-1 {
-    font-size: clamp(4rem, 12vw, 9rem);
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    color: #ffffff;
+.book-content p {
+    color: #000000;
+    text-shadow: none;
 }
 
-.hero-logo-text .word.line-2 {
-    font-size: clamp(3rem, 9vw, 6.7rem);
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    color: #ff9b36; /* Orange color matching accent */
+.book-content h2,
+.book-content h2 .hover-letter {
+    color: var(--mc-green);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
 }
 
-/* Micro-animation on letter hover for high-end feel */
-.hero-logo-text .word span {
+.book-content h2 {
+    margin-top: -250px;
+}
+
+.book-content .hover-letter:hover {
+    color: var(--mc-green-hover);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+.book-content p {
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .book-content p {
+        font-size: 1.2rem;
+    }
+}
+
+
+.mc-box h2 {
+    color: var(--mc-green);
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 0px #000000;
+    font-size: 3rem;
+}
+
+/* Animation lettre par lettre */
+.hover-letter {
     display: inline-block;
-    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease;
+    transition: transform 0.1s ease-out, color 0.1s ease-out;
     cursor: default;
 }
 
-.hero-logo-text .word span:hover {
-    transform: scale(1.15) translateY(-5px);
-    color: #ff9b36;
-}
-
-.hero-logo-text .word.line-2 span:hover {
+.hover-letter:hover {
+    transform: translateY(-4px);
     color: #ffffff;
+    text-shadow: 4px 4px 0px #000000;
 }
 
-.pixel-particle {
+/* Décoration autour du Portfolio */
+.decor-left {
     position: absolute;
-    z-index: 50;
-    /* Bring it all the way to the front */
-    border-radius: 0;
-    /* Square pixels */
-    opacity: 0;
-    pointer-events: none;
-    /* Make sure they do not block user clicks on links */
+    left: -500px;
+    top: 260px;
+    width: 720px;
+    z-index: 20; /* Passe au-dessus des vidéos */
+    opacity: 1;
+    image-rendering: pixelated; 
+    pointer-events: none; /* Clics traversent l'image vers les vidéos dessous */
 }
 
-.xp-particle {
-    /* Style unique pour les images xp1 et xp2 */
-    border-radius: 0;
-    background: transparent !important;
-    box-shadow: none !important;
-    filter: drop-shadow(0 0 8px #55ff55);
-    /* Glow vert XP */
-    mix-blend-mode: normal;
-    /* Les images ont leur propre fond transparent */
+.decor-right {
+    position: absolute;
+    right: -500px;
+    top: 260px;
+    width: 720px;
+    z-index: 20; 
+    opacity: 1;
+    image-rendering: pixelated; 
+    pointer-events: none; 
 }
 
-/* Container spécifique pour garder les particules contenues */
-.relative-container {
-    position: relative;
+/* Bandeau dynamique uniquement derrière les onglets Trailers/Blockbench */
+.tabs-header-stripe {
     width: 100%;
+    background-color: #F09830; 
+    background-image: linear-gradient(rgba(240, 152, 48, 0.4), rgba(240, 152, 48, 0.4)), url('assets/header.png');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    background-position: center;
+    image-rendering: pixelated;
+    transition: background-color 0.3s ease, background-image 0.3s ease, padding 0.3s ease;
 }
 
-@keyframes particleFloat {
-    0% {
-        transform: translateY(0px) scale(1);
-        filter: brightness(1);
-    }
-
-    100% {
-        transform: translateY(-15px) scale(1.2);
-        filter: brightness(1.5);
-    }
-}
-
-@keyframes fadeInParticle {
-    to {
-        opacity: 0.8;
-    }
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* --- Scroll Progress Bar --- */
-.scroll-progress-container {
-    width: 100vw;
-    margin-left: -50vw;
-    left: 50%;
-    height: 6px;
-    background-color: #111111;
-    border-top: 2px solid #333;
-    border-bottom: 2px solid #333;
-    position: sticky;
-    top: 96px;
-    z-index: 99;
-    overflow: hidden;
-    margin-bottom: 2rem;
-}
-
-.scroll-progress-bar {
-    height: 100%;
-    width: 0%;
-    /* Initial state */
-    background-color: #55ff55;
-    /* Minecraft experience green */
-    box-shadow: 0 0 10px #55ff55;
-    /* Glow effect */
-    will-change: width;
-    transition: width 0.1s ease-out;
-    /* Smooth fill */
-}
-
-.btn-outline {
-    background: transparent;
-    padding: 0.6rem 1.5rem;
-    border-radius: 50px;
-    color: var(--text-main);
-    border: 2px solid var(--secondary);
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-outline:hover {
-    background: rgba(102, 252, 241, 0.1);
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
-}
-
-/* --- About Section --- */
-.about-section {
-    min-height: 100vh;
-    background-color: transparent;
-    /* Changed from solid black */
-    position: relative;
-    z-index: 10;
+/* Onglets du Portfolio */
+.portfolio-tabs {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 5%;
+    gap: 4rem;
+    margin-bottom: 0;
 }
 
-.about-content {
-    max-width: 1000px;
-    width: 100%;
-}
-
-.about-content .section-title {
-    margin-left: 45px;
-    /* Décale le titre très précisément (3rem = 48px + 6px = 54px) */
-}
-
-.section-title {
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 800;
-    font-size: clamp(3.5rem, 7vw, 5.5rem);
-    color: #ff9b36;
-    /* Orange color matching the pixel glow */
-    margin-bottom: 3rem;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-}
-
-.about-grid {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    /* Aligne l'image en haut avec le texte */
-    gap: 6rem;
-    margin-left: -550px;
-    /* Décale physiquement toute la grille vers la gauche (350 -> 550 pour s'adapter à la nouvelle taille) */
-}
-
-.about-image {
-    flex: 0 0 500px;
-    /* Taille augmentée de 300px à 500px */
-    display: flex;
-    justify-content: flex-end;
-    /* Assure que l'image reste au plus près de l'écart */
-    align-items: flex-start;
-    margin-top: -350px;
-    /* Remonte la vidéo de 50px supplémentaires sur PC */
-}
-
-.profile-image {
-    width: 100%;
-    height: auto;
-    pointer-events: none;
-    /* Désactive les clics, incluant le clic droit et le menu contextuel natif de la vidéo */
-    position: relative;
-    z-index: 100;
-    /* Assure que la vidéo reste au-dessus des particules d'XP (qui sont à z-index: 50) */
-}
-
-.about-text {
-    flex: 1;
-    /* Le texte prend le reste, et retombe exactement sous le titre ABOUT ME (+350 de margin - 300 d'image - 50 gap ~ on compense) */
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 300; /* Police fine Space Grotesk */
-    font-size: 1.6rem;
-    line-height: 1.6;
-    color: var(--text-muted);
-}
-
-.about-text p {
-    margin-bottom: 1.8rem;
-}
-
-.social-links {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    /* Align with the text */
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    /* Spacing from the paragraph above */
-}
-
-.social-btn {
-    padding: 1rem 2rem;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.tab-btn {
+    cursor: pointer;
     color: #ffffff;
-    text-decoration: none;
-    text-align: center;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    border-radius: 4px;
-    /* Slight rounding to contrast with minecraft buttons */
-    backdrop-filter: blur(5px);
+    transition: color 0.3s, transform 0.2s, text-shadow 0.3s;
+    user-select: none;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 1), 0px 0px 20px rgba(0, 0, 0, 1), 0px 4px 8px rgba(0, 0, 0, 1);
 }
 
-.social-btn:hover {
-    background: #ffffff;
-    color: #000000;
+.tab-btn:hover {
+    color: #cccccc;
 }
 
-/* --- JS Fade In Elements --- */
-.fade-in-element {
-    opacity: 0;
-    /* Hidden by default */
-    transform: translateY(50px);
-    /* Start further down */
-    will-change: opacity, transform;
-    /* Optimize for JS continuous updates */
+.tab-btn.active {
+    color: var(--text-color);
+    text-shadow: 2px 2px 0px #000000, 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
-.fade-in-element.visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
-
-/* --- Animations / Projects Section --- */
-.animations-section {
-    min-height: 100vh;
-    background-color: transparent;
-    position: relative;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    /* Changed from center to align top */
-    padding: 100px 5%;
-    /* Top padding to ensure it starts below clearly */
-}
-
-.animations-content {
-    max-width: 1200px;
+.portfolio-divider {
     width: 100%;
+    height: 4px;
+    background-color: #000000; /* La barre visuelle en dessous */
+    margin-bottom: 3rem;
+    box-shadow: 0px 2px 0px rgba(255,255,255,0.1);
 }
 
-#clients .section-title {
-    color: #2596be;
-    text-align: center;
-    width: 100%;
-    margin-left: 10px; /* Shifted 10px as requested */
-}
-
-.flex-col-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* Projets Grid (Design asymétrique) */
+#content-trailers {
+    background-image: url('assets/paint.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; /* Agrandit l'image pour couvrir toute la zone */
+    image-rendering: pixelated; /* Garde l'aspect pixel art net */
 }
 
 .projects-grid {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: dense;
     gap: 2rem;
-    flex-wrap: wrap;
-    width: 100%;
     margin-top: 2rem;
 }
 
 .project-card {
-    background-color: #1f2833;
-    padding: 1rem;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s;
+    background-color: #1e2436; 
+    border: 4px solid var(--border-color);
+    box-shadow: inset -4px -4px 0px rgba(0,0,0,0.4), inset 4px 4px 0px rgba(255,255,255,0.1);
+    padding: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    aspect-ratio: 16 / 9; /* Remplace le vieux hack padding-bottom */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.card-large-right {
+    grid-column: 2 / span 2;
+    grid-row: span 2;
 }
 
 .project-card:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Subtle shadow on hover */
+    transform: translateY(-4px);
+    box-shadow: inset -4px -4px 0px rgba(0,0,0,0.4), inset 4px 4px 0px rgba(255,255,255,0.1), 0 8px 0px rgba(0,0,0,0.3);
 }
 
-.project-video-placeholder {
+.project-card img {
     width: 100%;
-    aspect-ratio: 16/9;
-    background-color: #111;
-    border: 2px solid #333;
-    display: flex;
-    justify-content: center;
+    height: 100%;
+    object-fit: cover;
+    border: 4px solid #000;
+    display: block;
+}
+
+#content-blockbench .project-card {
+    aspect-ratio: auto; /* Retire le format 16:9 pour s'adapter à l'image */
     align-items: center;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
+    justify-content: center;
 }
 
-.project-title {
-    color: var(--secondary);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+#content-blockbench .project-card img {
+    height: auto;
+    object-fit: contain; /* Respecte le format original de l'image (pas de rognage) */
+    background-color: transparent; /* Retire le fond subtil pour un rendu plus propre */
 }
 
-.project-desc {
-    color: var(--text-muted);
-    font-size: 1rem;
-}
-
-/* --- Mobile Responsiveness --- */
-@media screen and (max-width: 768px) {
-    #about,
-    #clients {
-        background-color: #000000 !important;
-    }
-
-    .navbar {
-        justify-content: flex-end;
-        padding: 15px 20px;
-        /* Colle le menu tout en haut à droite */
-    }
-
-    .mobile-menu-btn {
-        display: inline-flex !important;
-    }
-
-    nav {
-        position: static;
-    }
-
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: #2c2c2c;
-        border: 2px solid #000000;
-        border-left: none;
-        border-right: none;
-        padding: 2rem 1.5rem;
-        border-radius: 0;
-        gap: 1.5rem;
-        z-index: 200;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    }
-
-    .nav-links.active {
-        display: flex;
-        animation: fadeInDown 0.3s ease forwards;
-    }
-
-    /* Ajustements généraux */
-    .scroll-progress-container {
-        margin-bottom: 0; /* Remove gap to delimit perfectly between image and black background */
-        top: 0; /* Fallback before JS calculates it */
-    }
-
-    .hero-section {
-        padding-top: 130px;
-        padding-bottom: 0; /* Ensure it touch the progress bar */
-        min-height: 100vh;
-    }
-
-    .hero-section::before {
-        display: none; /* Retire la lueur sur mobile */
-    }
-
-    .about-grid {
-        flex-direction: column-reverse; /* Vidéo sous le texte */
-        gap: 2rem;
-        margin-left: 0;
-        align-items: center;
-    }
-
-    .section-title {
-        font-size: 2.2rem;
-        text-align: center;
-    }
-
-    .about-text {
-        text-align: center;
-    }
-
-    .about-image {
-        flex: 0 0 auto;
-        width: 220px;
-        margin: 0 auto;
-        margin-top: 1.5rem; /* Espace après le texte */
-    }
-
-    .clients-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 colonnes strictement égales */
-        gap: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    .partner-badge {
-        width: 30px;
-        /* Badge plus petit aussi */
-        height: 30px;
-        top: -5px;
-        right: -5px;
-    }
-}
-
-/* --- Performance Optimizations & YouTube Facades --- */
-.youtube-facade {
+.video-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 16/9;
-    cursor: pointer;
+    height: 100%;
+    border: 4px solid #000;
     background-color: #000;
     overflow: hidden;
-    border: 2px solid var(--glass-border);
 }
 
-.youtube-facade img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.youtube-facade:hover img {
-    transform: scale(1.05);
-}
-
-.play-button-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 44px;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease;
-}
-
-.play-button-overlay::after {
-    content: "";
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid #fff;
-    margin-left: 4px;
-}
-
-.youtube-facade:hover .play-button-overlay {
-    background-color: #ff0000;
-}
-
-.portfolio-media-wrapper {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background-color: #111;
-    overflow: hidden;
-}
-
-.portfolio-media-wrapper iframe,
-.portfolio-media-wrapper video,
-.portfolio-media-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.text-glow {
-    text-shadow:
-        0 0 10px var(--secondary),
-        0 0 20px var(--primary);
-}
-
-/* --- Hero Section --- */
-main {
-    padding-top: 80px;
-    min-height: 100vh;
-}
-
-/* Hero section merged above */
-
-/* Background gradient effect */
-.hero-section::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60vw;
-    height: 60vw;
-    background: radial-gradient(circle,
-            rgba(58, 174, 172, 0.15) 0%,
-            rgba(11, 12, 16, 0) 70%);
-    z-index: -1;
-    pointer-events: none;
-}
-
-.hero-content {
-    max-width: 800px;
-    margin-bottom: 4rem;
-    animation: fadeIn 1s ease-out;
-}
-
-.hero-title {
-    font-size: 4.5rem;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    letter-spacing: 2px;
-}
-
-.hero-subtitle {
-    font-size: 1.5rem;
-    color: #ff3333;
-    margin-bottom: 2.5rem;
-    font-weight: bold;
-    font-family: "Minecraft Bold", sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-top: 300px;
-}
-
-.hero-subtitle span {
-    color: white;
-    font-family: "Minecraft Bold", sans-serif;
-    font-size: 1.5rem;
-}
-
-.hero-actions {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-}
-
-.hero-client-proof {
-    margin-top: 3rem;
-    opacity: 0.8;
-    animation: fadeIn 1.5s ease-out;
-}
-
-.proof-title {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.client-list {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    font-size: 1.2rem;
-    color: var(--secondary);
-}
-
-.client-list .dot {
-    color: var(--primary);
-    font-size: 0.8rem;
-}
-
-/* --- Portfolio Loader Overlay --- */
-.portfolio-loader {
+.video-wrapper iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 100;
-    pointer-events: auto; /* Bloque les clics pendant l'intro */
-    overflow: hidden;
-    display: none; /* Caché par défaut jusqu'au trigger JS */
-    flex-direction: column; /* Aligne le texte au dessus de la vidéo */
-    justify-content: center;
-    align-items: center;
-    opacity: 1;
-    background-color: var(--bg-color);
-    transition: opacity 0.5s ease;
 }
 
-#loader-percentage {
-    font-family: 'Minecraft', sans-serif;
-    font-size: clamp(1.5rem, 4vw, 3rem);
-    color: #fff;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-    letter-spacing: 2px;
+.custom-youtube-player {
+    cursor: pointer;
 }
 
-#loading-video {
-    position: relative;
-    width: 25%;
-    height: auto;
-    max-width: 100%;
-    object-fit: contain;
-    mix-blend-mode: screen;
-    will-change: mix-blend-mode;
-    transform: translateZ(0); /* Force hardware layer */
-}
-
-/* État initial pour le reveal aléatoire */
-.portfolio-card.portfolio-item-hidden {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: none !important;
-    transform: none !important;
-}
-
-@media (max-width: 768px) {
-    #loading-video {
-        width: 50%; /* Agrandissement x2 pour le mode mobile */
-    }
-}
-
-/* Hide portfolio content initially if desired, or let the overlay cover it */
-#portfolio .animations-content {
-    opacity: 1; /* Par défaut, écrasé par le JS pendant le chargement */
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.text-glow {
-    text-shadow:
-        0 0 10px var(--secondary),
-        0 0 20px var(--primary);
-}
-
-/* Responsiveness */
-@media (max-width: 900px) {
-    .hero-title {
-        font-size: 3rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
-
-    .hero-actions {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}
-
-/* --- Modal --- */
-.modal-overlay {
-    position: fixed;
+.youtube-thumbnail {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(11, 12, 16, 0.8);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none !important;
+    z-index: 1;
 }
 
-.modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
+.youtube-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none; /* Assure qu'aucun clic ne passe à YouTube */
+}
+
+.click-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* Au-dessus de tout pour capter le clic */
+    background: transparent;
+}
+
+/* Modale Vidéo (Lightbox) */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.85); /* Fond sombre transparent */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
 }
 
 .modal-content {
-    background-color: #0d1117; /* Très sombre bleu-gris */
-    border: 4px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #111111;
-    border-right-color: #111111;
-    padding: 2rem;
-    width: 90%;
-    max-width: 500px;
     position: relative;
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-    box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
-    image-rendering: pixelated;
-}
-
-.modal-overlay.active .modal-content {
-    transform: translateY(0);
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 2rem;
-    cursor: pointer;
-    text-shadow: 2px 2px 0 #000;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: #ff5555;
-}
-
-.modal-title {
-    text-align: center;
-    color: #ff9b36;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-}
-
-.modal-icon {
-    width: 48px;
-    height: 48px;
-    transform: translateY(-5px);
-    image-rendering: pixelated;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-muted);
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: #070a0e; /* Très sombre pour haut contraste */
-    border: 2px solid #111;
-    color: #fff;
-    outline: none;
-    border-bottom-color: #d1d1d1;
-    border-right-color: #d1d1d1;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    border-top-color: var(--secondary);
-    border-left-color: var(--secondary);
-}
-
-.submit-btn {
-    width: 100%;
-    margin-top: 1rem;
-}
-
-#contact-form:invalid .submit-btn {
-    background-color: #070a0e;
-    color: #888888 !important;
-    border-top-color: #555555;
-    border-left-color: #555555;
-    border-bottom-color: #111111;
-    border-right-color: #111111;
-    text-shadow: 1px 1px 0px #111111;
-    pointer-events: none;
-    cursor: not-allowed;
-}
-
-/* --- Credits & Footer Section --- */
-.credits-section {
-    background-color: #0b0b0b; /* Fond encore plus sombre pour le footer */
-    padding: 6rem 2rem 3rem 2rem;
-    border-top: 1px solid #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.credits-content {
-    width: 100%;
+    width: 80%;
     max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4rem;
+    background-color: #000;
+    border: 4px solid var(--border-color);
+    box-shadow: inset -4px -4px 0px rgba(0,0,0,0.5), inset 4px 4px 0px rgba(255,255,255,0.2), 0 0 30px rgba(0,0,0,1);
 }
 
-.credits-title {
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: #888888; /* Gris */
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-/* Credits Grid - Sleek row of logos */
-.clients-credits-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* Restyle client cards inside the credits footer */
-.clients-credits-grid .client-card {
-    position: relative;
-    width: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: transparent;
-    transition: transform 0.3s ease;
-    cursor: default;
-}
-
-.clients-credits-grid .client-card-main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: visible;
-}
-
-.clients-credits-grid .client-logo-wrapper {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 2px solid #222;
-    background-color: #121212;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
-    filter: grayscale(100%) opacity(0.6);
-}
-
-.clients-credits-grid .client-card:hover .client-logo-wrapper {
-    filter: grayscale(0%) opacity(1);
-    border-color: #ff9b36;
-    box-shadow: 0 0 15px rgba(255, 155, 54, 0.4);
-}
-
-.clients-credits-grid .client-logo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* We present info below the logo cleanly like movie credits role */
-.clients-credits-grid .client-info {
-    position: static;
-    transform: none;
-    background: transparent;
-    padding: 0.5rem 0 0 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: auto;
-}
-
-.clients-credits-grid .client-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 500;
-    font-size: 0.95rem;
-    color: #888;
-    margin-top: 0.5rem;
-    transition: color 0.3s ease;
-}
-
-.clients-credits-grid .client-card:hover .client-name {
-    color: #fff;
-}
-
-/* Client description is shown as a tiny footnote or hidden if too crowded, but let's make it a nice small text */
-.clients-credits-grid .client-description {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 300;
-    font-size: 0.75rem;
-    color: #555;
-    margin-top: 0.1rem;
-    max-width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Small, subtle partner badge top-right of logo */
-.clients-credits-grid .partner-badge {
+.close-modal {
     position: absolute;
-    top: -5px;
-    right: 15px;
-    width: 32px;
-    height: 32px;
-    z-index: 10;
-    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5));
+    top: -50px;
+    right: -20px;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-family: 'Minecraft', sans-serif;
 }
 
-/* Legal Footer Bottom style */
-.credits-footer-bottom {
+.close-modal:hover {
+    color: var(--mc-green);
+}
+
+#modal-video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+    height: 0;
     width: 100%;
-    border-top: 1px solid #1a1a1a;
-    padding-top: 3rem;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
 }
 
-.credits-copyright {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 300;
-    font-size: 0.8rem;
-    color: #444;
-    letter-spacing: 0.05em;
+/* Footer */
+.large-spacer {
+    height: 10vh; /* Réduit un peu l'espace car le contenu prend de la place */
 }
 
-.credits-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-}
-
-.credits-links a {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 400;
-    font-size: 0.85rem;
-    color: #666;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.credits-links a:hover {
-    color: #ff9b36;
-}
-
-.credits-divider {
-    color: #333;
-    font-size: 0.85rem;
-    user-select: none;
-}
-
-/* Mobile Overrides */
-@media screen and (max-width: 768px) {
-    .credits-section {
-        padding: 4rem 1rem 2rem 1rem;
-    }
+/* ==========================================================================
+   MODE MOBILE (RESPONSIVE)
+   ========================================================================== */
+@media (max-width: 768px) {
     
-    .clients-credits-grid {
-        gap: 1.5rem;
-    }
-
-    .clients-credits-grid .client-card {
-        width: 100px;
-    }
-
-    .clients-credits-grid .client-logo-wrapper {
-        width: 60px;
-        height: 60px;
-    }
-
-    .clients-credits-grid .client-name {
-        font-size: 0.8rem;
-    }
-
-    .clients-credits-grid .client-description {
+    /* Masquer la décoration Froxal Paint pour gagner de la place */
+    .decor-left,
+    .decor-right {
         display: none;
     }
 
-    .clients-credits-grid .partner-badge {
-        width: 24px;
-        height: 24px;
-        top: -3px;
-        right: 12px;
+    /* 1. Bouton d'ouverture/fermeture du livre en bas à droite */
+    .book-toggle-btn {
+        right: 10px;
+        top: auto;
+        bottom: 20px;
+        transform: none; /* Annule le centrage vertical (translateY) */
     }
-}
 
-/* --- Portfolio Section --- */
-#portfolio {
-    padding: 120px 5% 60px; /* Increased top padding for header clearance */
-    background-color: transparent; /* Background follows the border frame */
-    position: relative;
-    z-index: 10;
-}
+    /* Réduction légère de la taille des boutons sur mobile pour mieux s'intégrer */
+    .btn-forward { width: 60px; }
+    .btn-close { width: 40px; }
 
-#portfolio .animations-content {
-    max-width: 1250px;
-    width: 100%;
-    position: relative;
-    z-index: 10; /* Above particles */
-}
+    /* 2. Grille de projets alignée 3 par 3 sur mobile */
+    .projects-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px; /* On réduit l'espace entre les vidéos pour que ça rentre */
+    }
 
-/* Portfolio border restored as a frame at site edges */
-/* Delimits the background #1d2029 */
-#portfolio::before {
-    content: "";
-    position: absolute;
-    top: -110px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #13151c;
-    z-index: -1;
-    opacity: var(--portfolio-border-opacity, 0);
-    transition: opacity 0.3s ease-out;
-}
+    .card-large, .card-large-right {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
 
-#portfolio::after {
-    content: "";
-    position: absolute;
-    top: -110px; /* Midpoint between Clients (100px bottom pad) and Portfolio (120px top pad) */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 2px solid #ff9b36;
-    pointer-events: none;
-    z-index: 1000;
-    box-shadow: inset 0 0 15px rgba(255, 155, 54, 0.2);
-    opacity: var(--portfolio-border-opacity, 0);
-    transition: opacity 0.3s ease-out;
-}
-
-@media screen and (max-width: 768px) {
-    #portfolio::before,
-    #portfolio::after {
-        top: -100px; /* Adjust for mobile padding differences if any */
+    /* On réduit les marges internes des cartes pour gagner de la place */
+    .project-card {
+        padding: 4px;
+        border-width: 2px;
     }
     
-    #portfolio::after {
-        border-width: 1.5px;
+    /* Onglets plus petits sur mobile */
+    .portfolio-tabs {
+        gap: 1.5rem;
+    }
+    .tab-btn {
+        font-size: 1.2rem;
     }
 }
 
-.portfolio-grid {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: center;
-    align-items: start;
-    gap: 2rem;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-.portfolio-card {
-    position: relative;
-    background-color: #000;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    cursor: default;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    width: 100%; 
-    max-width: 100%; /* Safety for small screens */
-    margin: 0;
-    border-radius: 14px;
-}
-
-.media-type-icon {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 30px;
-    height: 30px;
-    z-index: 15;
-    pointer-events: none;
-    image-rendering: pixelated;
-    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
-}
-
-.break-video {
+/* =========================================
+   BOUTONS DE NAVIGATION PORTFOLIO
+========================================= */
+.portfolio-nav-btn {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    z-index: 1000;
+    cursor: pointer;
+    width: 120px;
+    image-rendering: pixelated;
+    transition: transform 0.1s ease;
+    display: none; /* Masqué par défaut */
+}
+
+.nav-next {
+    right: -120px;
+    transform: translateY(-50%);
+}
+.nav-next:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+.nav-prev {
+    left: -120px;
+    transform: translateY(-50%) scaleX(-1);
+}
+.nav-prev:active {
+    transform: translateY(-50%) scaleX(-1) scale(0.9);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    z-index: 20;
-    pointer-events: none;
-    mix-blend-mode: screen; /* To ensure transparency if needed */
-}
-
-.portfolio-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.3), 0 10px 30px rgba(0, 0, 0, 0.8);
-}
-
-.portfolio-media-wrapper {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-    background: #000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    border-radius: 6px;
-}
-
-.portfolio-media-wrapper img,
-.portfolio-media-wrapper video,
-.portfolio-media-wrapper iframe {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    width: 105% !important; /* Slight overfill to ensure no gaps */
-    height: 105% !important;
-    min-width: 105% !important;
-    min-height: 105% !important;
-    max-width: none !important;
-    max-height: none !important;
-    object-fit: cover !important;
-    transform: translate(-50%, -50%) !important;
-    border: none !important;
-    display: block !important;
-    pointer-events: none !important; /* Allow clicks to pass through to the card */
-}
-
-.portfolio-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 1.5rem;
-    padding-top: 40px; /* Redescend un peu le texte */
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.95) 75%);
+    background-color: var(--footer-color);
+    min-height: 80px; 
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center; /* Center to avoid top-crop */
-    transform: translateY(100%); /* Hidden by default */
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 5;
-    overflow: hidden;
-    pointer-events: none;
+    justify-content: flex-end; /* Align at the bottom */
+    padding: 1rem 0;
 }
 
-.portfolio-card:hover .portfolio-info {
-    transform: translateY(0);
+footer p {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.75rem;
+    font-weight: normal;
+    text-align: center;
+    color: #000000; /* Noir au lieu de gris */
+    margin: 0;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
 }
 
-
-
-
-.portfolio-title {
-    font-family: "Minecraft Bold", sans-serif;
-    color: white;
-    font-size: 0.9rem; /* Extremely small */
-    text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.4; /* Better clearance */
-    margin-bottom: 5px;
-    padding: 2px 0;
-    max-height: 2.8em;
-    overflow: visible; /* Prevent cropping */
-    width: 100%;
-}
-
-.portfolio-description {
-    font-family: "Minecraft", sans-serif;
-    color: #ffd700; /* Gold color for description on overlay */
-    font-size: 0.7rem; /* Extremely small */
-    margin-top: 5px;
-    opacity: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    max-height: 3em;
-    overflow: hidden;
-}
-
-@media screen and (max-width: 900px) {
-    .portfolio-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 1rem;
-    }
-
-    /* Hide portfolio text on mobile as requested */
-    .portfolio-info {
-        display: none !important;
-    }
-}
-
-/* Portfolio Filter Controls - Parent pour l'alignement global */
-.portfolio-filter-controls {
-    display: flex;
-    justify-content: center; /* Centré par défaut sur PC */
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    z-index: 1000;
-}
-
-/* Dropdown Wrapper - Limité à la taille de l'icône */
-.portfolio-filter-dropdown {
-    position: relative;
-    display: inline-block;
-    width: auto;
-}
-
-.filter-trigger {
-    background-color: #7a7a7a;
-    border: 2px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #3b3b3b;
-    border-right-color: #3b3b3b;
+.footer-link {
     cursor: pointer;
-    padding: 6px;
-    transition: all 0.1s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    image-rendering: pixelated;
+    color: white;
+    transition: color 0.2s, transform 0.2s;
 }
 
-.filter-trigger:hover {
-    background-color: #6d7bd2;
-    border-top-color: #ffffff;
-    border-left-color: #ffffff;
-    border-bottom-color: #7c8ae2;
-    border-right-color: #7c8ae2;
+.footer-link:hover {
+    color: var(--mc-green);
     transform: scale(1.05);
 }
 
-.filter-options-container {
-    display: none; /* Caché par défaut */
-    flex-direction: column;
-    position: absolute;
-    top: 50%;
-    left: calc(100% + 5px); /* Collé à droite de l'icône */
-    transform: translateY(-50%);
-    background: #111;
-    border: 2px solid #555658;
-    z-index: 30000;
-    min-width: 150px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-}
-
-/* Version ultra-compacte pour PC */
-@media screen and (min-width: 901px) {
-    .filter-trigger {
-        padding: 4px;
-        transform: scale(0.85);
+/* =========================================
+   PRIX (TOS & PRICES)
+========================================= */
+@media (max-width: 768px) {
+    .price-row {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 1.5rem !important;
     }
-    .filter-options-container {
-        min-width: 130px;
-        left: calc(100% + 5px);
-    }
-    .filter-options-container .filter-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.7rem;
+    .price-row .price-text {
+        text-align: center !important;
     }
 }
 
-.filter-options-container.show {
-    display: flex;
+.service-item-btn:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.5) !important;
 }
 
-/* Mobile Alignment Override */
-@media screen and (max-width: 768px) {
-    .portfolio-filter-controls {
-        justify-content: flex-start; /* Alignement gauche sur mobile */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 1.5rem !important;
+    }
+    .modal-content > div {
+        max-width: 100% !important;
+    }
+    #service-modal-img {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    #service-modal-title {
+        font-size: 1.5rem !important;
+    }
+    #service-modal-desc {
+        font-size: 0.9rem !important;
+    }
+    #service-modal-price {
+        font-size: 1.8rem !important;
     }
 }
-
-.filter-options-container .filter-btn {
-    width: 100%;
-    background-color: #7a7a7a;
-    border: none;
-    border-bottom: 2px solid #3b3b3b;
-    padding: 0.7rem 1.2rem; /* Réduit pour être plus compact */
-    color: #ffffff;
-    text-shadow: 2px 2px 0px #3b3b3b;
-    font-size: 0.85rem; /* Légèrement réduit */
-    font-family: "Minecraft Bold", sans-serif;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.1s ease;
-    margin: 0 !important;
-}
-
-.filter-options-container .filter-btn:last-child {
-    border-bottom: none;
-}
-
-.filter-options-container .filter-btn:hover {
-    background-color: #6d7bd2;
-}
-
-.filter-options-container .filter-btn.active {
-    background-color: #313234;
-    color: #ffffff;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4);
-}
-
-/* Logic for filtering animation */
-.portfolio-card.hidden-filter {
-    display: none !important;
-}
-
-@media screen and (max-width: 650px) {
-    #portfolio {
-        padding: 80px 1rem 40px;
-    }
-
-    .portfolio-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 2 columns as requested */
-        gap: 0.8rem; /* Smaller gap for mobile 2-col */
-        padding: 0;
-        width: 100%;
-    }
-
-    .portfolio-card {
-        aspect-ratio: 16 / 9;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-    }
-
-    /* Fixed overlay for mobile since hover is unreliable */
-    .portfolio-card .portfolio-info {
-        transform: translateY(0) !important;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
-        padding: 0.5rem; /* Smaller padding */
-    }
-
-    .portfolio-title {
-        font-size: 0.7rem; /* Smaller title for 2-col */
-    }
-
-    .portfolio-description {
-        font-size: 0.6rem; /* Smaller description */
-    }
-}
-
-/* --- Lightbox --- */
-#portfolio-lightbox .lightbox-content {
-    position: relative;
-    width: 90%;
-    max-width: 1200px;
-    background: #0d0d0d;
-    border: 4px solid;
-    border-top-color: #d1d1d1;
-    border-left-color: #d1d1d1;
-    border-bottom-color: #1a1a1a;
-    border-right-color: #1a1a1a;
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    animation: zoomIn 0.3s ease-out;
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
-}
-
-#lightbox-media {
-    flex: 1;
-    aspect-ratio: 16/9;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-}
-
-.lightbox-nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    position: relative;
-    background: #000;
-}
-
-.nav-arrow {
-    width: 60px;
-    height: 60px;
-    background: url('images/UI/next.png') no-repeat center;
-    background-size: contain;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
-    opacity: 0.7;
-    flex-shrink: 0;
-    padding: 0;
-}
-
-.nav-arrow:hover {
-    opacity: 1;
-    filter: brightness(1.2);
-}
-
-.nav-arrow.prev {
-    transform: scaleX(-1);
-    margin-left: 10px;
-}
-
-.nav-arrow.prev:hover {
-    transform: scaleX(-1) scale(1.1);
-}
-
-.nav-arrow.next {
-    margin-right: 10px;
-}
-
-.nav-arrow.next:hover {
-    transform: scale(1.1);
-}
-
-#lightbox-media img,
-#lightbox-media video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-#lightbox-media iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.lightbox-info {
-    padding: 1.5rem;
-    background: #111;
-    border-top: 4px solid #333;
-}
-
-#lightbox-title {
-    color: #ff9b36;
-    font-family: "Minecraft Bold", sans-serif;
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
-    text-transform: uppercase;
-}
-
-#lightbox-description {
-    color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1.4;
-}
-
-/* --- MOBILE OPTIMIZATIONS FOR LIGHTBOX --- */
-@media screen and (max-width: 768px) {
-    .lightbox-content {
-        width: 95%;
-        max-height: 95vh;
-        margin: 5px;
-    }
-
-    .nav-arrow {
-        width: 40px;
-        height: 40px;
-    }
-
-    .nav-arrow.prev {
-        margin-left: 5px;
-    }
-
-    .nav-arrow.next {
-        margin-right: 5px;
-    }
-
-    .lightbox-info {
-        padding: 0.8rem;
-    }
-
-    #lightbox-title {
-        font-size: 1.1rem;
-        margin-bottom: 0.2rem;
-    }
-
-    #lightbox-description {
-        font-size: 0.8rem;
-        line-height: 1.3;
-    }
-}
-
-@keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* --- Portfolio Particles --- */
-.portfolio-particle {
-    position: absolute;
-    background-color: #ff9b36;
-    /* Removed border-radius for square pixel look */
-    pointer-events: none;
-    z-index: 1; /* Behind content */
-    box-shadow: 0 0 10px #ff9b36, 0 0 20px rgba(255, 155, 54, 0.5);
-    animation: float-twinkle 8s infinite ease-in-out;
-    opacity: 0.6;
-}
-
-@keyframes float-twinkle {
-    0%, 100% {
-        transform: translate(0, 0);
-        opacity: 0.3;
-    }
-    50% {
-        transform: translate(20px, -30px);
-        opacity: 0.8;
-    }
-}
-
-/* --- Reviews Section --- */
-.reviews-container {
-    width: 100%;
-    overflow: hidden;
-    padding: 3rem 0;
-    margin: 4rem 0;
-    position: relative;
-    z-index: 10;
-    /* Symmetrical gradient mask on both sides */
-    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-}
-
-.reviews-track {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem 0;
-    width: max-content; 
-    animation: reviews-scroll 60s linear infinite; /* Slowest more professional scroll */
-    pointer-events: auto;
-    will-change: transform;
-}
-
-.reviews-track:hover {
-    animation-play-state: paused;
-}
-
-@keyframes reviews-scroll {
-    0% { transform: translateX(-66.666%); }
-    100% { transform: translateX(-33.333%); }
-}
-
-.reviews-track::-webkit-scrollbar {
-    display: none;
-}
-
-.review-card {
-    flex: 0 0 300px;
-    min-width: 200px; /* Safety fallback */
-    background: rgba(20, 20, 20, 0.7);
-    border: 2px solid #333;
-    padding: 1.25rem;
-    border-radius: 12px; /* Rounded corners as requested */
-    scroll-snap-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
-    font-family: "Minecraft", sans-serif; /* Minecraft font */
-}
-
-.review-card:hover {
-    border-color: #ff9900; /* Bordure orange au survol */
-    transform: translate(-5px, -5px);
-    box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.6);
-    background: rgba(30, 30, 30, 0.9);
-}
-
-.review-card:hover .review-author {
-    color: #ff9900; /* Pseudo orange au survol */
-}
-
-.review-card:hover .review-stars img {
-    filter: none; /* Étoiles repassent en couleur or au survol */
-}
-
-.review-card:hover .review-text {
-    border-left-color: #ff9900; /* Barre latérale orange au survol */
-}
-
-.review-stars {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 5px;
-}
-
-.review-stars img {
-    width: 16px;
-    height: 16px;
-    filter: grayscale(100%) brightness(1.2); /* Étoiles grises par défaut */
-    transition: filter 0.3s ease;
-}
-
-.review-text {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: #eee;
-    font-family: "Minecraft", sans-serif;
-    flex-grow: 1;
-    position: relative;
-    padding-left: 15px;
-    border-left: 2px solid #888888; /* Barre latérale grise par défaut */
-    transition: border-color 0.3s ease;
-}
-
-.review-author {
-    font-family: "Minecraft", sans-serif;
-    color: #888888; /* Pseudo en gris par défaut */
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: color 0.3s ease;
-}
-
-.review-author::before {
-    content: ">";
-    color: #fff;
-}
-
-@media screen and (max-width: 768px) {
-    .reviews-track {
-        display: flex; /* Back to flex for scroll illusion */
-        flex-wrap: nowrap;
-        gap: 0.8rem;
-        padding: 1rem 10%; /* Center first card slightly */
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-    }
-    .review-card {
-        flex: 0 0 calc(33.333% - 0.6rem); /* 3 per line on mobile */
-        min-width: 100px;
-        padding: 0.8rem;
-        gap: 0.7rem;
-        border-radius: 8px;
-        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
-    }
-    .review-card:hover {
-        transform: none;
-        box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.6);
-    }
-    .review-stars img {
-        width: 14px;
-        height: 14px;
-    }
-    .review-text {
-        font-size: 0.75rem;
-        line-height: 1.3;
-        padding-left: 10px;
-    }
-    .review-author {
-        font-size: 0.85rem;
-        gap: 5px;
-    }
-    .review-author::before {
-        font-size: 0.7rem;
-    }
-}
-
-/* --- Scroll Down Indicator and Auto Scroll Area --- */
-.scroll-arrow-indicator {
-    position: absolute;
-    bottom: 3rem; /* Rehaussé sur la page */
-    left: 0;
-    width: 100%;
-    height: 100px; /* Grande zone de contact sur toute la largeur du bas */
-    z-index: 20;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.scroll-arrow-indicator:hover {
-    opacity: 1 !important;
-}
-
-.scroll-arrow-indicator svg {
-    animation: arrowBounce 2s infinite;
-}
-
-@keyframes arrowBounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-8px);
-    }
-    60% {
-        transform: translateY(-4px);
-    }
-}
-
-.scroll-trigger-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px; /* Aligné avec la même hauteur */
-    z-index: 15;
-    background-color: transparent;
-    pointer-events: auto;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-

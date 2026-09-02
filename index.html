@@ -1,300 +1,665 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FroXaL Studio</title>
-    <link rel="icon" type="image/png" href="images/froxal_logo.webp" />
-    <link rel="stylesheet" href="style.css?v=11" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Pixelify+Sans:wght@400..700&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    
-    <!-- Preload Critical Assets -->
-    <link rel="preload" href="Minecraft.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="Minecraft-Bold.ttf" as="font" type="font/ttf" crossorigin>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Froxal Studio - Minecraft Theme</title>
+    <link rel="stylesheet" href="style.css?v=2.05">
+</head>
+<body>
+    <!-- Bouton Retour déplacé dans la section portfolio -->
 
-    
-    <meta name="description" content="FroXaL Studio - Professionnal 3D Animator specializing in Minecraft, Hytale, and Roblox. Over 3 years of experience bringing worlds to life.">
-  </head>
-
-  <body>
-    <!-- Arrière-plan dynamique séparé du body pour contrôler l'opacité JS -->
-    <div id="dynamic-bg" class="dynamic-bg"></div>
-    <div id="dynamic-bg2" class="dynamic-bg bg2"></div>
-
-    <header class="navbar">
-      <nav>
-        <a
-          href="javascript:void(0);"
-          class="btn-icon mobile-menu-btn"
-          id="mobile-menu-btn"
-        >
-          <img src="images/UI/burger.webp" alt="Menu" class="nav-icon" width="16" height="16" />
-        </a>
-        <div class="nav-links" id="nav-links">
-          <a href="#home" class="btn-icon"
-            ><img src="images/UI/home.webp" alt="Home" class="nav-icon" width="15" height="16"
-          /></a>
-          <a href="#about" class="btn-icon"
-            ><img src="images/UI/clients.webp" alt="About Me" class="nav-icon" width="15" height="16"
-          /></a>
-          <a href="#portfolio" class="btn-icon"
-            ><img
-              src="images/UI/photo.webp"
-              alt="Portfolio"
-              class="nav-icon"
-              width="15" height="16"
-          /></a>
-          <a href="#contact" class="btn-primary">Contact</a>
+    <!-- Le bandeau Tabs devient le nouveau Header principal -->
+    <header id="tabs-header-bg" class="tabs-header-stripe" style="position: relative; overflow: hidden; transition: padding 0.3s ease;">
+        <!-- Curseur d'arrière-plan -->
+        <div id="bg-slider" style="position: absolute; top: 0; left: 0; width: 100%; height: 300%; display: flex; flex-direction: column; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0; transform: translateY(0);">
+            <div style="flex: 1; width: 100%; background-color: #F09830; background-image: url('assets/header.png'); background-repeat: repeat-x; background-size: auto 100%; background-position: center; image-rendering: pixelated;"></div>
+            <div style="flex: 1; width: 100%; background-color: #2a2a2a; background-image: linear-gradient(rgba(42, 42, 42, 0.5), rgba(42, 42, 42, 0.5)), url('assets/TRL.png'); background-size: cover; background-position: center;"></div>
+            <div style="flex: 1; width: 100%; background-color: #2a2a2a; background-image: linear-gradient(rgba(42, 42, 42, 0.5), rgba(42, 42, 42, 0.5)), url('assets/BB.png'); background-size: cover; background-position: center;"></div>
         </div>
-      </nav>
+
+        <div id="tabs-header-container" class="container" style="padding: 3rem 2rem; position: relative; z-index: 1; display: flex; align-items: center; transition: padding 0.3s ease;">
+            <img src="assets/froxal_logo.webp" alt="FROXAL STUDIO" class="header-logo" id="main-logo">
+            <div class="portfolio-tabs" style="margin: 0; position: absolute; left: 50%; transform: translateX(-50%);">
+                <h2 class="tab-btn" data-target="content-animation">ANIMATION</h2>
+                <h2 class="tab-btn" data-target="content-blockbench">BLOCKBENCH</h2>
+                <h2 class="tab-btn" data-target="content-prices">PRICES</h2>
+            </div>
+        </div>
     </header>
 
-    <main id="content">
-      <section
-        id="home"
-        class="hero-section"
-        style="flex-direction: column; align-items: center"
-      >
-        <div class="logo-wrapper">
-          <h1 class="hero-logo-text">
-            <span class="word line-1">
-              <span>F</span><span>R</span><span>O</span><span>X</span><span>A</span><span>L</span>
-            </span>
-            <span class="word line-2">
-              <span>S</span><span>T</span><span>U</span><span>D</span><span>I</span><span>O</span>
-            </span>
-          </h1>
-        </div>
-        <h1 class="hero-subtitle">
-          ONE ANIMATION.
-          <span>ABSOLUTE IMPACT ON YOUR PROJECT.</span>
-        </h1>
-        <div class="scroll-arrow-indicator">
-          <svg width="48" height="24" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4L24 20L44 4" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="scroll-trigger-line" aria-hidden="true"></div>
-      </section>
-
-      <!-- Scroll Progress Bar -->
-      <div class="scroll-progress-container">
-        <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
-      </div>
-
-      <!-- Section À Propos -->
-      <section id="about" class="about-section relative-container">
-        <div class="about-content fade-in-element">
-          <h2 class="section-title">ABOUT ME</h2>
-          <div class="about-grid">
-            <div class="about-image">
-              <video
-                id="profile-video"
-                class="profile-image"
-                autoplay
-                muted
-                loop
-                playsinline
-                webkit-playsinline
-                poster="images/froxal_hey.webp"
-                width="500"
-                height="500"
-              >
-                <source src="images/froxal_hey.mov" type='video/quicktime; codecs="hvc1"'>
-                <source src="images/froxal_hey.webm" type="video/webm">
-              </video>
-            </div>
-            <div
-              class="about-text"
-              id="about-text-container"
-              style="position: relative"
-            >
-              <p>
-                I am FroXaL, a 3D animator specializing in Minecraft, Hytale,
-                Roblox, and more. I have been bringing worlds to life through
-                animation for over 3 years.
-              </p>
-              <p>
-                My portfolio includes professional work for the Minecraft
-                Marketplace and custom animations for major YouTubers with over
-                10 million subscribers. I craft animations with the keen eye of
-                a creator and trailer scriptwriter.
-              </p>
-
-              <!-- Social buttons placed below the text as requested -->
-              <div class="social-links">
-                <a href="https://x.com/froxal" target="_blank" class="btn-icon">
-                  <img
-                    src="images/UI/x.webp"
-                    alt="Twitter / X"
-                    class="nav-icon"
-                    width="16" height="16"
-                    loading="lazy"
-                  />
-                </a>
-                <a
-                  href="https://www.youtube.com/@froxalshort"
-                  target="_blank"
-                  class="btn-icon"
-                >
-                  <img
-                    src="images/UI/youtube.webp"
-                    alt="YouTube"
-                    class="nav-icon"
-                    width="16" height="16"
-                    loading="lazy"
-                  />
-                </a>
-                <a
-                  href="https://discord.gg/4AyKuPWgCW"
-                  target="_blank"
-                  class="btn-icon"
-                >
-                  <img
-                    src="images/UI/discord.webp"
-                    alt="Discord"
-                    class="nav-icon"
-                    width="16" height="16"
-                    loading="lazy"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section Portfolio -->
-      <section id="portfolio" class="animations-section relative-container">
-        <!-- Overlay de chargement dynamique -->
-        <div id="portfolio-loader" class="portfolio-loader">
-          <div id="loader-percentage">0%</div>
-          <video id="loading-video" class="loader-video" muted playsinline>
-            <source src="images/loading.webm" type="video/webm">
-          </video>
-        </div>
-
-        <div class="animations-content fade-in-element flex-col-center">
-          <h2 class="section-title" style="margin-bottom: 3rem;">PORTFOLIO</h2>
-          <div id="portfolio-grid" class="portfolio-grid">
-            <!-- Les projets du portfolio apparaitront ici -->
-          </div>
-
-          <!-- Portfolio Filter Controls Wrapper -->
-          <div class="portfolio-filter-controls">
-            <div class="portfolio-filter-dropdown">
-              <button id="filter-trigger" class="btn-icon filter-trigger" title="Filtrer les projets">
-                <img src="images/UI/filter.webp" alt="Filter" class="nav-icon" width="16" height="16" loading="lazy" />
-              </button>
-              <div id="filter-options" class="filter-options-container">
-                <button class="filter-btn active" data-filter="all">ALL</button>
-                <button class="filter-btn" data-filter="video">ANIMATIONS</button>
-                <button class="filter-btn" data-filter="image">THUMBNAILS</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section Clients (remplacée par un footer / zone de crédits en bas de page) -->
-      <footer id="clients" class="credits-section relative-container">
-        <div class="credits-content fade-in-element">
-          <h2 class="credits-title">CLIENTS</h2>
-          
-          <div id="clients-grid" class="clients-credits-grid">
-            <!-- Les fiches clients générées par Supabase apparaitront ici, formatées en crédits discrets -->
-          </div>
-
-          <!-- Reviews (Avis Clients) -->
-          <div class="reviews-container fade-in-element">
-            <div id="reviews-track" class="reviews-track">
-              <!-- Les avis clients apparaîtront ici -->
-            </div>
-          </div>
-
-          <!-- Liens légaux & copyright (termes, services, etc.) -->
-          <div class="credits-footer-bottom">
-            <p class="credits-copyright">© 2026 FROXAL STUDIO. ALL RIGHTS RESERVED.</p>
-            <div class="credits-links">
-              <a href="#home">HOME</a>
-              <a href="#about">ABOUT</a>
-              <a href="#portfolio">PORTFOLIO</a>
-              <a href="javascript:void(0);" onclick="document.getElementById('contact-modal').classList.add('active')">CONTACT</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </main>
-    <!-- Lightbox Portfolio -->
-    <div id="portfolio-lightbox" class="modal-overlay">
-      <div class="lightbox-content">
-        <button id="close-lightbox-btn" class="close-btn">&times;</button>
+    <main class="middle-section">
         
-        <div class="lightbox-nav-container">
-          <button id="prev-project-btn" class="nav-arrow prev"></button>
-          <div id="lightbox-media"></div>
-          <button id="next-project-btn" class="nav-arrow next"></button>
-        </div>
+        <!-- Hero supprimé à la demande de l'utilisateur -->
 
-        <div class="lightbox-info">
-          <h3 id="lightbox-title"></h3>
-          <p id="lightbox-description"></p>
+        <!-- Section : Qui suis-je / Info -->
+        <section id="about">
+            <div class="container">
+                <div class="book-container">
+                    <img src="assets/book_close.png" id="book-bg-image" alt="Livre Minecraft" class="book-bg" style="cursor: pointer; transition: transform 0.1s ease;">
+                    <div class="book-content" id="book-content-wrapper" style="display: none; pointer-events: none;">
+                        <h2>
+                            <span class="hover-letter">A</span><span class="hover-letter">B</span><span class="hover-letter">O</span><span class="hover-letter">U</span><span class="hover-letter">T</span> <span class="hover-letter">M</span><span class="hover-letter">E</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nouvelle sous-page accueil -->
+        <section id="home-subpage" style="background-color: #00A1F2; width: 100%; min-height: 400px; padding: 4rem 0;">
+            <div class="container">
+                <!-- Vide pour l'instant -->
+            </div>
+        </section>
+
+        <!-- Page TOS & Prices -->
+        <section id="tos-page" style="display: none; position: relative; z-index: 1; overflow: hidden; background-color: #0069FC; width: 100%; min-height: 600px; padding: 4rem 0; color: white; font-family: 'Minecraft', sans-serif;">
+            <div class="container" style="position: relative; z-index: 1;">
+                <img src="assets/page_forward.png" id="btn-tos-nav-prev" class="portfolio-nav-btn nav-prev" title="Retour à Blockbench" style="display: none; top: 40px !important;">
+                <h1 style="text-align: center; margin-bottom: 2rem; text-shadow: 2px 2px 0px #000; font-size: 3rem;">TOS & Prices</h1>
+                <!-- Prices Section -->
+                <div class="prices-list" style="display: flex; flex-direction: column; gap: 4rem; margin-top: 2rem;">
+                    
+                    <!-- Row 1: Image Left, Text Right -->
+                    <div class="price-row" style="display: flex; align-items: center; gap: 3rem;">
+                        <div class="price-img" style="flex: 1;">
+                            <img src="assets/service2.png" alt="Service 1" class="service-item-btn" data-title="Trailer/3D Animation" data-desc="Complete trailer creation from start to finish, including storyboarding, 3D animation, sound design, and video editing. (Note: I do not provide Blender rigging services)." data-price="~12€/second" style="width: 100%; height: auto; border: 4px solid var(--border-color); box-shadow: 4px 4px 0px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.2s;">
+                        </div>
+                        <div class="price-text" style="flex: 1;">
+                            <h2 style="font-family: 'Minecraft', sans-serif; font-weight: normal; font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 0px #000; letter-spacing: 2px;">Trailer/3D Animation</h2>
+                            <h3 style="color: #F09830; font-family: 'Arial Black', Impact, sans-serif; font-size: 3rem; margin-top: 1rem; margin-bottom: 0; text-shadow: 2px 2px 0px #000;">~12€/second</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2: Text Left, Image Right -->
+                    <div class="price-row" style="display: flex; align-items: center; gap: 3rem; flex-direction: row-reverse;">
+                        <div class="price-img" style="flex: 1;">
+                            <img src="assets/service1.png" alt="Service 2" class="service-item-btn" data-title="Blockbench Animation/Model" data-desc="I will create your custom rigged Blockbench 3D model, complete with high-quality textures and animations. I also offer standalone animation services for your existing 3D models." data-price="~20€/animation" style="width: 100%; height: auto; border: 4px solid var(--border-color); box-shadow: 4px 4px 0px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.2s;">
+                        </div>
+                        <div class="price-text" style="flex: 1; text-align: right;">
+                            <h2 style="font-family: 'Minecraft', sans-serif; font-weight: normal; font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 0px #000; letter-spacing: 2px;">Blockbench Animation/Model</h2>
+                            <h3 style="color: #F09830; font-family: 'Arial Black', Impact, sans-serif; font-size: 3rem; margin-top: 1rem; margin-bottom: 0; text-shadow: 2px 2px 0px #000;">~20€/animation</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 3: Image Left, Text Right -->
+                    <div class="price-row" style="display: flex; align-items: center; gap: 3rem;">
+                        <div class="price-img" style="flex: 1;">
+                            <img src="assets/service3.png" alt="Service 3" class="service-item-btn" data-title="HUD & Pixel art" data-desc="Custom pixel art design for your in-game items, as well as fully customized Minecraft GUI and HUD layouts." data-price="~25€/HUD" style="width: 100%; height: auto; border: 4px solid var(--border-color); box-shadow: 4px 4px 0px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.2s;">
+                        </div>
+                        <div class="price-text" style="flex: 1;">
+                            <h2 style="font-family: 'Minecraft', sans-serif; font-weight: normal; font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 0px #000; letter-spacing: 2px;">HUD & Pixel art</h2>
+                            <h3 style="color: #F09830; font-family: 'Arial Black', Impact, sans-serif; font-size: 3rem; margin-top: 1rem; margin-bottom: 0; text-shadow: 2px 2px 0px #000;">~25€/HUD</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr style="margin: 4rem 0; border: none; border-top: 2px dashed rgba(255,255,255,0.2);">
+
+                <!-- TOS Section -->
+                <div class="tos-small" style="font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; color: #cccccc; text-align: center; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                    <h3 style="margin-bottom: 1rem; color: white; font-family: 'Minecraft', sans-serif; letter-spacing: 2px; font-weight: normal; font-size: 1.5rem;">TERMS OF SERVICE</h3>
+                    <p style="font-family: Arial, Helvetica, sans-serif !important; font-size: 0.85rem !important;">
+                        1. Payment is processed via PayPal: 50% is required upon presentation of the base model/concept, and the remaining 50% upon final delivery.<br>
+                        2. If an order is canceled after production has begun, the initial 50% deposit is strictly non-refundable.<br>
+                        3. Clients are entitled to a maximum of two (2) free revisions per order after receiving the delivery.<br>
+                        4. Substantial modifications or complete redesigns are not considered standard revisions and will incur additional charges.<br>
+                        5. Turnaround time depends on the complexity of the project and current workload.<br>
+                        6. Crediting the artist when the model or animation is used publicly is highly appreciated.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Portfolio avec fond #00A1F2 -->
+        <section id="portfolio-section" style="background-color: #00A1F2; width: 100%; flex-grow: 1; position: relative; overflow: hidden; z-index: 1; padding: 0;">
+
+            <!-- Bouton Retour absolu dans la section -->
+            <img src="assets/back.png" id="btn-back-home" alt="Retour" style="display: none; position: absolute; top: 30px; left: 30px; z-index: 1000; cursor: pointer; width: 60px; image-rendering: pixelated; transition: transform 0.1s ease;">
+
+            <div id="portfolio" class="container" style="display: none; position: relative; z-index: 2; padding-top: 2rem; padding-bottom: 10vh;">
+                <!-- Navigation entre ANIMATION et Blockbench -->
+                <img src="assets/page_forward.png" id="btn-nav-next" class="portfolio-nav-btn nav-next" title="Voir Blockbench" style="top: 40px !important;">
+                <img src="assets/page_forward.png" id="btn-nav-prev" class="portfolio-nav-btn nav-prev" title="Voir ANIMATION" style="top: 40px !important;">
+                
+                <!-- Barre visuelle en dessous -->
+                <div class="portfolio-divider"></div>
+
+                <!-- Contenu : Animation -->
+                <div class="tab-content" id="content-animation">
+                    <!-- Décoration à gauche, collée à la grille -->
+                    <img src="assets/froxalpaint2.png" alt="Décoration" class="decor-left">
+                    <div class="projects-grid" id="grid-animation">
+                        <!-- Animation 1 (En grand) -->
+                        <div class="project-card card-large">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="6pw0LlvNdfY" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <!-- Miniature propre sans aucun logo -->
+                                <img src="https://img.youtube.com/vi/6pw0LlvNdfY/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <!-- Calque transparent pour intercepter les clics -->
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 2 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="HmaC_rNRc9k" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <!-- Miniature propre sans aucun logo -->
+                                <img src="https://img.youtube.com/vi/HmaC_rNRc9k/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <!-- Calque transparent pour intercepter les clics -->
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 3 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="9RBB32PiBuc" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <!-- Miniature propre sans aucun logo -->
+                                <img src="https://img.youtube.com/vi/9RBB32PiBuc/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <!-- Calque transparent pour intercepter les clics -->
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 4 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="7vXvxH-uycI" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <!-- Miniature propre sans aucun logo -->
+                                <img src="https://img.youtube.com/vi/7vXvxH-uycI/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <!-- Calque transparent pour intercepter les clics -->
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 5 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="ABYMMWSjlgI" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/ABYMMWSjlgI/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 6 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="vL0K_FmLLcU" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/vL0K_FmLLcU/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 7 -->
+                        <div class="project-card card-large-right">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="3uaKsTQb1us" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/3uaKsTQb1us/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 8 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="Wgg-kT98cSg" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/Wgg-kT98cSg/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 9 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="x0tXygcntaI" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/x0tXygcntaI/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Animation 10 -->
+                        <div class="project-card">
+                            <div class="video-wrapper custom-youtube-player" data-video-id="FXjBbW4OrJA" title="Cliquez pour lancer ou arrêter la vidéo">
+                                <img src="https://img.youtube.com/vi/FXjBbW4OrJA/maxresdefault.jpg" class="youtube-thumbnail" alt="Animation">
+                                <div class="click-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenu : Blockbench -->
+                <div class="tab-content" id="content-blockbench" style="display: none;">
+                    <!-- Décoration à droite (comme froxalpaint mais côté opposé) -->
+                    <img src="assets/fox.png" alt="Décoration Fox" class="decor-right">
+                    <div class="projects-grid">
+                        <!-- Model 1 (Large) -->
+                        <div class="project-card card-large">
+                            <img src="assets/model1.png" alt="Model 1">
+                        </div>
+                        <!-- Model 2 -->
+                        <div class="project-card">
+                            <img src="assets/model2.png" alt="Model 2">
+                        </div>
+                        <!-- Model 3 -->
+                        <div class="project-card">
+                            <img src="assets/model3.png" alt="Model 3">
+                        </div>
+                        <!-- Model 4 -->
+                        <div class="project-card">
+                            <img src="assets/model4.png" alt="Model 4">
+                        </div>
+                        <!-- Model 5 -->
+                        <div class="project-card">
+                            <img src="assets/model5.png" alt="Model 5">
+                        </div>
+                        <!-- Model 6 -->
+                        <div class="project-card">
+                            <img src="assets/model6.png" alt="Model 6">
+                        </div>
+                        <!-- Model 7 (Large Right) -->
+                        <div class="project-card card-large-right">
+                            <img src="assets/model7.png" alt="Model 7">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <footer>
+        <div class="container footer-content" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%;">
+            <h2 style="font-family: 'Arial Black', Impact, system-ui, sans-serif; font-weight: 900; font-size: 2rem; color: #F09830; text-transform: uppercase; margin-bottom: 0.5rem; margin-top: -0.5rem; letter-spacing: 2px;">OTHER</h2>
+            <div class="footer-links" style="display: flex; width: 100%; max-width: 800px; align-items: center; font-family: 'Arial Black', Impact, system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; text-transform: uppercase;">
+                <div style="flex: 1; text-align: right; padding-right: 3rem;"><span id="btn-tos" class="footer-link">TOS & Prices</span></div>
+                <div style="text-align: center;"><span id="btn-social" class="footer-link">Social Networks</span></div>
+                <div style="flex: 1; text-align: left; padding-left: 3rem;"><a href="https://discord.gg/4AyKuPWgCW" target="_blank" class="footer-link" style="text-decoration: none;">Discord</a></div>
+            </div>
+            <p style="margin-top: 1rem;">FROXAL STUDIO &copy; 2026. NOT AN OFFICIAL MINECRAFT PRODUCT.</p>
         </div>
-      </div>
+    </footer>
+
+    <!-- Fenêtre Modale Vidéo (Lightbox) -->
+    <div id="video-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal close-video-modal">&times;</span>
+            <div id="modal-video-container"></div>
+        </div>
     </div>
 
-    <!-- Modal Contact -->
-    <div id="contact-modal" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal-btn" class="close-btn">&times;</button>
-        <h2 class="modal-title">
-          <img src="images/UI/envelop.webp" alt="Email" class="modal-icon" width="15" height="15" loading="lazy" />
-          CONTACT ME
-        </h2>
-        <form id="contact-form">
-          <div class="form-group">
-            <label for="contact-email">Your Email</label>
-            <input
-              type="email"
-              id="contact-email"
-              placeholder="your.email@example.com"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="contact-subject">Subject</label>
-            <input
-              type="text"
-              id="contact-subject"
-              placeholder="What is your project about?"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="contact-message">Message</label>
-            <textarea
-              id="contact-message"
-              rows="5"
-              placeholder="Describe your needs..."
-              required
-            ></textarea>
-          </div>
-          <button type="submit" class="btn-primary submit-btn">
-            Send via Email
-          </button>
-        </form>
-      </div>
+    <!-- Fenêtre Modale Réseaux Sociaux -->
+    <div id="social-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px; background-color: #2a2a2a; border: 4px solid var(--border-color); color: white; padding: 2rem; margin: auto; position: relative;">
+            <span class="close-modal close-social-modal" style="position: absolute; top: 10px; right: 15px; font-size: 28px; line-height: 1; cursor: pointer;">&times;</span>
+            <h2 style="margin-bottom: 2rem; font-size: 2rem; text-shadow: 2px 2px 0px #000; text-align: center;">SOCIAL NETWORKS</h2>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-start; margin-left: 2rem;">
+                <!-- Discord -->
+                <div style="display: flex; align-items: center; gap: 1.5rem; cursor: pointer; user-select: none;" 
+                     onclick="navigator.clipboard.writeText('froxal').then(() => alert('Username copied: froxal'));"
+                     onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+                    <img src="assets/discord.png" alt="Discord" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border-color);">
+                    <p style="font-family: 'Minecraft', sans-serif; font-size: 1.5rem; text-shadow: 2px 2px 0px #000;">froxal</p>
+                </div>
+
+                <!-- Twitter -->
+                <a href="https://x.com/froxal" target="_blank" style="text-decoration: none; color: white; display: flex; align-items: center; gap: 1.5rem; user-select: none;"
+                   onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+                    <img src="assets/twitter.webp" alt="Twitter" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 4px solid white;">
+                    <p style="font-family: 'Minecraft', sans-serif; font-size: 1.5rem; text-shadow: 2px 2px 0px #000;">froxal</p>
+                </a>
+
+                <!-- YouTube -->
+                <a href="https://www.youtube.com/@froxalshort" target="_blank" style="text-decoration: none; color: white; display: flex; align-items: center; gap: 1.5rem; user-select: none;"
+                   onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+                    <img src="assets/youtube.png" alt="YouTube" style="width: 70px; height: 70px; object-fit: contain;">
+                    <p style="font-family: 'Minecraft', sans-serif; font-size: 1.5rem; text-shadow: 2px 2px 0px #000;">froxalshort</p>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- Lenis Smooth Scroll -->
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <!-- Script pour interagir avec le livre et onglets -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookBg = document.getElementById('book-bg-image');
+            const bookContent = document.getElementById('book-content-wrapper');
+            let isBookOpen = false; // Le livre est fermé au chargement
 
-    <!-- Supabase CDN + Configuration & Main Script -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js?v=2"></script>
-    <script src="script.js?v=10"></script>
-  </body>
+            // Effet visuel au clic
+            bookBg.addEventListener('mousedown', () => {
+                bookBg.style.transform = 'scale(0.98)';
+            });
+            bookBg.addEventListener('mouseup', () => {
+                bookBg.style.transform = 'scale(1)';
+            });
+            bookBg.addEventListener('mouseleave', () => {
+                bookBg.style.transform = 'scale(1)';
+            });
+
+            // Gestion du clic sur le livre
+            bookBg.addEventListener('click', () => {
+                if (isBookOpen) {
+                    // Action de fermeture (inverse)
+                    bookBg.src = 'assets/book_semi-open2.png'; // Étape 1 : un peu fermé, le texte reste visible
+                    
+                    setTimeout(() => {
+                        bookBg.src = 'assets/book_semi-open.png'; // Étape 2 : très fermé
+                        bookContent.style.display = 'none'; // Le texte disparaît ICI
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        bookBg.src = 'assets/book_close.png'; // Étape 3 : fermé complètement
+                        isBookOpen = false;
+                    }, 200);
+                } else {
+                    // Action d'ouverture
+                    bookBg.src = 'assets/book_semi-open.png'; // Étape 1 : un peu ouvert, le texte est encore caché
+                    
+                    setTimeout(() => {
+                        bookBg.src = 'assets/book_semi-open2.png'; // Étape 2 : très ouvert
+                        bookContent.style.display = 'flex'; // Le texte apparaît ICI
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        bookBg.src = 'assets/book.png'; // Étape 3 : complètement ouvert
+                        isBookOpen = true;
+                    }, 200);
+                }
+            });
+
+            // Gestion des Onglets du Portfolio
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabsHeaderBg = document.getElementById('tabs-header-bg');
+            const bgSlider = document.getElementById('bg-slider');
+            const tabsHeaderContainer = document.getElementById('tabs-header-container');
+            const mainLogo = document.getElementById('main-logo');
+
+            const aboutSection = document.getElementById('about');
+            const homeSubpage = document.getElementById('home-subpage');
+            const tosPage = document.getElementById('tos-page');
+            const btnBackHome = document.getElementById('btn-back-home');
+            const portfolioContainer = document.getElementById('portfolio');
+            const animationTabBtn = document.querySelector('.tab-btn[data-target="content-animation"]');
+            const blockbenchTabBtn = document.querySelector('.tab-btn[data-target="content-blockbench"]');
+            const pricesTabBtn = document.querySelector('.tab-btn[data-target="content-prices"]');
+            const navNext = document.getElementById('btn-nav-next');
+            const navPrev = document.getElementById('btn-nav-prev');
+            const btnTosNavPrev = document.getElementById('btn-tos-nav-prev');
+
+            // Footer links
+            const btnTos = document.getElementById('btn-tos');
+            const btnSocial = document.getElementById('btn-social');
+            const socialModal = document.getElementById('social-modal');
+            const closeSocialModalBtn = document.querySelector('.close-social-modal');
+
+            // Flèches de navigation latérales
+            if (navNext) {
+                navNext.addEventListener('click', () => {
+                    if (animationTabBtn && animationTabBtn.classList.contains('active')) {
+                        if (blockbenchTabBtn) blockbenchTabBtn.click();
+                    } else if (blockbenchTabBtn && blockbenchTabBtn.classList.contains('active')) {
+                        if (btnTos) btnTos.click();
+                    }
+                });
+                navNext.addEventListener('mouseenter', () => navNext.src = 'assets/page_forward_highlighted.png');
+                navNext.addEventListener('mouseleave', () => navNext.src = 'assets/page_forward.png');
+            }
+            if (navPrev && animationTabBtn) {
+                navPrev.addEventListener('click', () => animationTabBtn.click());
+                navPrev.addEventListener('mouseenter', () => navPrev.src = 'assets/page_forward_highlighted.png');
+                navPrev.addEventListener('mouseleave', () => navPrev.src = 'assets/page_forward.png');
+            }
+            if (btnTosNavPrev) {
+                btnTosNavPrev.addEventListener('click', () => {
+                    if (blockbenchTabBtn) blockbenchTabBtn.click();
+                });
+                btnTosNavPrev.addEventListener('mouseenter', () => btnTosNavPrev.src = 'assets/page_forward_highlighted.png');
+                btnTosNavPrev.addEventListener('mouseleave', () => btnTosNavPrev.src = 'assets/page_forward.png');
+            }
+
+            if (btnBackHome) {
+                btnBackHome.addEventListener('click', () => {
+                    history.pushState(null, '', '/');
+                    if (aboutSection) aboutSection.style.display = '';
+                    if (homeSubpage) homeSubpage.style.display = '';
+                    if (tosPage) tosPage.style.display = 'none';
+                    btnBackHome.style.display = 'none';
+                    if (portfolioContainer) portfolioContainer.style.display = 'none';
+                    if (navNext) navNext.style.display = 'none';
+                    if (navPrev) navPrev.style.display = 'none';
+                    
+                    // Réinitialiser les onglets (fermer la vue portfolio)
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Remettre le bandeau à la couleur de base et à la petite taille
+                    if (bgSlider) bgSlider.style.transform = 'translateY(0)';
+                    if (tabsHeaderContainer) tabsHeaderContainer.style.padding = '3rem 2rem';
+                    if (mainLogo) mainLogo.style.height = '100px';
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                // Effets de survol et clic pour le bouton retour
+                btnBackHome.addEventListener('mouseenter', () => btnBackHome.src = 'assets/back_highlight.png');
+                btnBackHome.addEventListener('mouseleave', () => {
+                    btnBackHome.src = 'assets/back.png';
+                    btnBackHome.style.transform = 'scale(1)';
+                });
+                btnBackHome.addEventListener('mousedown', () => btnBackHome.style.transform = 'scale(0.9)');
+                btnBackHome.addEventListener('mouseup', () => btnBackHome.style.transform = 'scale(1)');
+            }
+
+            // Clic sur le logo pour retourner à l'accueil
+            if (mainLogo && btnBackHome) {
+                mainLogo.addEventListener('click', () => {
+                    btnBackHome.click();
+                });
+            }
+
+            // Logic for TOS & Prices
+            if (btnTos) {
+                btnTos.addEventListener('click', () => {
+                    history.pushState(null, '', '/prices');
+                    
+                    const wasOnBlockbench = blockbenchTabBtn && blockbenchTabBtn.classList.contains('active');
+                    if (btnTosNavPrev) {
+                        btnTosNavPrev.style.display = wasOnBlockbench ? 'block' : 'none';
+                    }
+
+                    if (aboutSection) aboutSection.style.display = 'none';
+                    if (homeSubpage) homeSubpage.style.display = 'none';
+                    if (portfolioContainer) portfolioContainer.style.display = 'none';
+                    if (navNext) navNext.style.display = 'none';
+                    if (navPrev) navPrev.style.display = 'none';
+                    
+                    if (tosPage) tosPage.style.display = 'block';
+                    if (btnBackHome) btnBackHome.style.display = 'block';
+
+                    // Réinitialiser les onglets portfolio
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    if (pricesTabBtn) pricesTabBtn.classList.add('active');
+
+                    // Remettre le bandeau à la couleur de base et à la petite taille
+                    if (bgSlider) bgSlider.style.transform = 'translateY(0)';
+                    if (tabsHeaderContainer) tabsHeaderContainer.style.padding = '3rem 2rem';
+                    if (mainLogo) mainLogo.style.height = '100px';
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            // Logic for Social Networks Modal
+            if (btnSocial) {
+                btnSocial.addEventListener('click', () => {
+                    if (socialModal) socialModal.classList.add('show');
+                });
+            }
+            if (closeSocialModalBtn) {
+                closeSocialModalBtn.addEventListener('click', () => {
+                    if (socialModal) socialModal.classList.remove('show');
+                });
+            }
+            if (socialModal) {
+                socialModal.addEventListener('click', (e) => {
+                    if (e.target === socialModal) socialModal.classList.remove('show');
+                });
+            }
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update URL
+                    const targetId = btn.getAttribute('data-target');
+                    if (targetId === 'content-prices') {
+                        if (btnTos) btnTos.click();
+                        return;
+                    }
+                    if (targetId === 'content-animation') history.pushState(null, '', '/animation');
+                    if (targetId === 'content-blockbench') history.pushState(null, '', '/blockbench');
+
+                    // Masquer les autres pages (simule une nouvelle page)
+                    if (aboutSection) aboutSection.style.display = 'none';
+                    if (homeSubpage) homeSubpage.style.display = 'none';
+                    if (tosPage) tosPage.style.display = 'none';
+                    if (btnBackHome) btnBackHome.style.display = 'block';
+                    if (portfolioContainer) portfolioContainer.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    // Retirer 'active' partout
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => {
+                        c.classList.remove('active');
+                        c.style.display = 'none';
+                    });
+
+                    // Ajouter 'active' au bouton cliqué
+                    btn.classList.add('active');
+
+                    // Afficher le contenu correspondant
+                    const targetContent = document.getElementById(targetId);
+                    if(targetContent) {
+                        targetContent.classList.add('active');
+                        targetContent.style.display = 'block';
+                    }
+
+                    // Changer la couleur du bandeau et appliquer le fond avec 50% d'opacité
+                    if(targetId === 'content-animation') {
+                        if (bgSlider) bgSlider.style.transform = 'translateY(-33.333%)';
+                        if (tabsHeaderContainer) tabsHeaderContainer.style.padding = '6rem 2rem';
+                        if (mainLogo) mainLogo.style.height = '120px';
+                        if (navNext) { navNext.style.display = 'block'; navNext.title = 'Voir Blockbench'; }
+                        if (navPrev) navPrev.style.display = 'none';
+                    } else if (targetId === 'content-blockbench') {
+                        if (bgSlider) bgSlider.style.transform = 'translateY(-66.666%)';
+                        if (tabsHeaderContainer) tabsHeaderContainer.style.padding = '6rem 2rem';
+                        if (mainLogo) mainLogo.style.height = '120px';
+                        if (navNext) { navNext.style.display = 'block'; navNext.title = 'Voir Prices'; }
+                        if (navPrev) navPrev.style.display = 'block';
+                    }
+                });
+            });
+
+            // Gestion de la Fenêtre Modale Vidéo
+            const videoModal = document.getElementById('video-modal');
+            const modalVideoContainer = document.getElementById('modal-video-container');
+            const closeVideoModalBtn = document.querySelector('.close-video-modal');
+
+            // Handle initial URL routing
+            const path = window.location.pathname;
+            if (path === '/prices' || path === '/tos') {
+                if (btnTos) btnTos.click();
+            } else if (path === '/animation') {
+                if (animationTabBtn) animationTabBtn.click();
+            } else if (path === '/blockbench') {
+                if (blockbenchTabBtn) blockbenchTabBtn.click();
+            }
+
+            function closeVideoModal() {
+                videoModal.classList.remove('show');
+                modalVideoContainer.innerHTML = ''; // Détruire l'iframe pour arrêter la vidéo
+            }
+
+            if (closeVideoModalBtn) {
+                closeVideoModalBtn.addEventListener('click', closeVideoModal);
+            }
+            
+            // Fermer si on clique en dehors de la vidéo (sur le fond noir)
+            videoModal.addEventListener('click', (e) => {
+                if(e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+
+            // Lancement des vidéos dans la modale
+            document.querySelectorAll('.custom-youtube-player').forEach(player => {
+                player.addEventListener('click', function() {
+                    const videoId = this.getAttribute('data-video-id');
+                    
+                    // Injecter l'iframe dans le conteneur de la modale avec autoplay et sans contrôles
+                    modalVideoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=0&disablekb=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></iframe>`;
+                    
+                    // Afficher la modale
+                    videoModal.classList.add('show');
+                });
+            });
+        });
+    </script>
+    <!-- Modal Service -->
+    <div id="service-modal" class="modal" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 9999; opacity: 0; transition: opacity 0.3s ease;">
+        <div class="modal-content" style="background-color: #2a2a2a; border: 4px solid var(--border-color); box-shadow: 8px 8px 0px rgba(0,0,0,0.5); padding: 2rem; max-width: 800px; width: 90%; display: flex; gap: 2rem; position: relative; transform: scale(0.8); transition: transform 0.3s ease;">
+            <span id="service-modal-close" style="position: absolute; top: 10px; right: 15px; font-size: 28px; line-height: 1; cursor: pointer; color: white;">&times;</span>
+            <div style="flex: 1; max-width: 300px;">
+                <img id="service-modal-img" src="" alt="Service Image" style="width: 100%; height: auto; border: 4px solid var(--border-color); box-shadow: 4px 4px 0px rgba(0,0,0,0.5);">
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                <h2 id="service-modal-title" style="font-family: 'Minecraft', sans-serif; font-weight: normal; font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px 0px #000; letter-spacing: 2px; color: white; line-height: 1.2;">Title</h2>
+                <p id="service-modal-desc" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 1rem; line-height: 1.5; color: white; margin-bottom: 1.5rem;">Description</p>
+                <h3 id="service-modal-price" style="color: #F09830; font-family: 'Arial Black', Impact, sans-serif; font-size: 2.5rem; margin-top: 0; margin-bottom: 0; text-shadow: 2px 2px 0px #000;">Price</h3>
+                <p style="font-family: Arial, Helvetica, sans-serif; font-size: 0.9rem; color: #cccccc; margin-top: 0.3rem; margin-bottom: 0;">(excl. tax)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logique pour la modale des services
+        document.addEventListener('DOMContentLoaded', () => {
+            const serviceBtns = document.querySelectorAll('.service-item-btn');
+            const modal = document.getElementById('service-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            const closeBtn = document.getElementById('service-modal-close');
+            
+            const modalImg = document.getElementById('service-modal-img');
+            const modalTitle = document.getElementById('service-modal-title');
+            const modalDesc = document.getElementById('service-modal-desc');
+            const modalPrice = document.getElementById('service-modal-price');
+
+            serviceBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modalImg.src = btn.src;
+                    modalTitle.textContent = btn.getAttribute('data-title');
+                    modalDesc.textContent = btn.getAttribute('data-desc');
+                    modalPrice.textContent = btn.getAttribute('data-price');
+                    
+                    modal.style.display = 'flex';
+                    // Force reflow
+                    modal.offsetHeight;
+                    modal.style.opacity = '1';
+                    modalContent.style.transform = 'scale(1)';
+                });
+            });
+
+            const closeModal = () => {
+                modal.style.opacity = '0';
+                modalContent.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
 </html>
